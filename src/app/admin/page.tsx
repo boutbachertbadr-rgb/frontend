@@ -148,20 +148,28 @@ export default function AdminPage() {
   }
 
   function exportCsv() {
+    const mainProd = (o: Order) =>
+      o.items.filter(i => i.product_name.toLowerCase().includes("unidad"))
+        .map(i => i.product_name).join(" + ") || "—";
+    const upsellProd = (o: Order) =>
+      o.items.filter(i => !i.product_name.toLowerCase().includes("unidad"))
+        .map(i => i.product_name).join(" + ") || "No";
+
     const rows = [
-      ["ID", "Date", "Name", "Phone", "State", "City", "Address", "Products", "Total", "Status", "Upsell"],
+      ["Fecha", "Order ID", "Nombre Cliente", "Teléfono", "Estado", "Ciudad", "Dirección", "Producto Principal", "Upsell (Sí/No)", "Producto Upsell", "Total a Cobrar", "Status"],
       ...orders.map((o) => [
-        o.id,
-        new Date(o.created_at).toLocaleDateString(),
+        new Date(o.created_at).toLocaleDateString("es-MX"),
+        `#${o.id}`,
         o.customer_name,
         o.customer_phone,
         o.customer_state,
         o.customer_city,
         o.customer_address,
-        o.items.map((i) => `${i.product_name}(x${i.quantity})`).join(" | "),
-        o.total_price,
+        mainProd(o),
+        o.is_upsell_accepted ? "Sí" : "No",
+        upsellProd(o),
+        `$${Number(o.total_price).toFixed(2)} MXN`,
         o.status,
-        o.is_upsell_accepted ? "yes" : "no",
       ]),
     ];
     const csv = rows.map((r) => r.map(String).map((v) => `"${v.replace(/"/g, '""')}"`).join(",")).join("\n");
@@ -314,7 +322,8 @@ export default function AdminPage() {
                     <th className="px-4 py-3">Customer</th>
                     <th className="px-4 py-3">Phone</th>
                     <th className="px-4 py-3">Location</th>
-                    <th className="px-4 py-3">Products</th>
+                    <th className="px-4 py-3">Producto Principal</th>
+                    <th className="px-4 py-3">Upsell</th>
                     <th className="px-4 py-3">Total</th>
                     <th className="px-4 py-3">Status</th>
                   </tr>
@@ -348,14 +357,27 @@ export default function AdminPage() {
                         <div>{order.customer_state}</div>
                         {order.customer_city && <div className="text-gray-400">{order.customer_city}</div>}
                       </td>
-                      <td className="px-4 py-3 text-gray-700 text-xs max-w-[200px]">
-                        {order.items.length > 0
-                          ? order.items.map((i) => (
-                              <div key={i.product_name}>
-                                {i.product_name} <span className="text-gray-400">×{i.quantity}</span>
-                              </div>
-                            ))
+                      <td className="px-4 py-3 text-gray-700 text-xs max-w-[180px]">
+                        {order.items.filter(i => i.product_name.toLowerCase().includes("unidad")).length > 0
+                          ? order.items
+                              .filter(i => i.product_name.toLowerCase().includes("unidad"))
+                              .map(i => (
+                                <div key={i.product_name} className="font-medium">
+                                  {i.product_name}
+                                </div>
+                              ))
                           : <span className="text-gray-400">—</span>}
+                      </td>
+                      <td className="px-4 py-3 text-xs max-w-[150px]">
+                        {order.items.filter(i => !i.product_name.toLowerCase().includes("unidad")).length > 0
+                          ? order.items
+                              .filter(i => !i.product_name.toLowerCase().includes("unidad"))
+                              .map(i => (
+                                <div key={i.product_name} className="bg-green-100 text-green-800 font-semibold px-2 py-0.5 rounded-full inline-block">
+                                  ✓ {i.product_name}
+                                </div>
+                              ))
+                          : <span className="text-gray-300 text-xs">No</span>}
                       </td>
                       <td className="px-4 py-3 font-semibold text-gray-900 whitespace-nowrap">
                         ${Number(order.total_price).toFixed(2)}
