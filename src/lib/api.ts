@@ -26,7 +26,7 @@ export interface OrderResponse {
 
 export async function createOrder(payload: CreateOrderPayload): Promise<OrderResponse> {
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 3000);
+  const timeoutId = setTimeout(() => controller.abort(), 15000);
 
   try {
     const res = await fetch(`${API_URL}/orders/`, {
