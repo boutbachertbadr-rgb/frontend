@@ -201,8 +201,14 @@ function useActiveIndex(ref: React.RefObject<HTMLDivElement | null>, itemCount: 
   return activeIndex;
 }
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "https://api.vazlina.shop";
+
 /* ═══════════════ PAGE ═══════════════ */
 export default function Home() {
+  useEffect(() => {
+    fetch(`${API_URL}/track/view`, { method: "POST" }).catch(() => {});
+  }, []);
+
   const productsRef = useRef<HTMLDivElement>(null);
   const testimonialsRef = useRef<HTMLDivElement>(null);
   const stepsRef = useRef<HTMLDivElement>(null);

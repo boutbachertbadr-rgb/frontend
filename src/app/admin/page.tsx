@@ -1,657 +1,362 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "https://api.vazlina.shop";
 
+/* TYPES */
+interface OrderItem { product_name: string; quantity: number; price_per_item: number; }
+interface Order {
+  id: number; created_at: string; customer_name: string; customer_phone: string;
+  customer_state: string; customer_city: string; customer_address: string;
+  total_price: number; status: string; is_upsell_accepted: boolean; items: OrderItem[];
+}
+interface Metrics {
+  total_orders: number; total_revenue: number; avg_order_value: number;
+  conversion_rate: number; upsell_rate: number; upsell_revenue: number;
+  confirmed_revenue: number; page_views: number;
+  status_counts: Record<string, number>;
+  daily_trend: { date: string; revenue: number }[];
+  top_products: { name: string; count: number; revenue: number }[];
+  top_states: { state: string; orders: number }[];
+}
+
 const STATUSES = [
-  { value: "pending_confirmation", label: "Pending", color: "bg-yellow-100 text-yellow-800", bar: "#EAB308" },
-  { value: "confirmed", label: "Confirmed", color: "bg-blue-100 text-blue-800", bar: "#2563EB" },
-  { value: "shipped", label: "Shipped", color: "bg-purple-100 text-purple-800", bar: "#9333EA" },
-  { value: "delivered", label: "Delivered", color: "bg-green-100 text-green-800", bar: "#16A34A" },
-  { value: "cancelled", label: "Cancelled", color: "bg-red-100 text-red-800", bar: "#DC2626" },
+  { value: "pending_confirmation", label: "Pending", color: "bg-amber-100 text-amber-800", bar: "#F59E0B" },
+  { value: "confirmed", label: "Confirmed", color: "bg-blue-100 text-blue-800", bar: "#3B82F6" },
+  { value: "shipped", label: "Shipped", color: "bg-purple-100 text-purple-800", bar: "#A855F7" },
+  { value: "delivered", label: "Delivered", color: "bg-emerald-100 text-emerald-800", bar: "#10B981" },
+  { value: "cancelled", label: "Cancelled", color: "bg-red-100 text-red-800", bar: "#EF4444" },
 ];
 
-const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
-interface OrderItem {
-  product_name: string;
-  quantity: number;
-  price_per_item: number;
-}
-
-interface Order {
-  id: number;
-  created_at: string;
-  customer_name: string;
-  customer_phone: string;
-  customer_state: string;
-  customer_city: string;
-  customer_address: string;
-  total_price: number;
-  status: string;
-  is_upsell_accepted: boolean;
-  items: OrderItem[];
-}
-
+function fmtMoney(n: number) { return `$${n.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`; }
 function statusBadge(status: string) {
   const s = STATUSES.find((x) => x.value === status);
+  return <span className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${s?.color ?? "bg-gray-100 text-gray-700"}`}>{s?.label ?? status}</span>;
+}
+function toInputDate(d: Date) { return d.toISOString().slice(0, 10); }
+
+function KpiCard({ label, value, sub, color }: { label: string; value: string; sub: string; color: string }) {
+  const bg = { emerald: "bg-emerald-50 text-emerald-600", blue: "bg-blue-50 text-blue-600", indigo: "bg-indigo-50 text-indigo-600", amber: "bg-amber-50 text-amber-600", orange: "bg-orange-50 text-orange-600", green: "bg-green-50 text-green-600" }[color] || "bg-gray-50 text-gray-600";
   return (
-    <span
-      className={`inline-block px-2 py-0.5 rounded-full text-xs font-semibold ${
-        s?.color ?? "bg-gray-100 text-gray-700"
-      }`}
-    >
-      {s?.label ?? status}
-    </span>
+    <div className="bg-white rounded-xl border border-gray-200 p-4">
+      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">{label}</p>
+      <p className="text-xl font-bold text-gray-900">{value}</p>
+      <p className="text-[10px] text-gray-400 mt-0.5">{sub}</p>
+    </div>
   );
 }
 
-export default function AdminPage() {
-  const [key, setKey] = useState<string>("");
-  const [inputKey, setInputKey] = useState("");
-  const [loginError, setLoginError] = useState("");
+export default function AdminDashboard() {
+  const [token, setToken] = useState<string>("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [loginErr, setLoginErr] = useState("");
 
+  const today = new Date();
+  const thirtyAgo = new Date(); thirtyAgo.setDate(today.getDate() - 29);
+  const [fromDate, setFromDate] = useState(toInputDate(thirtyAgo));
+  const [toDate, setToDate] = useState(toInputDate(today));
+
+  const [metrics, setMetrics] = useState<Metrics | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loadingMetrics, setLoadingMetrics] = useState(false);
+  const [loadingOrders, setLoadingOrders] = useState(false);
   const [error, setError] = useState("");
 
   const [search, setSearch] = useState("");
   const [filterStatus, setFilterStatus] = useState("");
   const [updatingId, setUpdatingId] = useState<number | null>(null);
-
+  const [previewOrder, setPreviewOrder] = useState<Order | null>(null);
   const [importing, setImporting] = useState(false);
   const [importMsg, setImportMsg] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
+  const [activeTab, setActiveTab] = useState<"overview" | "orders">("overview");
 
-  useEffect(() => {
-    const saved = localStorage.getItem("vzl_admin_key") ?? "";
-    if (saved) setKey(saved);
-  }, []);
+  useEffect(() => { const saved = localStorage.getItem("vzl_admin_token") ?? ""; if (saved) setToken(saved); }, []);
+  useEffect(() => { if (!token) return; fetchMetrics(); fetchOrders(); }, [token, fromDate, toDate]);
 
-  useEffect(() => {
-    if (key) fetchOrders();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [key, filterStatus]);
-
-  async function fetchOrders() {
-    setLoading(true);
-    setError("");
-    try {
-      const params = new URLSearchParams();
-      if (filterStatus) params.set("status", filterStatus);
-      if (search) params.set("search", search);
-      const res = await fetch(`${API_URL}/orders/?${params}`, {
-        headers: { "x-admin-key": key },
-      });
-      if (res.status === 403) {
-        setKey("");
-        localStorage.removeItem("vzl_admin_key");
-        setError("Wrong admin key.");
-        return;
-      }
-      if (!res.ok) throw new Error("Failed to fetch orders");
-      setOrders(await res.json());
-    } catch (e: unknown) {
-      setError((e as Error).message ?? "Network error");
-    } finally {
-      setLoading(false);
-    }
+  async function api(path: string, opts?: RequestInit) {
+    const res = await fetch(`${API_URL}${path}`, { ...opts, headers: { "Content-Type": "application/json", "x-admin-key": token, ...opts?.headers } });
+    if (res.status === 403) { setToken(""); localStorage.removeItem("vzl_admin_token"); throw new Error("Session expired. Please login again."); }
+    if (!res.ok) throw new Error(`${res.status}: ${await res.text()}`);
+    return res.json();
   }
 
-  function handleLogin() {
-    if (!inputKey.trim()) {
-      setLoginError("Enter the admin key.");
-      return;
-    }
-    localStorage.setItem("vzl_admin_key", inputKey.trim());
-    setKey(inputKey.trim());
-    setLoginError("");
-  }
+  async function fetchMetrics() { setLoadingMetrics(true); setError(""); try { const d = await api(`/admin/metrics?from=${fromDate}&to=${toDate}`); setMetrics(d); } catch (e: unknown) { setError((e as Error).message); } finally { setLoadingMetrics(false); } }
+  async function fetchOrders() { setLoadingOrders(true); try { const p = new URLSearchParams(); p.set("from", fromDate); p.set("to", toDate); if (filterStatus) p.set("status", filterStatus); if (search) p.set("search", search); const d = await api(`/admin/orders?${p}`); setOrders(d); } catch (e: unknown) { setError((e as Error).message); } finally { setLoadingOrders(false); } }
 
-  async function updateStatus(orderId: number, status: string) {
-    setUpdatingId(orderId);
-    try {
-      await fetch(`${API_URL}/orders/${orderId}/status`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json", "x-admin-key": key },
-        body: JSON.stringify({ status }),
-      });
-      setOrders((prev) =>
-        prev.map((o) => (o.id === orderId ? { ...o, status } : o))
-      );
-    } finally {
-      setUpdatingId(null);
-    }
-  }
+  async function handleLogin() { setLoginErr(""); try { const d = await fetch(`${API_URL}/admin/login`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ username, password }) }).then((r) => r.json()); if (!d.token) throw new Error("Invalid"); localStorage.setItem("vzl_admin_token", d.token); setToken(d.token); } catch { setLoginErr("Invalid username or password"); } }
+  async function updateStatus(id: number, status: string) { setUpdatingId(id); try { await api(`/admin/orders/${id}/status`, { method: "PATCH", body: JSON.stringify({ status }) }); setOrders((p) => p.map((o) => (o.id === id ? { ...o, status } : o))); fetchMetrics(); } finally { setUpdatingId(null); } }
+  async function handleImport(e: React.ChangeEvent<HTMLInputElement>) { const f = e.target.files?.[0]; if (!f) return; setImporting(true); setImportMsg(""); try { const fd = new FormData(); fd.append("file", f); const r = await fetch(`${API_URL}/admin/orders/import`, { method: "POST", headers: { "x-admin-key": token }, body: fd }); const d = await r.json(); setImportMsg(`âœ… ${d.imported} imported`); fetchOrders(); fetchMetrics(); } catch { setImportMsg("âŒ Failed"); } finally { setImporting(false); if (fileRef.current) fileRef.current.value = ""; } }
+  function exportCsv() { const rows = [["Date","Order ID","Customer","Phone","State","City","Address","Products","Total","Status","Upsell"], ...orders.map((o) => [new Date(o.created_at).toLocaleString("en-GB"), `#${o.id}`, o.customer_name, o.customer_phone, o.customer_state, o.customer_city, o.customer_address, o.items.map((i) => `${i.product_name} x${i.quantity}`).join(", "), `$${o.total_price.toFixed(2)}`, o.status, o.is_upsell_accepted ? "Yes" : "No"])]; const csv = rows.map((r) => r.map((v) => `"${String(v).replace(/"/g, '""')}"`).join(",")).join("\n"); const blob = new Blob([csv], { type: "text/csv" }); const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = `orders-${new Date().toISOString().slice(0, 10)}.csv`; a.click(); URL.revokeObjectURL(url); }
 
-  async function handleImport(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setImporting(true);
-    setImportMsg("");
-    try {
-      const fd = new FormData();
-      fd.append("file", file);
-      const res = await fetch(`${API_URL}/orders/import`, {
-        method: "POST",
-        headers: { "x-admin-key": key },
-        body: fd,
-      });
-      const data = await res.json();
-      setImportMsg(`✅ ${data.imported} orders imported`);
-      fetchOrders();
-    } catch {
-      setImportMsg("❌ Import failed");
-    } finally {
-      setImporting(false);
-      if (fileRef.current) fileRef.current.value = "";
-    }
-  }
+  const filtered = useMemo(() => { if (!search) return orders; const q = search.toLowerCase(); return orders.filter((o) => o.customer_name.toLowerCase().includes(q) || o.customer_phone.includes(q)); }, [orders, search]);
 
-  function exportCsv() {
-    const mainProd = (o: Order) =>
-      o.items.filter(i => i.product_name.toLowerCase().includes("unidad"))
-        .map(i => i.product_name).join(" + ") || "—";
-    const upsellProd = (o: Order) =>
-      o.items.filter(i => !i.product_name.toLowerCase().includes("unidad"))
-        .map(i => i.product_name).join(" + ") || "No";
-
-    const rows = [
-      ["Date", "Order ID", "Customer Name", "Phone", "State", "City", "Address", "Main Product", "Upsell (Yes/No)", "Upsell Product", "Total to Collect", "Status"],
-      ...orders.map((o) => [
-        new Date(o.created_at).toLocaleDateString("en-GB"),
-        `#${o.id}`,
-        o.customer_name,
-        o.customer_phone,
-        o.customer_state,
-        o.customer_city,
-        o.customer_address,
-        mainProd(o),
-        o.is_upsell_accepted ? "Yes" : "No",
-        upsellProd(o),
-        `$${Number(o.total_price).toFixed(2)} MXN`,
-        o.status,
-      ]),
-    ];
-    const csv = rows.map((r) => r.map(String).map((v) => `"${v.replace(/"/g, '""')}"`).join(",")).join("\n");
-    const blob = new Blob([csv], { type: "text/csv" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `vazlina-orders-${new Date().toISOString().slice(0, 10)}.csv`;
-    a.click();
-    URL.revokeObjectURL(url);
-  }
-
-  const filtered = search
-    ? orders.filter(
-        (o) =>
-          o.customer_name.toLowerCase().includes(search.toLowerCase()) ||
-          o.customer_phone.includes(search)
-      )
-    : orders;
-
-  /* ---- ANALYTICS ---- */
-  const analytics = useMemo(() => {
-    const all = orders;
-    const totalOrders = all.length;
-    const totalRevenue = all.reduce((s, o) => s + o.total_price, 0);
-    const avgOrderValue = totalOrders ? totalRevenue / totalOrders : 0;
-
-    const upsellOrders = all.filter((o) => o.is_upsell_accepted);
-    const upsellRate = totalOrders ? (upsellOrders.length / totalOrders) * 100 : 0;
-    const upsellRevenue = upsellOrders.reduce((s, o) => s + o.total_price, 0);
-
-    const confirmedRevenue = all
-      .filter((o) => o.status === "confirmed" || o.status === "shipped" || o.status === "delivered")
-      .reduce((s, o) => s + o.total_price, 0);
-
-    const byStatus = Object.fromEntries(
-      STATUSES.map((s) => [s.value, all.filter((o) => o.status === s.value).length])
-    );
-
-    // Product breakdown
-    const productStats: Record<string, { count: number; revenue: number }> = {};
-    all.forEach((o) => {
-      o.items.forEach((i) => {
-        const name = i.product_name;
-        if (!productStats[name]) productStats[name] = { count: 0, revenue: 0 };
-        productStats[name].count += i.quantity;
-        productStats[name].revenue += i.price_per_item * i.quantity;
-      });
-    });
-    const topProducts = Object.entries(productStats)
-      .sort((a, b) => b[1].revenue - a[1].revenue)
-      .slice(0, 5);
-
-    // Daily revenue trend (last 30 days)
-    const today = new Date();
-    const daily: Record<string, number> = {};
-    for (let i = 29; i >= 0; i--) {
-      const d = new Date(today);
-      d.setDate(d.getDate() - i);
-      daily[d.toISOString().slice(0, 10)] = 0;
-    }
-    all.forEach((o) => {
-      const d = o.created_at.slice(0, 10);
-      if (daily[d] !== undefined) daily[d] += o.total_price;
-    });
-    const dailyTrend = Object.entries(daily).map(([date, revenue]) => ({
-      date,
-      day: parseInt(date.slice(8, 10)),
-      revenue,
-    }));
-
-    // Revenue by month
-    const monthly: Record<string, number> = {};
-    all.forEach((o) => {
-      const m = o.created_at.slice(0, 7);
-      monthly[m] = (monthly[m] || 0) + o.total_price;
-    });
-    const monthlyTrend = Object.entries(monthly)
-      .sort()
-      .slice(-6)
-      .map(([m, revenue]) => ({
-        label: MONTHS[parseInt(m.slice(5, 7)) - 1] + " '" + m.slice(2, 4),
-        revenue,
-      }));
-
-    return {
-      totalOrders,
-      totalRevenue,
-      avgOrderValue,
-      upsellRate,
-      upsellRevenue,
-      confirmedRevenue,
-      byStatus,
-      topProducts,
-      dailyTrend,
-      monthlyTrend,
-    };
-  }, [orders]);
-
-  if (!key) {
-    return (
-      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
-        <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-sm">
-          <h1 className="text-2xl font-bold text-gray-900 mb-1">Admin Login</h1>
-          <p className="text-sm text-gray-500 mb-6">Vazlina Orders Dashboard</p>
-          <input
-            type="password"
-            placeholder="Enter admin key"
-            value={inputKey}
-            onChange={(e) => setInputKey(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleLogin()}
-            className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm mb-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          />
-          {loginError && <p className="text-red-500 text-xs mb-3">{loginError}</p>}
-          <button
-            onClick={handleLogin}
-            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg py-2.5 text-sm transition"
-          >
-            Login
-          </button>
+  /* LOGIN */
+  if (!token) return (
+    <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+      <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-sm">
+        <div className="text-center mb-6">
+          <div className="w-12 h-12 bg-slate-900 rounded-xl mx-auto mb-3 flex items-center justify-center text-white font-bold text-xl">V</div>
+          <h1 className="text-xl font-bold text-gray-900">Vazlina Admin</h1>
+          <p className="text-xs text-gray-500 mt-1">COD Store Dashboard</p>
         </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
-        <div>
-          <h1 className="text-xl font-bold text-gray-900">Vazlina Orders</h1>
-          <p className="text-xs text-gray-400">Admin Dashboard</p>
-        </div>
-        <button
-          onClick={() => {
-            localStorage.removeItem("vzl_admin_key");
-            setKey("");
-          }}
-          className="text-xs text-gray-400 hover:text-red-500 transition"
-        >
-          Logout
-        </button>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-4 py-6 space-y-6">
-        {/* KPI Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-white rounded-xl border border-gray-200 p-5">
-            <div className="flex items-center justify-between mb-2">
-              <p className="text-xs font-medium text-gray-500 uppercase">Total Revenue</p>
-              <div className="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-600 text-lg font-bold">$</div>
-            </div>
-            <p className="text-2xl font-bold text-gray-900">${analytics.totalRevenue.toFixed(0)}</p>
-            <p className="text-xs text-gray-400 mt-1">{analytics.totalOrders} orders</p>
-          </div>
-          <div className="bg-white rounded-xl border border-gray-200 p-5">
-            <div className="flex items-center justify-between mb-2">
-              <p className="text-xs font-medium text-gray-500 uppercase">Avg. Order</p>
-              <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-              </div>
-            </div>
-            <p className="text-2xl font-bold text-gray-900">${analytics.avgOrderValue.toFixed(2)}</p>
-            <p className="text-xs text-gray-400 mt-1">Per order</p>
-          </div>
-          <div className="bg-white rounded-xl border border-gray-200 p-5">
-            <div className="flex items-center justify-between mb-2">
-              <p className="text-xs font-medium text-gray-500 uppercase">Upsell Rate</p>
-              <div className="w-8 h-8 rounded-lg bg-orange-50 flex items-center justify-center text-orange-600">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
-              </div>
-            </div>
-            <p className="text-2xl font-bold text-gray-900">{analytics.upsellRate.toFixed(1)}%</p>
-            <p className="text-xs text-gray-400 mt-1">+${analytics.upsellRevenue.toFixed(0)} upsell revenue</p>
-          </div>
-          <div className="bg-white rounded-xl border border-gray-200 p-5">
-            <div className="flex items-center justify-between mb-2">
-              <p className="text-xs font-medium text-gray-500 uppercase">Confirmed Rev.</p>
-              <div className="w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center text-green-600">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7"/></svg>
-              </div>
-            </div>
-            <p className="text-2xl font-bold text-gray-900">${analytics.confirmedRevenue.toFixed(0)}</p>
-            <p className="text-xs text-gray-400 mt-1">Confirmed/Shipped/Delivered</p>
-          </div>
-        </div>
-
-        {/* Charts Row */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          {/* Status Donut */}
-          <div className="bg-white rounded-xl border border-gray-200 p-5">
-            <h3 className="text-sm font-semibold text-gray-700 mb-4">Orders by Status</h3>
-            <div className="flex items-center gap-6">
-              <div className="relative w-32 h-32 shrink-0">
-                <svg viewBox="0 0 36 36" className="w-32 h-32 transform -rotate-90">
-                  {(() => {
-                    const total = analytics.totalOrders || 1;
-                    let acc = 0;
-                    return STATUSES.map((s) => {
-                      const count = analytics.byStatus[s.value] || 0;
-                      const pct = (count / total) * 100;
-                      const dash = `${pct} ${100 - pct}`;
-                      const el = (
-                        <circle
-                          key={s.value}
-                          cx="18" cy="18" r="15.9"
-                          fill="none"
-                          stroke={s.bar}
-                          strokeWidth="3.8"
-                          strokeDasharray={dash}
-                          strokeDashoffset={-acc * 3.6 / 100 * 100}
-                          className="transition-all"
-                        />
-                      );
-                      acc += pct;
-                      return el;
-                    });
-                  })()}
-                </svg>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-lg font-bold text-gray-700">{analytics.totalOrders}</span>
-                </div>
-              </div>
-              <div className="flex-1 space-y-2">
-                {STATUSES.map((s) => (
-                  <div key={s.value} className="flex items-center gap-2 text-xs">
-                    <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: s.bar }} />
-                    <span className="text-gray-600 flex-1">{s.label}</span>
-                    <span className="font-semibold text-gray-900">{analytics.byStatus[s.value] || 0}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Revenue Trend (Daily) */}
-          <div className="bg-white rounded-xl border border-gray-200 p-5 lg:col-span-2">
-            <h3 className="text-sm font-semibold text-gray-700 mb-4">Revenue Trend (Last 30 Days)</h3>
-            {analytics.dailyTrend.length > 0 && (
-              <div className="flex items-end gap-1 h-40">
-                {(() => {
-                  const max = Math.max(...analytics.dailyTrend.map((d) => d.revenue), 1);
-                  return analytics.dailyTrend.map((d, i) => (
-                    <div key={i} className="flex-1 flex flex-col items-center group relative">
-                      <div
-                        className="w-full bg-indigo-500 rounded-t transition-all hover:bg-indigo-400"
-                        style={{ height: `${(d.revenue / max) * 100}%`, minHeight: d.revenue > 0 ? 4 : 1 }}
-                        title={`${d.date}: $${d.revenue.toFixed(2)}`}
-                      />
-                      {i % 5 === 0 && (
-                        <span className="text-[9px] text-gray-400 mt-1">{d.day}</span>
-                      )}
-                    </div>
-                  ));
-                })()}
-              </div>
-            )}
-            <div className="flex justify-between text-[10px] text-gray-400 mt-2">
-              <span>{analytics.dailyTrend[0]?.date}</span>
-              <span>{analytics.dailyTrend[analytics.dailyTrend.length - 1]?.date}</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Bottom Row */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          {/* Top Products */}
-          <div className="bg-white rounded-xl border border-gray-200 p-5">
-            <h3 className="text-sm font-semibold text-gray-700 mb-4">Top Products</h3>
-            <div className="space-y-3">
-              {analytics.topProducts.map(([name, stats], i) => {
-                const max = analytics.topProducts[0][1].revenue;
-                return (
-                  <div key={name}>
-                    <div className="flex items-center justify-between text-xs mb-1">
-                      <span className="text-gray-700 font-medium truncate max-w-[200px]">{name}</span>
-                      <span className="text-gray-500">${stats.revenue.toFixed(0)} ({stats.count} sold)</span>
-                    </div>
-                    <div className="w-full bg-gray-100 rounded-full h-2">
-                      <div
-                        className="bg-indigo-500 h-2 rounded-full transition-all"
-                        style={{ width: `${(stats.revenue / max) * 100}%` }}
-                      />
-                    </div>
-                  </div>
-                );
-              })}
-              {analytics.topProducts.length === 0 && (
-                <p className="text-sm text-gray-400 py-4 text-center">No product data yet</p>
-              )}
-            </div>
-          </div>
-
-          {/* Monthly Revenue */}
-          <div className="bg-white rounded-xl border border-gray-200 p-5">
-            <h3 className="text-sm font-semibold text-gray-700 mb-4">Revenue by Month</h3>
-            <div className="space-y-3">
-              {analytics.monthlyTrend.map((m, i) => {
-                const max = Math.max(...analytics.monthlyTrend.map((x) => x.revenue), 1);
-                return (
-                  <div key={m.label}>
-                    <div className="flex items-center justify-between text-xs mb-1">
-                      <span className="text-gray-700 font-medium">{m.label}</span>
-                      <span className="text-gray-500">${m.revenue.toFixed(0)}</span>
-                    </div>
-                    <div className="w-full bg-gray-100 rounded-full h-2">
-                      <div
-                        className="bg-emerald-500 h-2 rounded-full transition-all"
-                        style={{ width: `${(m.revenue / max) * 100}%` }}
-                      />
-                    </div>
-                  </div>
-                );
-              })}
-              {analytics.monthlyTrend.length === 0 && (
-                <p className="text-sm text-gray-400 py-4 text-center">No monthly data yet</p>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Compact Status Counts */}
-        <div className="grid grid-cols-5 gap-3">
-          {STATUSES.map((s) => (
-            <div key={s.value} className="bg-white rounded-xl border border-gray-200 p-3 text-center">
-              <p className="text-2xl font-bold text-gray-900">{analytics.byStatus[s.value] || 0}</p>
-              <p className="text-[10px] text-gray-500 uppercase mt-0.5">{s.label}</p>
-            </div>
-          ))}
-        </div>
-
-        {/* Toolbar */}
-        <div className="bg-white rounded-xl border border-gray-200 p-4 flex flex-wrap gap-3 items-center">
-          <input
-            type="text"
-            placeholder="Search name or phone…"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && fetchOrders()}
-            className="border border-gray-300 rounded-lg px-3 py-2 text-sm flex-1 min-w-[180px] focus:outline-none focus:ring-2 focus:ring-indigo-400"
-          />
-          <select
-            value={filterStatus}
-            onChange={(e) => setFilterStatus(e.target.value)}
-            className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
-          >
-            <option value="">All statuses</option>
-            {STATUSES.map((s) => (
-              <option key={s.value} value={s.value}>{s.label}</option>
-            ))}
-          </select>
-          <button
-            onClick={() => fetchOrders()}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition"
-          >
-            Refresh
-          </button>
-          <button
-            onClick={exportCsv}
-            className="border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm font-medium px-4 py-2 rounded-lg transition"
-          >
-            Export CSV
-          </button>
-          <label className={`cursor-pointer border border-dashed border-indigo-400 hover:bg-indigo-50 text-indigo-600 text-sm font-medium px-4 py-2 rounded-lg transition ${importing ? "opacity-50 pointer-events-none" : ""}`}>
-            {importing ? "Importing…" : "Import CSV"}
-            <input
-              type="file"
-              accept=".csv"
-              className="hidden"
-              ref={fileRef}
-              onChange={handleImport}
-            />
-          </label>
-          {importMsg && <span className="text-sm">{importMsg}</span>}
-        </div>
-
-        {/* Error */}
-        {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 text-sm">{error}</div>
-        )}
-
-        {/* Table */}
-        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-          {loading ? (
-            <div className="py-16 text-center text-gray-400 text-sm">Loading orders…</div>
-          ) : filtered.length === 0 ? (
-            <div className="py-16 text-center text-gray-400 text-sm">No orders found</div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="bg-gray-50 border-b border-gray-200 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                    <th className="px-4 py-3">#</th>
-                    <th className="px-4 py-3">Date</th>
-                    <th className="px-4 py-3">Customer</th>
-                    <th className="px-4 py-3">Phone</th>
-                    <th className="px-4 py-3">Location</th>
-                    <th className="px-4 py-3">Producto Principal</th>
-                    <th className="px-4 py-3">Upsell</th>
-                    <th className="px-4 py-3">Total</th>
-                    <th className="px-4 py-3">Status</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100">
-                  {filtered.map((order) => (
-                    <tr key={order.id} className="hover:bg-gray-50 transition">
-                      <td className="px-4 py-3 font-mono text-gray-400 text-xs">#{order.id}</td>
-                      <td className="px-4 py-3 text-gray-600 whitespace-nowrap">
-                        {new Date(order.created_at).toLocaleDateString("en-GB", {
-                          day: "2-digit",
-                          month: "short",
-                          year: "numeric",
-                        })}
-                        <br />
-                        <span className="text-xs text-gray-400">
-                          {new Date(order.created_at).toLocaleTimeString("en-GB", {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 font-medium text-gray-900">
-                        {order.customer_name}
-                        {order.is_upsell_accepted && (
-                          <span className="ml-1 text-xs bg-orange-100 text-orange-700 px-1 py-0.5 rounded">upsell</span>
-                        )}
-                      </td>
-                      <td className="px-4 py-3 text-gray-600">{order.customer_phone}</td>
-                      <td className="px-4 py-3 text-gray-600 text-xs">
-                        <div>{order.customer_state}</div>
-                        {order.customer_city && <div className="text-gray-400">{order.customer_city}</div>}
-                      </td>
-                      <td className="px-4 py-3 text-gray-700 text-xs max-w-[180px]">
-                        {order.items.filter(i => i.product_name.toLowerCase().includes("unidad")).length > 0
-                          ? order.items
-                              .filter(i => i.product_name.toLowerCase().includes("unidad"))
-                              .map(i => (
-                                <div key={i.product_name} className="font-medium">
-                                  {i.product_name}
-                                </div>
-                              ))
-                          : <span className="text-gray-400">—</span>}
-                      </td>
-                      <td className="px-4 py-3 text-xs max-w-[150px]">
-                        {order.items.filter(i => !i.product_name.toLowerCase().includes("unidad")).length > 0
-                          ? order.items
-                              .filter(i => !i.product_name.toLowerCase().includes("unidad"))
-                              .map(i => (
-                                <div key={i.product_name} className="bg-green-100 text-green-800 font-semibold px-2 py-0.5 rounded-full inline-block">
-                                  ✓ {i.product_name}
-                                </div>
-                              ))
-                          : <span className="text-gray-300 text-xs">No</span>}
-                      </td>
-                      <td className="px-4 py-3 font-semibold text-gray-900 whitespace-nowrap">
-                        ${Number(order.total_price).toFixed(2)}
-                      </td>
-                      <td className="px-4 py-3">
-                        <div className="flex flex-col gap-1.5">
-                          {statusBadge(order.status)}
-                          <select
-                            value={order.status}
-                            disabled={updatingId === order.id}
-                            onChange={(e) => updateStatus(order.id, e.target.value)}
-                            className="text-xs border border-gray-200 rounded px-1.5 py-1 bg-white focus:outline-none focus:ring-1 focus:ring-indigo-400 disabled:opacity-50"
-                          >
-                            {STATUSES.map((s) => (
-                              <option key={s.value} value={s.value}>{s.label}</option>
-                            ))}
-                          </select>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+        <div className="space-y-3">
+          <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} onKeyDown={(e) => e.key === "Enter" && handleLogin()} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900" />
+          <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} onKeyDown={(e) => e.key === "Enter" && handleLogin()} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900" />
+          {loginErr && <p className="text-red-500 text-xs">{loginErr}</p>}
+          <button onClick={handleLogin} className="w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-lg py-2.5 text-sm transition">Sign In</button>
         </div>
       </div>
     </div>
   );
+
+  /* DASHBOARD */
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <header className="bg-white border-b border-gray-200 sticky top-0 z-30">
+        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center text-white font-bold text-sm">V</div>
+            <div><h1 className="text-sm font-bold text-gray-900">Vazlina Admin</h1><p className="text-[10px] text-gray-400">COD Dashboard</p></div>
+          </div>
+          <div className="flex items-center gap-2">
+            <button onClick={() => setActiveTab("overview")} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${activeTab === "overview" ? "bg-slate-900 text-white" : "text-gray-600 hover:bg-gray-100"}`}>Overview</button>
+            <button onClick={() => setActiveTab("orders")} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${activeTab === "orders" ? "bg-slate-900 text-white" : "text-gray-600 hover:bg-gray-100"}`}>Orders</button>
+            <button onClick={() => { localStorage.removeItem("vzl_admin_token"); setToken(""); }} className="text-xs text-gray-400 hover:text-red-500 px-2 py-1 transition">Logout</button>
+          </div>
+        </div>
+      </header>
+
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center gap-3">
+          <span className="text-xs font-medium text-gray-500 uppercase">Date Range</span>
+          <input type="date" value={fromDate} onChange={(e) => setFromDate(e.target.value)} className="border border-gray-200 rounded-lg px-3 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-slate-900" />
+          <span className="text-gray-300 text-xs">to</span>
+          <input type="date" value={toDate} onChange={(e) => setToDate(e.target.value)} className="border border-gray-200 rounded-lg px-3 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-slate-900" />
+          <button onClick={() => { fetchMetrics(); fetchOrders(); }} className="bg-slate-900 hover:bg-slate-800 text-white text-xs font-medium px-3 py-1.5 rounded-lg transition">Refresh</button>
+          {loadingMetrics && <span className="text-xs text-gray-400 animate-pulse">Loading...</span>}
+        </div>
+      </div>
+
+      {error && <div className="max-w-7xl mx-auto px-4 mt-4"><div className="bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-2.5 text-xs">{error}</div></div>}
+      {activeTab === "overview" && metrics && (
+        <div className="max-w-7xl mx-auto px-4 py-6 space-y-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+            <KpiCard label="Revenue" value={fmtMoney(metrics.total_revenue)} sub={`${metrics.total_orders} orders`} color="emerald" />
+            <KpiCard label="Orders" value={String(metrics.total_orders)} sub={`${metrics.status_counts.delivered ?? 0} delivered`} color="blue" />
+            <KpiCard label="AOV" value={fmtMoney(metrics.avg_order_value)} sub="avg order" color="indigo" />
+            <KpiCard label="Conversion" value={`${metrics.conversion_rate.toFixed(1)}%`} sub={`${metrics.page_views} views`} color="amber" />
+            <KpiCard label="Upsell Rate" value={`${metrics.upsell_rate.toFixed(1)}%`} sub={fmtMoney(metrics.upsell_revenue)} color="orange" />
+            <KpiCard label="Confirmed" value={fmtMoney(metrics.confirmed_revenue)} sub="paid rev." color="green" />
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <div className="bg-white rounded-xl border border-gray-200 p-5">
+              <h3 className="text-sm font-bold text-gray-800 mb-4">Orders by Status</h3>
+              <div className="flex items-center gap-5">
+                <div className="relative w-28 h-28 shrink-0">
+                  <svg viewBox="0 0 36 36" className="w-28 h-28 -rotate-90">
+                    {(() => { const total = metrics.total_orders || 1; let acc = 0; return STATUSES.map((s) => { const c = metrics.status_counts[s.value] || 0; const pct = (c / total) * 100; const el = (<circle key={s.value} cx="18" cy="18" r="15.9" fill="none" stroke={s.bar} strokeWidth="3.8" strokeDasharray={`${pct} ${100 - pct}`} strokeDashoffset={-acc * 3.6} />); acc += pct; return el; }); })()}
+                  </svg>
+                  <div className="absolute inset-0 flex items-center justify-center"><span className="text-base font-bold text-gray-800">{metrics.total_orders}</span></div>
+                </div>
+                <div className="flex-1 space-y-1.5">
+                  {STATUSES.map((s) => (
+                    <div key={s.value} className="flex items-center gap-2 text-[11px]">
+                      <span className="w-2 h-2 rounded-full" style={{ backgroundColor: s.bar }} />
+                      <span className="text-gray-500 flex-1">{s.label}</span>
+                      <span className="font-bold text-gray-800">{metrics.status_counts[s.value] || 0}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl border border-gray-200 p-5 lg:col-span-2">
+              <h3 className="text-sm font-bold text-gray-800 mb-4">Revenue Trend</h3>
+              <div className="flex items-end gap-[2px] h-36">
+                {(() => { const max = Math.max(...metrics.daily_trend.map((d) => d.revenue), 1); return metrics.daily_trend.map((d, i) => (
+                  <div key={i} className="flex-1 flex flex-col items-center group relative" title={`${d.date}: $${d.revenue.toFixed(0)}`}>
+                    <div className="w-full bg-slate-900 rounded-t transition-all hover:bg-slate-700" style={{ height: `${(d.revenue / max) * 100}%`, minHeight: d.revenue > 0 ? 2 : 1, opacity: d.revenue > 0 ? 1 : 0.15 }} />
+                  </div>
+                )); })()}
+              </div>
+              <div className="flex justify-between text-[9px] text-gray-400 mt-2">
+                <span>{metrics.daily_trend[0]?.date.slice(5)}</span>
+                <span>{metrics.daily_trend[metrics.daily_trend.length - 1]?.date.slice(5)}</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div className="bg-white rounded-xl border border-gray-200 p-5">
+              <h3 className="text-sm font-bold text-gray-800 mb-4">Top Products</h3>
+              <div className="space-y-3">
+                {metrics.top_products.map((p) => { const max = metrics.top_products[0]?.revenue || 1; return (
+                  <div key={p.name}>
+                    <div className="flex items-center justify-between text-[11px] mb-1">
+                      <span className="text-gray-700 font-medium truncate max-w-[220px]">{p.name}</span>
+                      <span className="text-gray-400">{p.count} sold Â· {fmtMoney(p.revenue)}</span>
+                    </div>
+                    <div className="w-full bg-gray-100 rounded-full h-1.5"><div className="bg-slate-900 h-1.5 rounded-full transition-all" style={{ width: `${(p.revenue / max) * 100}%` }} /></div>
+                  </div>
+                ); })}
+                {metrics.top_products.length === 0 && <p className="text-xs text-gray-400 text-center py-4">No product data</p>}
+              </div>
+            </div>
+            <div className="bg-white rounded-xl border border-gray-200 p-5">
+              <h3 className="text-sm font-bold text-gray-800 mb-4">Top States</h3>
+              <div className="space-y-3">
+                {metrics.top_states.map((s) => { const max = metrics.top_states[0]?.orders || 1; return (
+                  <div key={s.state}>
+                    <div className="flex items-center justify-between text-[11px] mb-1">
+                      <span className="text-gray-700 font-medium">{s.state}</span>
+                      <span className="text-gray-400">{s.orders} orders</span>
+                    </div>
+                    <div className="w-full bg-gray-100 rounded-full h-1.5"><div className="bg-emerald-500 h-1.5 rounded-full transition-all" style={{ width: `${(s.orders / max) * 100}%` }} /></div>
+                  </div>
+                ); })}
+                {metrics.top_states.length === 0 && <p className="text-xs text-gray-400 text-center py-4">No state data</p>}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {activeTab === "orders" && (
+        <div className="max-w-7xl mx-auto px-4 py-6 space-y-4">
+          <div className="bg-white rounded-xl border border-gray-200 p-3 flex flex-wrap gap-2 items-center">
+            <input type="text" placeholder="Search name or phone..." value={search} onChange={(e) => setSearch(e.target.value)} className="border border-gray-200 rounded-lg px-3 py-2 text-xs flex-1 min-w-[160px] focus:outline-none focus:ring-1 focus:ring-slate-900" />
+            <select value={filterStatus} onChange={(e) => { setFilterStatus(e.target.value); setTimeout(fetchOrders, 0); }} className="border border-gray-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-slate-900">
+              <option value="">All</option>
+              {STATUSES.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
+            </select>
+            <button onClick={fetchOrders} className="bg-slate-900 hover:bg-slate-800 text-white text-xs font-medium px-3 py-2 rounded-lg transition">Refresh</button>
+            <button onClick={exportCsv} className="border border-gray-200 hover:bg-gray-50 text-gray-700 text-xs font-medium px-3 py-2 rounded-lg transition">Export CSV</button>
+            <label className={`cursor-pointer border border-dashed border-slate-400 hover:bg-slate-50 text-slate-700 text-xs font-medium px-3 py-2 rounded-lg transition ${importing ? "opacity-50" : ""}`}>
+              {importing ? "Importing..." : "Import CSV"}
+              <input type="file" accept=".csv" className="hidden" ref={fileRef} onChange={handleImport} />
+            </label>
+            {importMsg && <span className="text-xs">{importMsg}</span>}
+          </div>
+
+          <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+            {loadingOrders ? (
+              <div className="py-12 text-center text-gray-400 text-sm">Loading...</div>
+            ) : filtered.length === 0 ? (
+              <div className="py-12 text-center text-gray-400 text-sm">No orders found</div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-xs">
+                  <thead>
+                    <tr className="bg-gray-50 border-b border-gray-200 text-left font-semibold text-gray-500 uppercase tracking-wider">
+                      <th className="px-3 py-2.5">#</th>
+                      <th className="px-3 py-2.5">Date</th>
+                      <th className="px-3 py-2.5">Customer</th>
+                      <th className="px-3 py-2.5">Phone</th>
+                      <th className="px-3 py-2.5">State</th>
+                      <th className="px-3 py-2.5">Products</th>
+                      <th className="px-3 py-2.5">Total</th>
+                      <th className="px-3 py-2.5">Status</th>
+                      <th className="px-3 py-2.5"></th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {filtered.map((order) => (
+                      <tr key={order.id} className="hover:bg-gray-50 transition">
+                        <td className="px-3 py-2.5 font-mono text-gray-400">#{order.id}</td>
+                        <td className="px-3 py-2.5 text-gray-600 whitespace-nowrap">
+                          {new Date(order.created_at).toLocaleDateString("en-GB", { day: "2-digit", month: "short" })}
+                          <br /><span className="text-[10px] text-gray-400">{new Date(order.created_at).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })}</span>
+                        </td>
+                        <td className="px-3 py-2.5 font-medium text-gray-900">
+                          {order.customer_name}
+                          {order.is_upsell_accepted && <span className="ml-1 text-[9px] bg-orange-100 text-orange-700 px-1 rounded">upsell</span>}
+                        </td>
+                        <td className="px-3 py-2.5 text-gray-600">{order.customer_phone}</td>
+                        <td className="px-3 py-2.5 text-gray-600">{order.customer_state}</td>
+                        <td className="px-3 py-2.5 text-gray-700 max-w-[200px]">
+                          <div className="truncate">{order.items.map((i) => `${i.product_name} x${i.quantity}`).join(", ")}</div>
+                        </td>
+                        <td className="px-3 py-2.5 font-bold text-gray-900 whitespace-nowrap">${order.total_price.toFixed(2)}</td>
+                        <td className="px-3 py-2.5">{statusBadge(order.status)}</td>
+                        <td className="px-3 py-2.5">
+                          <div className="flex items-center gap-1">
+                            <button onClick={() => setPreviewOrder(order)} className="text-[10px] text-slate-600 hover:text-slate-900 underline">View</button>
+                            <select value={order.status} disabled={updatingId === order.id} onChange={(e) => updateStatus(order.id, e.target.value)} className="text-[10px] border border-gray-200 rounded px-1 py-0.5 bg-white focus:outline-none disabled:opacity-50">
+                              {STATUSES.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
+                            </select>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* PREVIEW MODAL */}
+      {previewOrder && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onClick={() => setPreviewOrder(null)}>
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <div className="p-6 border-b border-gray-100 flex items-center justify-between">
+              <div>
+                <h2 className="text-lg font-bold text-gray-900">Order #{previewOrder.id}</h2>
+                <p className="text-xs text-gray-400">{new Date(previewOrder.created_at).toLocaleString("en-GB")}</p>
+              </div>
+              <button onClick={() => setPreviewOrder(null)} className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-500 transition">&times;</button>
+            </div>
+            <div className="p-6 space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <p className="text-[10px] font-bold text-gray-400 uppercase">Customer</p>
+                  <p className="text-sm font-medium text-gray-900">{previewOrder.customer_name}</p>
+                  <p className="text-xs text-gray-500">{previewOrder.customer_phone}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] font-bold text-gray-400 uppercase">Location</p>
+                  <p className="text-sm text-gray-900">{previewOrder.customer_state}</p>
+                  <p className="text-xs text-gray-500">{previewOrder.customer_city}</p>
+                </div>
+              </div>
+              <div>
+                <p className="text-[10px] font-bold text-gray-400 uppercase">Address</p>
+                <p className="text-sm text-gray-900">{previewOrder.customer_address}</p>
+              </div>
+              <div>
+                <p className="text-[10px] font-bold text-gray-400 uppercase mb-2">Products</p>
+                <div className="space-y-2">
+                  {previewOrder.items.map((item, i) => (
+                    <div key={i} className="flex items-center justify-between bg-gray-50 rounded-lg px-3 py-2">
+                      <span className="text-sm text-gray-800">{item.product_name}</span>
+                      <div className="text-right">
+                        <span className="text-xs text-gray-500">x{item.quantity}</span>
+                        <span className="text-sm font-bold text-gray-900 ml-2">${(item.price_per_item * item.quantity).toFixed(2)}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="border-t border-gray-100 pt-4 flex items-center justify-between">
+                <div>
+                  <p className="text-[10px] font-bold text-gray-400 uppercase">Status</p>
+                  <div className="mt-1">{statusBadge(previewOrder.status)}</div>
+                </div>
+                <div className="text-right">
+                  <p className="text-[10px] font-bold text-gray-400 uppercase">Total</p>
+                  <p className="text-xl font-bold text-gray-900">${previewOrder.total_price.toFixed(2)}</p>
+                  {previewOrder.is_upsell_accepted && <span className="text-[10px] bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full">Upsell Accepted</span>}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }
+
