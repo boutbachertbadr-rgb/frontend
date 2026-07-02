@@ -1,16 +1,18 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "https://api.vazlina.shop";
 
 const STATUSES = [
-  { value: "pending_confirmation", label: "Pending", color: "bg-yellow-100 text-yellow-800" },
-  { value: "confirmed", label: "Confirmed", color: "bg-blue-100 text-blue-800" },
-  { value: "shipped", label: "Shipped", color: "bg-purple-100 text-purple-800" },
-  { value: "delivered", label: "Delivered", color: "bg-green-100 text-green-800" },
-  { value: "cancelled", label: "Cancelled", color: "bg-red-100 text-red-800" },
+  { value: "pending_confirmation", label: "Pending", color: "bg-yellow-100 text-yellow-800", bar: "#EAB308" },
+  { value: "confirmed", label: "Confirmed", color: "bg-blue-100 text-blue-800", bar: "#2563EB" },
+  { value: "shipped", label: "Shipped", color: "bg-purple-100 text-purple-800", bar: "#9333EA" },
+  { value: "delivered", label: "Delivered", color: "bg-green-100 text-green-800", bar: "#16A34A" },
+  { value: "cancelled", label: "Cancelled", color: "bg-red-100 text-red-800", bar: "#DC2626" },
 ];
+
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 interface OrderItem {
   product_name: string;
@@ -190,10 +192,84 @@ export default function AdminPage() {
       )
     : orders;
 
-  const totalRevenue = filtered.reduce((s, o) => s + o.total_price, 0);
-  const byStatus = Object.fromEntries(
-    STATUSES.map((s) => [s.value, filtered.filter((o) => o.status === s.value).length])
-  );
+  /* ---- ANALYTICS ---- */
+  const analytics = useMemo(() => {
+    const all = orders;
+    const totalOrders = all.length;
+    const totalRevenue = all.reduce((s, o) => s + o.total_price, 0);
+    const avgOrderValue = totalOrders ? totalRevenue / totalOrders : 0;
+
+    const upsellOrders = all.filter((o) => o.is_upsell_accepted);
+    const upsellRate = totalOrders ? (upsellOrders.length / totalOrders) * 100 : 0;
+    const upsellRevenue = upsellOrders.reduce((s, o) => s + o.total_price, 0);
+
+    const confirmedRevenue = all
+      .filter((o) => o.status === "confirmed" || o.status === "shipped" || o.status === "delivered")
+      .reduce((s, o) => s + o.total_price, 0);
+
+    const byStatus = Object.fromEntries(
+      STATUSES.map((s) => [s.value, all.filter((o) => o.status === s.value).length])
+    );
+
+    // Product breakdown
+    const productStats: Record<string, { count: number; revenue: number }> = {};
+    all.forEach((o) => {
+      o.items.forEach((i) => {
+        const name = i.product_name;
+        if (!productStats[name]) productStats[name] = { count: 0, revenue: 0 };
+        productStats[name].count += i.quantity;
+        productStats[name].revenue += i.price_per_item * i.quantity;
+      });
+    });
+    const topProducts = Object.entries(productStats)
+      .sort((a, b) => b[1].revenue - a[1].revenue)
+      .slice(0, 5);
+
+    // Daily revenue trend (last 30 days)
+    const today = new Date();
+    const daily: Record<string, number> = {};
+    for (let i = 29; i >= 0; i--) {
+      const d = new Date(today);
+      d.setDate(d.getDate() - i);
+      daily[d.toISOString().slice(0, 10)] = 0;
+    }
+    all.forEach((o) => {
+      const d = o.created_at.slice(0, 10);
+      if (daily[d] !== undefined) daily[d] += o.total_price;
+    });
+    const dailyTrend = Object.entries(daily).map(([date, revenue]) => ({
+      date,
+      day: parseInt(date.slice(8, 10)),
+      revenue,
+    }));
+
+    // Revenue by month
+    const monthly: Record<string, number> = {};
+    all.forEach((o) => {
+      const m = o.created_at.slice(0, 7);
+      monthly[m] = (monthly[m] || 0) + o.total_price;
+    });
+    const monthlyTrend = Object.entries(monthly)
+      .sort()
+      .slice(-6)
+      .map(([m, revenue]) => ({
+        label: MONTHS[parseInt(m.slice(5, 7)) - 1] + " '" + m.slice(2, 4),
+        revenue,
+      }));
+
+    return {
+      totalOrders,
+      totalRevenue,
+      avgOrderValue,
+      upsellRate,
+      upsellRevenue,
+      confirmedRevenue,
+      byStatus,
+      topProducts,
+      dailyTrend,
+      monthlyTrend,
+    };
+  }, [orders]);
 
   if (!key) {
     return (
@@ -241,17 +317,188 @@ export default function AdminPage() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 py-6 space-y-6">
-        {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
-          <div className="col-span-2 bg-white rounded-xl border border-gray-200 p-4">
-            <p className="text-xs text-gray-500 mb-1">Total Revenue</p>
-            <p className="text-2xl font-bold text-gray-900">${totalRevenue.toFixed(2)}</p>
-            <p className="text-xs text-gray-400">{filtered.length} orders</p>
+        {/* KPI Cards */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="bg-white rounded-xl border border-gray-200 p-5">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-xs font-medium text-gray-500 uppercase">Total Revenue</p>
+              <div className="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-600 text-lg font-bold">$</div>
+            </div>
+            <p className="text-2xl font-bold text-gray-900">${analytics.totalRevenue.toFixed(0)}</p>
+            <p className="text-xs text-gray-400 mt-1">{analytics.totalOrders} orders</p>
           </div>
+          <div className="bg-white rounded-xl border border-gray-200 p-5">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-xs font-medium text-gray-500 uppercase">Avg. Order</p>
+              <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+              </div>
+            </div>
+            <p className="text-2xl font-bold text-gray-900">${analytics.avgOrderValue.toFixed(2)}</p>
+            <p className="text-xs text-gray-400 mt-1">Per order</p>
+          </div>
+          <div className="bg-white rounded-xl border border-gray-200 p-5">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-xs font-medium text-gray-500 uppercase">Upsell Rate</p>
+              <div className="w-8 h-8 rounded-lg bg-orange-50 flex items-center justify-center text-orange-600">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+              </div>
+            </div>
+            <p className="text-2xl font-bold text-gray-900">{analytics.upsellRate.toFixed(1)}%</p>
+            <p className="text-xs text-gray-400 mt-1">+${analytics.upsellRevenue.toFixed(0)} upsell revenue</p>
+          </div>
+          <div className="bg-white rounded-xl border border-gray-200 p-5">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-xs font-medium text-gray-500 uppercase">Confirmed Rev.</p>
+              <div className="w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center text-green-600">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7"/></svg>
+              </div>
+            </div>
+            <p className="text-2xl font-bold text-gray-900">${analytics.confirmedRevenue.toFixed(0)}</p>
+            <p className="text-xs text-gray-400 mt-1">Confirmed/Shipped/Delivered</p>
+          </div>
+        </div>
+
+        {/* Charts Row */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          {/* Status Donut */}
+          <div className="bg-white rounded-xl border border-gray-200 p-5">
+            <h3 className="text-sm font-semibold text-gray-700 mb-4">Orders by Status</h3>
+            <div className="flex items-center gap-6">
+              <div className="relative w-32 h-32 shrink-0">
+                <svg viewBox="0 0 36 36" className="w-32 h-32 transform -rotate-90">
+                  {(() => {
+                    const total = analytics.totalOrders || 1;
+                    let acc = 0;
+                    return STATUSES.map((s) => {
+                      const count = analytics.byStatus[s.value] || 0;
+                      const pct = (count / total) * 100;
+                      const dash = `${pct} ${100 - pct}`;
+                      const el = (
+                        <circle
+                          key={s.value}
+                          cx="18" cy="18" r="15.9"
+                          fill="none"
+                          stroke={s.bar}
+                          strokeWidth="3.8"
+                          strokeDasharray={dash}
+                          strokeDashoffset={-acc * 3.6 / 100 * 100}
+                          className="transition-all"
+                        />
+                      );
+                      acc += pct;
+                      return el;
+                    });
+                  })()}
+                </svg>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="text-lg font-bold text-gray-700">{analytics.totalOrders}</span>
+                </div>
+              </div>
+              <div className="flex-1 space-y-2">
+                {STATUSES.map((s) => (
+                  <div key={s.value} className="flex items-center gap-2 text-xs">
+                    <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: s.bar }} />
+                    <span className="text-gray-600 flex-1">{s.label}</span>
+                    <span className="font-semibold text-gray-900">{analytics.byStatus[s.value] || 0}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Revenue Trend (Daily) */}
+          <div className="bg-white rounded-xl border border-gray-200 p-5 lg:col-span-2">
+            <h3 className="text-sm font-semibold text-gray-700 mb-4">Revenue Trend (Last 30 Days)</h3>
+            {analytics.dailyTrend.length > 0 && (
+              <div className="flex items-end gap-1 h-40">
+                {(() => {
+                  const max = Math.max(...analytics.dailyTrend.map((d) => d.revenue), 1);
+                  return analytics.dailyTrend.map((d, i) => (
+                    <div key={i} className="flex-1 flex flex-col items-center group relative">
+                      <div
+                        className="w-full bg-indigo-500 rounded-t transition-all hover:bg-indigo-400"
+                        style={{ height: `${(d.revenue / max) * 100}%`, minHeight: d.revenue > 0 ? 4 : 1 }}
+                        title={`${d.date}: $${d.revenue.toFixed(2)}`}
+                      />
+                      {i % 5 === 0 && (
+                        <span className="text-[9px] text-gray-400 mt-1">{d.day}</span>
+                      )}
+                    </div>
+                  ));
+                })()}
+              </div>
+            )}
+            <div className="flex justify-between text-[10px] text-gray-400 mt-2">
+              <span>{analytics.dailyTrend[0]?.date}</span>
+              <span>{analytics.dailyTrend[analytics.dailyTrend.length - 1]?.date}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Row */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          {/* Top Products */}
+          <div className="bg-white rounded-xl border border-gray-200 p-5">
+            <h3 className="text-sm font-semibold text-gray-700 mb-4">Top Products</h3>
+            <div className="space-y-3">
+              {analytics.topProducts.map(([name, stats], i) => {
+                const max = analytics.topProducts[0][1].revenue;
+                return (
+                  <div key={name}>
+                    <div className="flex items-center justify-between text-xs mb-1">
+                      <span className="text-gray-700 font-medium truncate max-w-[200px]">{name}</span>
+                      <span className="text-gray-500">${stats.revenue.toFixed(0)} ({stats.count} sold)</span>
+                    </div>
+                    <div className="w-full bg-gray-100 rounded-full h-2">
+                      <div
+                        className="bg-indigo-500 h-2 rounded-full transition-all"
+                        style={{ width: `${(stats.revenue / max) * 100}%` }}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+              {analytics.topProducts.length === 0 && (
+                <p className="text-sm text-gray-400 py-4 text-center">No product data yet</p>
+              )}
+            </div>
+          </div>
+
+          {/* Monthly Revenue */}
+          <div className="bg-white rounded-xl border border-gray-200 p-5">
+            <h3 className="text-sm font-semibold text-gray-700 mb-4">Revenue by Month</h3>
+            <div className="space-y-3">
+              {analytics.monthlyTrend.map((m, i) => {
+                const max = Math.max(...analytics.monthlyTrend.map((x) => x.revenue), 1);
+                return (
+                  <div key={m.label}>
+                    <div className="flex items-center justify-between text-xs mb-1">
+                      <span className="text-gray-700 font-medium">{m.label}</span>
+                      <span className="text-gray-500">${m.revenue.toFixed(0)}</span>
+                    </div>
+                    <div className="w-full bg-gray-100 rounded-full h-2">
+                      <div
+                        className="bg-emerald-500 h-2 rounded-full transition-all"
+                        style={{ width: `${(m.revenue / max) * 100}%` }}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+              {analytics.monthlyTrend.length === 0 && (
+                <p className="text-sm text-gray-400 py-4 text-center">No monthly data yet</p>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Compact Status Counts */}
+        <div className="grid grid-cols-5 gap-3">
           {STATUSES.map((s) => (
-            <div key={s.value} className="bg-white rounded-xl border border-gray-200 p-4">
-              <p className="text-xs text-gray-500 mb-1">{s.label}</p>
-              <p className="text-2xl font-bold text-gray-900">{byStatus[s.value] ?? 0}</p>
+            <div key={s.value} className="bg-white rounded-xl border border-gray-200 p-3 text-center">
+              <p className="text-2xl font-bold text-gray-900">{analytics.byStatus[s.value] || 0}</p>
+              <p className="text-[10px] text-gray-500 uppercase mt-0.5">{s.label}</p>
             </div>
           ))}
         </div>
