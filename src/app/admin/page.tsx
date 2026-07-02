@@ -156,9 +156,9 @@ export default function AdminPage() {
         .map(i => i.product_name).join(" + ") || "No";
 
     const rows = [
-      ["Fecha", "Order ID", "Nombre Cliente", "Teléfono", "Estado", "Ciudad", "Dirección", "Producto Principal", "Upsell (Sí/No)", "Producto Upsell", "Total a Cobrar", "Status"],
+      ["Date", "Order ID", "Customer Name", "Phone", "State", "City", "Address", "Main Product", "Upsell (Yes/No)", "Upsell Product", "Total to Collect", "Status"],
       ...orders.map((o) => [
-        new Date(o.created_at).toLocaleDateString("es-MX"),
+        new Date(o.created_at).toLocaleDateString("en-GB"),
         `#${o.id}`,
         o.customer_name,
         o.customer_phone,
@@ -166,7 +166,7 @@ export default function AdminPage() {
         o.customer_city,
         o.customer_address,
         mainProd(o),
-        o.is_upsell_accepted ? "Sí" : "No",
+        o.is_upsell_accepted ? "Yes" : "No",
         upsellProd(o),
         `$${Number(o.total_price).toFixed(2)} MXN`,
         o.status,
