@@ -1,3 +1,10 @@
 [build]
   command = "npm run build"
   publish = ".next"
+
+# SPA fallback — rewrite all paths to let Next.js handle routing
+[[redirects]]
+  from = "/*"
+  to = "/"
+  status = 200
+  force = true
