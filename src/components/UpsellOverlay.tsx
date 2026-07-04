@@ -81,7 +81,11 @@ export default function UpsellOverlay() {
       price_per_item: i.pricePerItem,
     }));
 
-    const hasUpsell = upsellItems.length > 0;
+     const hasUpsell = upsellItems.length > 0;
+
+    const orderId = Math.floor(Math.random() * 6700) + 800;
+    router.push(`/thank-you?order_id=${orderId}&total=${total.toFixed(2)}&upsell=${hasUpsell}`);
+    clearCart();
 
     createOrder({
       customer_name: customerForm?.name ?? "",
@@ -93,24 +97,10 @@ export default function UpsellOverlay() {
       is_upsell_accepted: hasUpsell,
       total_price: total,
       browser_event_id: eventId,
-    const orderId = Math.floor(Math.random() * 6700) + 800;
-router.push(`/thank-you?order_id=${orderId}&total=${total.toFixed(2)}&upsell=${hasUpsell}`);
-clearCart();
-
-createOrder({
-  customer_name: customerForm?.name ?? "",
-  customer_phone: customerForm?.phone ?? "",
-  customer_state: customerForm?.state ?? "",
-  customer_city: customerForm?.city ?? "",
-  customer_address: customerForm?.address ?? "",
-  items: orderItems,
-  is_upsell_accepted: hasUpsell,
-  total_price: total,
-  browser_event_id: eventId,
-}).then(() => {
-  trackPurchase(total, eventId);
-}).catch(() => {
-});
+    }).then(() => {
+      trackPurchase(total, eventId);
+    }).catch(() => {
+    });
   }
 
   if (!ui.isUpsellOpen) return null;
