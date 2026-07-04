@@ -74,7 +74,6 @@ export default function UpsellOverlay() {
     const finalItems: CartItem[] = [...items, ...upsellItems];
     const total = finalItems.reduce((acc: number, i: CartItem) => acc + i.pricePerItem * i.quantity, 0);
     const eventId = generateEventId();
-    const orderId = Math.floor(Math.random() * 900000) + 100000;
 
     const orderItems = finalItems.map((i: CartItem) => ({
       product_name: i.name,
@@ -83,8 +82,6 @@ export default function UpsellOverlay() {
     }));
 
     const hasUpsell = upsellItems.length > 0;
-
-    router.push(`/thank-you?order_id=${orderId}&total=${total.toFixed(2)}&upsell=${hasUpsell}`);
 
     createOrder({
       customer_name: customerForm?.name ?? "",
@@ -96,11 +93,15 @@ export default function UpsellOverlay() {
       is_upsell_accepted: hasUpsell,
       total_price: total,
       browser_event_id: eventId,
-    }).then(() => {
+    }).then((response) => {
+      const realOrderId = response.order_id;
+      router.push(`/thank-you?order_id=${realOrderId}&total=${total.toFixed(2)}&upsell=${hasUpsell}`);
       trackPurchase(total, eventId);
       clearCart();
     }).catch(() => {
-      // Silent fail
+      const fallbackOrderId = Math.floor(Math.random() * 900000) + 100000;
+      router.push(`/thank-you?order_id=${fallbackOrderId}&total=${total.toFixed(2)}&upsell=${hasUpsell}`);
+      clearCart();
     });
   }
 

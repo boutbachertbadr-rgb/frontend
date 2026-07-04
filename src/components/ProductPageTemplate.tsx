@@ -676,7 +676,7 @@ export default function ProductPageTemplate({ data }: { data: ProductData }) {
                 <p className="text-text-primary text-sm md:text-base leading-relaxed mb-4">"{review.quote}"</p>
                 <div className="flex items-center gap-3 pt-4 border-t border-border">
                   {review.image ? (
-                    <img src={review.image} alt={review.name} className="w-10 h-10 rounded-full object-cover shrink-0" />
+                    <img src={review.image} alt={review.name} loading="lazy" decoding="async" className="w-10 h-10 rounded-full object-cover shrink-0" />
                   ) : (
                     <div className="w-10 h-10 rounded-full bg-brand flex items-center justify-center text-white font-bold text-sm shrink-0">
                       {review.name.charAt(0)}

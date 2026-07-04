@@ -206,7 +206,23 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "https://api.vazlina.shop";
 /* ═══════════════ PAGE ═══════════════ */
 export default function Home() {
   useEffect(() => {
-    fetch(`${API_URL}/track/view`, { method: "POST" }).catch(() => {});
+    const params = new URLSearchParams(window.location.search);
+    let source = params.get("utm_source") || "";
+    if (!source) {
+      const ref = document.referrer;
+      if (!ref) source = "direct";
+      else if (ref.includes("facebook.com") || ref.includes("fb.com") || ref.includes("fb.me")) source = "facebook";
+      else if (ref.includes("tiktok.com")) source = "tiktok";
+      else if (ref.includes("instagram.com")) source = "instagram";
+      else if (ref.includes("google.com")) source = "google";
+      else if (ref.includes("youtube.com")) source = "youtube";
+      else source = "other";
+    }
+    fetch(`${API_URL}/track/view`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ source }),
+    }).catch(() => {});
   }, []);
 
   const productsRef = useRef<HTMLDivElement>(null);
@@ -505,7 +521,7 @@ export default function Home() {
                 <p className="text-text-primary text-sm md:text-base leading-relaxed mb-4">{t.quote}</p>
                 <div className="flex items-center gap-3 pt-4 border-t border-border">
                   {t.image ? (
-                    <img src={t.image} alt={t.name} className="w-10 h-10 rounded-full object-cover flex-shrink-0" />
+                    <img src={t.image} alt={t.name} loading="lazy" decoding="async" className="w-10 h-10 rounded-full object-cover flex-shrink-0" />
                   ) : (
                     <div className="w-10 h-10 rounded-full bg-brand flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
                       {t.name.charAt(0)}
