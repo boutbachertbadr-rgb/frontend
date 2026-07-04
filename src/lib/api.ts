@@ -1,4 +1,4 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "https://api.vazlina.shop";
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
 export interface OrderItem {
   product_name: string;
@@ -26,7 +26,7 @@ export interface OrderResponse {
 
 export async function createOrder(payload: CreateOrderPayload): Promise<OrderResponse> {
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 15000);
+  const timeoutId = setTimeout(() => controller.abort(), 3000);
 
   try {
     const res = await fetch(`${API_URL}/orders/`, {
