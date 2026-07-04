@@ -74,7 +74,9 @@ export default function UpsellOverlay() {
     const finalItems: CartItem[] = [...items, ...upsellItems];
     const total = finalItems.reduce((acc: number, i: CartItem) => acc + i.pricePerItem * i.quantity, 0);
     const eventId = generateEventId();
-    const orderId = Math.floor(Math.random() * 6700) + 800;
+    const lastOrderId = parseInt(localStorage.getItem("vazlina_last_order_id") ?? "799");
+const orderId = lastOrderId + 1;
+localStorage.setItem("vazlina_last_order_id", String(orderId));
     const orderItems = finalItems.map((i: CartItem) => ({
       product_name: i.name,
       quantity: i.quantity,
