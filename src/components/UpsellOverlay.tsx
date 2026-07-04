@@ -83,7 +83,6 @@ export default function UpsellOverlay() {
 
      const hasUpsell = upsellItems.length > 0;
 
-    const orderId = Math.floor(Math.random() * 6700) + 800;
     router.push(`/thank-you?order_id=${orderId}&total=${total.toFixed(2)}&upsell=${hasUpsell}`);
     clearCart();
 
