@@ -6,7 +6,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useCartStore } from "@/store/cart";
 import { MX_PHONE_REGEX } from "@/lib/phone";
-
+import { useRouter } from "next/navigation";
+import { getAvailableUpsells } from "@/lib/upsell";
+import { generateEventId, trackPurchase } from "@/lib/pixels";
+import { createOrder } from "@/lib/api";
 const schema = z.object({
   name: z.string().min(2, "Ingresa tu nombre completo."),
   phone: z.string().regex(MX_PHONE_REGEX, "Número inválido. Ingresa 10 dígitos MX."),
@@ -18,7 +21,8 @@ const schema = z.object({
 type CheckoutForm = z.infer<typeof schema>;
 
 export default function CheckoutModal() {
-  const { items, ui, closeCheckout, openUpsell, subtotal } = useCartStore();
+  const { items, ui, closeCheckout, openUpsell, subtotal, clearCart } = useCartStore();
+const router = useRouter();
 
   const {
     register,
@@ -33,8 +37,39 @@ export default function CheckoutModal() {
   if (!ui.isCheckoutOpen) return null;
 
   const onSubmit = (data: CheckoutForm) => {
+  const available = getAvailableUpsells(items);
+  if (available.length === 0) {
+    // Client khad koulchi — matel3ch popup
+    const lastOrderId = parseInt(localStorage.getItem("vazlina_last_order_id") ?? "799");
+    const orderId = lastOrderId + 1;
+    localStorage.setItem("vazlina_last_order_id", String(orderId));
+    const eventId = generateEventId();
+    const total = subtotal();
+    const orderItems = items.map((i) => ({
+      product_name: i.name,
+      quantity: i.quantity,
+      price_per_item: i.pricePerItem,
+    }));
+    router.push(`/thank-you?order_id=${orderId}&total=${total.toFixed(2)}&upsell=false`);
+    clearCart();
+    createOrder({
+      customer_name: data.name,
+      customer_phone: data.phone,
+      customer_state: data.state,
+      customer_city: data.city,
+      customer_address: data.address,
+      items: orderItems,
+      is_upsell_accepted: false,
+      total_price: total,
+      browser_event_id: eventId,
+    }).then(() => {
+      trackPurchase(total, eventId);
+    }).catch(() => {});
+  } else {
+    // Kayen products baqiyn — 7el popup
     openUpsell({ name: data.name, phone: data.phone, state: data.state, city: data.city, address: data.address });
-  };
+  }
+};
 
   return (
     <>
