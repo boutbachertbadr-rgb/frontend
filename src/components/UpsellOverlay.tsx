@@ -22,6 +22,12 @@ export default function UpsellOverlay() {
 
   useEffect(() => {
     if (!ui.isUpsellOpen) return;
+
+    if (availableUpsells.length === 0) {
+      closeUpsell();
+      return;
+    }
+
     setIsProcessing(false);
     setSeconds(UPSELL_SECONDS);
     // Auto-select all available by default
@@ -74,7 +80,7 @@ export default function UpsellOverlay() {
     const finalItems: CartItem[] = [...items, ...upsellItems];
     const total = finalItems.reduce((acc: number, i: CartItem) => acc + i.pricePerItem * i.quantity, 0);
     const eventId = generateEventId();
-    const orderId = Math.floor(Math.random() * 7500) + 1000;
+    const orderId = Math.floor(Math.random() * 6700) + 800;
 
     const orderItems = finalItems.map((i: CartItem) => ({
       product_name: i.name,
