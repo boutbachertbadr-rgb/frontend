@@ -18,6 +18,7 @@ export default function PixelScripts() {
             (window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
             fbq('init','${FB_PIXEL_ID}');
             fbq('track','PageView');
+            window.__fbpid='${FB_PIXEL_ID}';
           `}
         </Script>
       )}

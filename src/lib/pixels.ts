@@ -3,6 +3,7 @@ declare global {
   interface Window {
     fbq?: (...args: any[]) => void;
     ttq?: { track: (...args: any[]) => void; load: (id: string) => void; page: () => void; identify: (params: any) => void };
+    __fbpid?: string;
   }
 }
 
@@ -45,10 +46,14 @@ export function trackPurchase(value: number, eventId: string, phone?: string): v
     window.ttq?.track("CompletePayment", { currency: "MXN", value, content_id: "purchase" });
   };
 
-  if (phone && window.ttq?.identify) {
+  if (phone) {
     const clean = phone.replace(/\D/g, "");
     sha256(clean)
-      .then(hashed => { window.ttq?.identify({ phone_number: hashed }); fireTrack(); })
+      .then(hashed => {
+        if (window.__fbpid) window.fbq?.("init", window.__fbpid, { ph: hashed });
+        window.ttq?.identify?.({ phone_number: hashed });
+        fireTrack();
+      })
       .catch(fireTrack);
   } else {
     fireTrack();
