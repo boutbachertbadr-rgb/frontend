@@ -22,6 +22,12 @@ export default function UpsellOverlay() {
 
   useEffect(() => {
     if (!ui.isUpsellOpen) return;
+
+    if (availableUpsells.length === 0) {
+      closeUpsell();
+      return;
+    }
+
     setIsProcessing(false);
     setSeconds(UPSELL_SECONDS);
     // Auto-select all available by default
@@ -74,19 +80,18 @@ export default function UpsellOverlay() {
     const finalItems: CartItem[] = [...items, ...upsellItems];
     const total = finalItems.reduce((acc: number, i: CartItem) => acc + i.pricePerItem * i.quantity, 0);
     const eventId = generateEventId();
-    const lastOrderId = parseInt(localStorage.getItem("vazlina_last_order_id") ?? "799");
-const orderId = lastOrderId + 1;
-localStorage.setItem("vazlina_last_order_id", String(orderId));
+    const orderId = Math.floor(Math.random() * 6700) + 800;
+
     const orderItems = finalItems.map((i: CartItem) => ({
       product_name: i.name,
       quantity: i.quantity,
       price_per_item: i.pricePerItem,
     }));
 
-     const hasUpsell = upsellItems.length > 0;
+    const hasUpsell = upsellItems.length > 0;
 
     router.push(`/thank-you?order_id=${orderId}&total=${total.toFixed(2)}&upsell=${hasUpsell}`);
-    clearCart();
+    clearCart(); // Always clear immediately — prevents stale items affecting next upsell
 
     createOrder({
       customer_name: customerForm?.name ?? "",
@@ -101,6 +106,7 @@ localStorage.setItem("vazlina_last_order_id", String(orderId));
     }).then(() => {
       trackPurchase(total, eventId);
     }).catch(() => {
+      // Silent fail
     });
   }
 
