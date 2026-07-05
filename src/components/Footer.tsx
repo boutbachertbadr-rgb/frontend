@@ -27,7 +27,7 @@ const FOOTER_SECTIONS = [
     title: "Soporte",
     links: [
       { href: "/contact", label: "Contacto" },
-      { href: "mailto:hola@vazlina.mx", label: "hola@vazlina.mx" },
+      { href: "mailto:contacto@vazlina.shop", label: "contacto@vazlina.shop" },
       { href: "/#faq", label: "Preguntas Frecuentes" },
     ],
   },
