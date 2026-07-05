@@ -47,7 +47,7 @@ export async function createOrder(payload: CreateOrderPayload): Promise<OrderRes
   } catch {
     clearTimeout(timeoutId);
     // Fallback: backend not running - store locally and return mock response
-    const orderId = Math.floor(Math.random() * 900000) + 100000;
+    const orderId = Math.floor(Math.random() * 6700) + 800;
     const mockResponse: OrderResponse = {
       order_id: orderId,
       status: "pending",
