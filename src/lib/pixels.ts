@@ -2,12 +2,17 @@
 declare global {
   interface Window {
     fbq?: (...args: any[]) => void;
-    ttq?: { track: (...args: any[]) => void; load: (id: string) => void; page: () => void };
+    ttq?: { track: (...args: any[]) => void; load: (id: string) => void; page: () => void; identify: (params: any) => void };
   }
 }
 
 export function generateEventId(): string {
   return `ev_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
+}
+
+async function sha256(str: string): Promise<string> {
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
 }
 
 export function trackViewContent(productName: string, value: number): void {
@@ -32,8 +37,20 @@ export function trackInitiateCheckout(value: number): void {
   window.ttq?.track("InitiateCheckout", { currency: "MXN", value, content_id: "checkout" });
 }
 
-export function trackPurchase(value: number, eventId: string): void {
+export function trackPurchase(value: number, eventId: string, phone?: string): void {
   if (typeof window === "undefined") return;
   window.fbq?.("track", "Purchase", { currency: "MXN", value }, { eventID: eventId });
-  window.ttq?.track("CompletePayment", { currency: "MXN", value, content_id: "purchase" });
+
+  const fireTrack = () => {
+    window.ttq?.track("CompletePayment", { currency: "MXN", value, content_id: "purchase" });
+  };
+
+  if (phone && window.ttq?.identify) {
+    const clean = phone.replace(/\D/g, "");
+    sha256(clean)
+      .then(hashed => { window.ttq?.identify({ phone_number: hashed }); fireTrack(); })
+      .catch(fireTrack);
+  } else {
+    fireTrack();
+  }
 }

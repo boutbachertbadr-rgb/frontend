@@ -64,7 +64,7 @@ export default function CheckoutModal() {
         total_price: total,
         browser_event_id: eventId,
       }).then(() => {
-        trackPurchase(total, eventId);
+        trackPurchase(total, eventId, data.phone);
       }).catch(() => {});
     } else {
       openUpsell({ name: data.name, phone: data.phone, state: data.state, city: data.city, address: data.address });

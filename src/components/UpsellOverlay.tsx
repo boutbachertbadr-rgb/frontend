@@ -104,7 +104,7 @@ export default function UpsellOverlay() {
       total_price: total,
       browser_event_id: eventId,
     }).then(() => {
-      trackPurchase(total, eventId);
+      trackPurchase(total, eventId, customerForm?.phone ?? undefined);
     }).catch(() => {
       // Silent fail
     });
