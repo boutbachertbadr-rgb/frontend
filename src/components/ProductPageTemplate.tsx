@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -257,6 +257,9 @@ export default function ProductPageTemplate({ data }: { data: ProductData }) {
                 src={selectedImage}
                 alt={data.name}
                 className="absolute inset-0 w-full h-full object-cover"
+                fetchPriority="high"
+                loading="eager"
+                decoding="async"
               />
             </div>
             <div className="mb-3 md:hidden">
@@ -271,7 +274,7 @@ export default function ProductPageTemplate({ data }: { data: ProductData }) {
                   onClick={() => setSelectedImage(thumb)}
                   className={`relative w-20 h-20 bg-subtle rounded-lg overflow-hidden flex-shrink-0 border-2 cursor-pointer transition-all ${selectedImage === thumb ? 'border-brand' : 'border-transparent hover:border-brand'}`}
                 >
-                  <Image src={thumb} alt={`${data.name} ${i + 1}`} fill className="object-cover" unoptimized />
+                  <Image src={thumb} alt={`${data.name} ${i + 1}`} fill className="object-cover" unoptimized priority={i === 0} />
                 </div>
               ))}
             </div>
