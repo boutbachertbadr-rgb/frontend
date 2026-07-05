@@ -17,23 +17,23 @@ export function trackViewContent(productName: string, value: number): void {
     currency: "MXN",
     value,
   });
-  window.ttq?.track("ViewContent", { description: productName, currency: "MXN", value });
+  window.ttq?.track("ViewContent", { description: productName, currency: "MXN", value, content_id: productName });
 }
 
 export function trackAddToCart(productName: string, value: number): void {
   if (typeof window === "undefined") return;
   window.fbq?.("track", "AddToCart", { content_name: productName, currency: "MXN", value });
-  window.ttq?.track("AddToCart", { description: productName, currency: "MXN", value });
+  window.ttq?.track("AddToCart", { description: productName, currency: "MXN", value, content_id: productName });
 }
 
 export function trackInitiateCheckout(value: number): void {
   if (typeof window === "undefined") return;
   window.fbq?.("track", "InitiateCheckout", { currency: "MXN", value });
-  window.ttq?.track("InitiateCheckout", { currency: "MXN", value });
+  window.ttq?.track("InitiateCheckout", { currency: "MXN", value, content_id: "checkout" });
 }
 
 export function trackPurchase(value: number, eventId: string): void {
   if (typeof window === "undefined") return;
   window.fbq?.("track", "Purchase", { currency: "MXN", value }, { eventID: eventId });
-  window.ttq?.track("CompletePayment", { currency: "MXN", value });
+  window.ttq?.track("CompletePayment", { currency: "MXN", value, content_id: "purchase" });
 }
