@@ -3,7 +3,7 @@
 import Script from "next/script";
 
 const FB_PIXEL_ID = process.env.NEXT_PUBLIC_FACEBOOK_PIXEL_ID ?? "";
-const TT_PIXEL_ID = process.env.NEXT_PUBLIC_TIKTOK_PIXEL_ID ?? "D9578H3C77UDPAPRHJD0";
+const TT_PIXEL_ID = "D9578H3C77UDPAPRHJD0";
 
 export default function PixelScripts() {
   return (
