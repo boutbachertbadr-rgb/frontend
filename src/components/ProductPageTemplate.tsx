@@ -323,7 +323,7 @@ export default function ProductPageTemplate({ data }: { data: ProductData }) {
               {/* Price pill */}
               <div className="bg-subtle rounded-full px-2.5 py-1 shrink-0">
                 <span className="text-[11px] text-text-secondary">
-                  <span className="font-bold text-text-primary">${data.priceFrom.toLocaleString()} MXN</span>
+                  <span className="font-bold text-text-primary">₡{(data.priceFrom * 28).toLocaleString("es-CR")} CRC</span>
                 </span>
               </div>
 
@@ -379,12 +379,12 @@ export default function ProductPageTemplate({ data }: { data: ProductData }) {
                       <div>
                         <p className="font-bold text-text-primary">{offer.label}</p>
                         <p className={`text-xs font-semibold mt-0.5 ${offer.savings ? 'text-brand' : 'invisible'}`}>
-                          {offer.savings ? `Ahorras $${offer.savings} MXN` : 'Ahorras'}
+                          {offer.savings ? `Ahorras ₡${((offer.savings ?? 0) * 28).toLocaleString("es-CR")} CRC` : 'Ahorras'}
                         </p>
                       </div>
                     </div>
                     <p className="font-heading font-bold text-xl text-text-primary pt-1">
-                      ${offer.price} MXN
+                      ₡{(offer.price * 28).toLocaleString("es-CR")} CRC
                     </p>
                   </div>
                 </button>
@@ -1009,7 +1009,7 @@ export default function ProductPageTemplate({ data }: { data: ProductData }) {
 
                 <div className="mt-4 flex items-center justify-between">
                   <p className="font-heading font-bold text-lg text-text-primary">
-                    Desde ${product.price} MXN
+                    Desde ₡{(product.price * 28).toLocaleString("es-CR")} CRC
                   </p>
                   <Link
                     href={`/products/${product.slug}`}

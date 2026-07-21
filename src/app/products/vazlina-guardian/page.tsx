@@ -65,7 +65,7 @@ const guardianData: ProductData = {
       },
     },
     {
-      problem: "Compré un cargador 'de marca' por $800 MXN y mi batería sigue muriendo. Pagé por un logo, no por protección. Dinero tirado. Confianza rota.",
+      problem: "Compré un cargador 'de marca' por ₡22,400 CRC y mi batería sigue muriendo. Pagé por un logo, no por protección. Dinero tirado. Confianza rota.",
       solution: {
         title: "Pagaste por promesas. Guardián te da PRUEBAS.",
         desc: "Marcas caras te venden logos. Nosotros te vendemos velocidad que puedes medir: hasta 140W de carga rápida, con dos modos inteligentes que se adaptan a lo que cargas. El LED te muestra en tiempo real que la protección está trabajando. No es marketing. Es física.",
@@ -130,7 +130,7 @@ const guardianData: ProductData = {
     },
   ],
   timelineSummary:
-    "Una unidad protege tu dispositivo. Dos o tres protegen a toda tu familia, y ahorras hasta $1,048 MXN.",
+    "Una unidad protege tu dispositivo. Dos o tres protegen a toda tu familia, y ahorras hasta ₡29,344 CRC.",
   reviews: [
     {
       name: "Roberto Méndez",
@@ -163,7 +163,7 @@ const guardianData: ProductData = {
   comparisons: [
     {
       name: "Cargadores genéricos",
-      priceRange: "$50-$150 MXN",
+      priceRange: "₡1,400-₡4,200 CRC",
       problems: [
         "Se calientan peligrosamente al lado de tu cama",
         "'Auto-stop' de mentira. Sigue cargando al 100%",
@@ -173,9 +173,9 @@ const guardianData: ProductData = {
     },
     {
       name: "Cargadores de marca",
-      priceRange: "$800-$1,500 MXN",
+      priceRange: "₡22,400-₡42,000 CRC",
       problems: [
-        "Pagas $1,500 por un logo. Sin desconexión física real.",
+        "Pagas ₡42,000 por un logo. Sin desconexión física real.",
         "Tu batería sigue muriendo. Tu dinero sigue yendo a la basura.",
         "3x más caro. 0x más protección.",
         "Marca famosa ≠ familia protegida",
@@ -183,7 +183,7 @@ const guardianData: ProductData = {
     },
     {
       name: "Multicontactos / regletas",
-      priceRange: "$200-$600 MXN",
+      priceRange: "₡5,600-₡16,800 CRC",
       problems: [
         "Ocupan espacio. Estorban. Feos.",
         "No detectan temperatura. No se desconectan.",

@@ -13,21 +13,21 @@ const CROSS_SELL = [
     key: "vazlina-brisa",
     href: "/products/vazlina-brisa",
     name: "Vazlina Brisa",
-    price: "$1,199.00 MXN",
+    price: "₡33,572 CRC",
     image: "/images/products/brisa-hero.jpg",
   },
   {
     key: "vazlina-guardian",
     href: "/products/vazlina-guardian",
     name: "Vazlina Guardián",
-    price: "$1,249.00 MXN",
+    price: "₡34,972 CRC",
     image: "/images/products/guardian-hero.jpg",
   },
   {
     key: "vazlina-mariposa",
     href: "/products/vazlina-mariposa",
     name: "Vazlina Mariposa",
-    price: "$1,299.00 MXN",
+    price: "₡36,372 CRC",
     image: "/images/products/mariposa-hero.jpg",
   },
 ];
@@ -100,7 +100,7 @@ export default function CartDrawer() {
                     <p className="font-semibold text-sm leading-tight truncate">{item.name}</p>
                     <p className="text-xs text-gray-500 mt-0.5">Cantidad: {item.quantity}</p>
                     <p className="text-sm font-bold text-brand mt-1">
-                      ${(item.pricePerItem * item.quantity).toFixed(2)} MXN
+                      ₡{(item.pricePerItem * item.quantity * 28).toLocaleString("es-CR")} CRC
                     </p>
                   </div>
                   <button
@@ -146,7 +146,7 @@ export default function CartDrawer() {
           <div className="p-4 border-t border-border space-y-3">
             <div className="flex justify-between font-heading font-bold text-lg">
               <span>Total</span>
-              <span>${subtotal().toFixed(2)} MXN</span>
+              <span>₡{(subtotal() * 28).toLocaleString("es-CR")} CRC</span>
             </div>
             <p className="text-xs text-gray-500 text-center">
               Pagas al recibir. Sin tarjeta, sin riesgo.

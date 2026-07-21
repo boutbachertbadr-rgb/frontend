@@ -130,7 +130,7 @@ const brisaData: ProductData = {
     },
   ],
   timelineSummary:
-    "Una unidad transforma tu día. Dos o tres protegen a toda tu familia del calor, y ahorras hasta $998 MXN.",
+    "Una unidad transforma tu día. Dos o tres protegen a toda tu familia del calor, y ahorras hasta ₡27,944 CRC.",
   reviews: [
     {
       name: "María González",
@@ -163,7 +163,7 @@ const brisaData: ProductData = {
   comparisons: [
     {
       name: "Ventiladores tianguis",
-      priceRange: "$50-$150 MXN",
+      priceRange: "₡1,400-₡4,200 CRC",
       problems: [
         "Los tienes que cargar con la mano. Una mano menos para todo lo demás",
         "Aspas expuestas: peligrosas cerca de bebés, niños y cabello",
@@ -173,12 +173,12 @@ const brisaData: ProductData = {
     },
     {
       name: "Ventiladores escritorio",
-      priceRange: "$300-$600 MXN",
+      priceRange: "₡8,400-₡16,800 CRC",
       problems: [
         "Solo funcionan enchufados. No te siguen al metro ni al parque",
         "Ocupan espacio, necesitan cable, enredan todo",
         "Aspas que giran cerca de tus dedos y los de tu bebé",
-        "Pagas $400+ MXN por algo que solo sirve en un cuarto",
+        "Pagas ₡11,200+ CRC por algo que solo sirve en un cuarto",
       ],
     },
     {
@@ -193,7 +193,7 @@ const brisaData: ProductData = {
     },
     {
       name: "Ventiladores portátiles genéricos",
-      priceRange: "$800-$1,500 MXN",
+      priceRange: "₡22,400-₡42,000 CRC",
       problems: [
         "Sigues cargándolo con la mano. Nada de manos libres",
         "Aspas expuestas que no puedes usar cerca de tu bebé sin miedo",

@@ -90,7 +90,7 @@ function ThankYouContent() {
             </div>
             <div className="flex items-center justify-between text-sm">
               <span className="text-gray-500">Total a pagar al recibir</span>
-              <span className="font-bold text-brand">${parseFloat(total).toFixed(2)} MXN</span>
+              <span className="font-bold text-brand">₡{(parseFloat(total) * 28).toLocaleString("es-CR")} CRC</span>
             </div>
             {upsell && (
               <div className="flex items-center justify-between text-sm">

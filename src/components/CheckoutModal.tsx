@@ -102,7 +102,7 @@ export default function CheckoutModal() {
               ))}
               <div className="border-t border-border pt-2 flex justify-between font-heading font-bold">
                 <span>Total a pagar al recibir</span>
-                <span className="text-brand">${subtotal().toFixed(2)} MXN</span>
+                <span className="text-brand">₡{(subtotal() * 28).toLocaleString("es-CR")} CRC</span>
               </div>
             </div>
 

@@ -20,30 +20,30 @@ export function trackViewContent(productName: string, value: number): void {
   if (typeof window === "undefined") return;
   window.fbq?.("track", "ViewContent", {
     content_name: productName,
-    currency: "MXN",
+    currency: "CRC",
     value,
   });
-  window.ttq?.track("ViewContent", { description: productName, currency: "MXN", value, content_id: productName });
+  window.ttq?.track("ViewContent", { description: productName, currency: "CRC", value, content_id: productName });
 }
 
 export function trackAddToCart(productName: string, value: number): void {
   if (typeof window === "undefined") return;
-  window.fbq?.("track", "AddToCart", { content_name: productName, currency: "MXN", value });
-  window.ttq?.track("AddToCart", { description: productName, currency: "MXN", value, content_id: productName });
+  window.fbq?.("track", "AddToCart", { content_name: productName, currency: "CRC", value });
+  window.ttq?.track("AddToCart", { description: productName, currency: "CRC", value, content_id: productName });
 }
 
 export function trackInitiateCheckout(value: number): void {
   if (typeof window === "undefined") return;
-  window.fbq?.("track", "InitiateCheckout", { currency: "MXN", value });
-  window.ttq?.track("InitiateCheckout", { currency: "MXN", value, content_id: "checkout" });
+  window.fbq?.("track", "InitiateCheckout", { currency: "CRC", value });
+  window.ttq?.track("InitiateCheckout", { currency: "CRC", value, content_id: "checkout" });
 }
 
 export function trackPurchase(value: number, eventId: string, phone?: string): void {
   if (typeof window === "undefined") return;
-  window.fbq?.("track", "Purchase", { currency: "MXN", value }, { eventID: eventId });
+  window.fbq?.("track", "Purchase", { currency: "CRC", value }, { eventID: eventId });
 
   const fireTrack = () => {
-    window.ttq?.track("CompletePayment", { currency: "MXN", value, content_id: "purchase" });
+    window.ttq?.track("CompletePayment", { currency: "CRC", value, content_id: "purchase" });
   };
 
   if (phone) {

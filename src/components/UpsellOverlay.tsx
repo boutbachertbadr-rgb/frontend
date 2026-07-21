@@ -189,11 +189,11 @@ export default function UpsellOverlay() {
                       <div className="flex-1 min-w-0">
                         <p className="font-semibold text-sm">{upsell.name}</p>
                         <p className="text-gray-400 text-xs line-through">
-                          ${upsell.originalPrice.toFixed(2)} MXN
+                          ₡{(upsell.originalPrice * 28).toLocaleString("es-CR")} CRC
                         </p>
                         <div className="flex items-center gap-2 mt-0.5">
                           <p className="text-brand font-bold text-base">
-                            ${upsell.discountPrice.toFixed(2)} MXN
+                            ₡{(upsell.discountPrice * 28).toLocaleString("es-CR")} CRC
                           </p>
                           <span className="bg-accent/10 text-accent text-[10px] font-bold px-1.5 py-0.5 rounded-full">
                             -${(upsell.originalPrice - upsell.discountPrice).toFixed(0)}
@@ -212,7 +212,7 @@ export default function UpsellOverlay() {
                     {selectedCount} producto{selectedCount > 1 ? "s" : ""} seleccionado{selectedCount > 1 ? "s" : ""}
                   </p>
                   <p className="text-brand font-bold text-lg">
-                    Ahorras ${totalSavings.toFixed(2)} MXN
+                    Ahorras ₡{(totalSavings * 28).toLocaleString("es-CR")} CRC
                   </p>
                 </div>
               )}

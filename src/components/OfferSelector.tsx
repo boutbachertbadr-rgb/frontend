@@ -47,7 +47,7 @@ export default function OfferSelector({ productId, productName, offers, image }:
           }`}
         >
           <span className="text-sm font-semibold">{offer.label}</span>
-          <span className="font-heading font-bold text-brand">${offer.price.toFixed(2)} MXN</span>
+          <span className="font-heading font-bold text-brand">₡{(offer.price * 28).toLocaleString("es-CR")} CRC</span>
         </button>
       ))}
       <button onClick={handleAdd} className="btn-primary w-full text-base py-4 mt-2">

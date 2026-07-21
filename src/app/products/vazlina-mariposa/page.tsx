@@ -94,7 +94,7 @@ const mariposaData: ProductData = {
     },
   ],
   timelineSummary:
-    "Una unidad transforma tu estilo. Dos o tres te dan opciones para cada día, y ahorras hasta $1,098 MXN.",
+    "Una unidad transforma tu estilo. Dos o tres te dan opciones para cada día, y ahorras hasta ₡30,744 CRC.",
   reviews: [
     {
       name: "Ana Morales",
@@ -127,7 +127,7 @@ const mariposaData: ProductData = {
   comparisons: [
     {
       name: "Audífonos genéricos TWS",
-      priceRange: "$200-$400 MXN",
+      priceRange: "₡5,600-₡11,200 CRC",
       problems: [
         "Te hacen sentir invisible. Se caen cuando alguien te ve.",
         "Batería que muere a media cita. Te deja en ridículo.",
@@ -137,7 +137,7 @@ const mariposaData: ProductData = {
     },
     {
       name: "AirPods / marcas caras",
-      priceRange: "$3,000-$5,000 MXN",
+      priceRange: "₡84,000-₡140,000 CRC",
       problems: [
         "Pagas por un logo que todos tienen. No te hace ver mejor.",
         "No te hacen sentir única. Te hacen sentir... como todos.",
@@ -147,7 +147,7 @@ const mariposaData: ProductData = {
     },
     {
       name: "Audífonos con cable",
-      priceRange: "$100-$800 MXN",
+      priceRange: "₡2,800-₡22,400 CRC",
       problems: [
         "Cables que enredan y rompen. Resignación en cada nudo.",
         "Limitan tu movimiento. Imposibles en el gym.",
@@ -157,7 +157,7 @@ const mariposaData: ProductData = {
     },
     {
       name: "Audífonos diadema",
-      priceRange: "$500-$2,000 MXN",
+      priceRange: "₡14,000-₡56,000 CRC",
       problems: [
         "Ocupan espacio, arruinan tu peinado, te hacen sudar.",
         "Imposibles llevar en tu bolsa. Ni hablar de tu bolsillo.",

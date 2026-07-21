@@ -425,7 +425,7 @@ export default function Home() {
 
                 <div className="mt-4 flex items-center justify-between">
                   <p className="font-heading font-bold text-lg text-text-primary">
-                    Desde ${p.price.toFixed(2)} MXN
+                    Desde ₡{(p.price * 28).toLocaleString("es-CR")} CRC
                   </p>
                   <Link
                     href={`/products/${p.slug}`}
