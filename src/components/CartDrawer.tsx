@@ -100,7 +100,7 @@ export default function CartDrawer() {
                     <p className="font-semibold text-sm leading-tight truncate">{item.name}</p>
                     <p className="text-xs text-gray-500 mt-0.5">Cantidad: {item.quantity}</p>
                     <p className="text-sm font-bold text-brand mt-1">
-                      ₡{(item.pricePerItem * item.quantity * 28).toLocaleString("es-CR")} CRC
+                      ₡{(item.pricePerItem * item.quantity).toLocaleString("es-CR")} CRC
                     </p>
                   </div>
                   <button
@@ -146,7 +146,7 @@ export default function CartDrawer() {
           <div className="p-4 border-t border-border space-y-3">
             <div className="flex justify-between font-heading font-bold text-lg">
               <span>Total</span>
-              <span>₡{(subtotal() * 28).toLocaleString("es-CR")} CRC</span>
+              <span>₡{subtotal().toLocaleString("es-CR")} CRC</span>
             </div>
             <p className="text-xs text-gray-500 text-center">
               Pagas al recibir. Sin tarjeta, sin riesgo.

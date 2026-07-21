@@ -67,7 +67,7 @@ export default function StickyAddToCart({ productId, productName, offers, image,
           </div>
           <div className="min-w-0">
             <p className="text-sm font-bold text-text-primary truncate">{productName}</p>
-            <p className="text-xs text-text-secondary">{offer.label} · ₡{(offer.price * 28).toLocaleString("es-CR")} CRC</p>
+            <p className="text-xs text-text-secondary">{offer.label} · ₡{offer.price.toLocaleString("es-CR")} CRC</p>
           </div>
         </div>
 

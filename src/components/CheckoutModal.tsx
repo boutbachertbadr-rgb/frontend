@@ -101,12 +101,12 @@ export default function CheckoutModal() {
                   <span className="text-text-primary">
                     {item.name} × {item.quantity}
                   </span>
-                  <span className="font-semibold">${(item.pricePerItem * item.quantity).toFixed(2)}</span>
+                  <span className="font-semibold">₡{(item.pricePerItem * item.quantity).toLocaleString("es-CR")}</span>
                 </div>
               ))}
               <div className="border-t border-border pt-2 flex justify-between font-heading font-bold">
                 <span>Total a pagar al recibir</span>
-                <span className="text-brand">₡{(subtotal() * 28).toLocaleString("es-CR")} CRC</span>
+                <span className="text-brand">₡{subtotal().toLocaleString("es-CR")} CRC</span>
               </div>
             </div>
 

@@ -32,7 +32,7 @@ const PRODUCT_CARDS = [
     headline: "El calor ya no decide cómo te sientes",
     desc: "El metro en verano. El cuarto sin aire. El calor que arruina tu ánimo. Brisa es la brisa que siempre necesitabas: silenciosa, ligera, y que te sigue a donde vayas.",
     reviews: "(2,847 personas ya llegan frescas)",
-    price: 1199,
+    price: 18451,
     image: "/images/products/brisa-hero.jpg",
     cta: "Encuentra tu alivio",
   },
@@ -42,7 +42,7 @@ const PRODUCT_CARDS = [
     headline: "Duerme tranquilo. Tu familia está protegida.",
     desc: "A las 3am tocas tu celular: caliente. Tu estómago se hace nudo. Guardián rompe el circuito al 100% automáticamente. Tú duermes. Tu batería descansa. Tu familia está segura.",
     reviews: "(1,247 familias ya duermen en paz)",
-    price: 1249,
+    price: 17997,
     image: "/images/products/guardian-hero.jpg",
     cta: "Protege tu familia",
   },
@@ -52,7 +52,7 @@ const PRODUCT_CARDS = [
     headline: "El accesorio que cambia cómo te sientes y cómo te ven",
     desc: "No entran a tu oído: se posan como joyería. Alas de cristal desmontables para cuando quieres brillar. Un clip minimalista para cuando quieres pasar desapercibida. Tú eliges.",
     reviews: "(4,128 personas ya recibieron cumplidos)",
-    price: 1299,
+    price: 19358,
     image: "/images/products/mariposa-hero.jpg",
     cta: "Descubre tu versión",
   },
@@ -425,7 +425,7 @@ export default function Home() {
 
                 <div className="mt-4 flex items-center justify-between">
                   <p className="font-heading font-bold text-lg text-text-primary">
-                    Desde ₡{(p.price * 28).toLocaleString("es-CR")} CRC
+                    Desde ₡{p.price.toLocaleString("es-CR")} CRC
                   </p>
                   <Link
                     href={`/products/${p.slug}`}

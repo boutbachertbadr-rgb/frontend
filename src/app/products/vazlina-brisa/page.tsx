@@ -18,12 +18,12 @@ const brisaData: ProductData = {
     { stars: 2, count: 0 },
     { stars: 1, count: 0 },
   ],
-  priceFrom: 1199,
+  priceFrom: 18451,
   heroImage: "/images/products/brisa-hero.jpg",
   offers: [
-    { qty: 1, price: 1199, label: "1 Vazlina Brisa" },
-    { qty: 2, price: 1999, label: "2 Vazlina Brisa", badge: "Más popular", savings: 399 },
-    { qty: 3, price: 2599, label: "3 Vazlina Brisa", badge: "Máximo ahorro", savings: 998 },
+    { qty: 1, price: 18451, label: "1 Vazlina Brisa" },
+    { qty: 2, price: 33950, label: "2 Vazlina Brisa", badge: "Más popular", savings: 2952 },
+    { qty: 3, price: 47032, label: "3 Vazlina Brisa", badge: "Máximo ahorro", savings: 8321 },
   ],
   statPills: [
     { icon: "Battery", label: "Batería 8 horas" },
@@ -130,7 +130,7 @@ const brisaData: ProductData = {
     },
   ],
   timelineSummary:
-    "Una unidad transforma tu día. Dos o tres protegen a toda tu familia del calor, y ahorras hasta ₡27,944 CRC.",
+    "Una unidad transforma tu día. Dos o tres protegen a toda tu familia del calor, y ahorras hasta ₡8,321 CRC.",
   reviews: [
     {
       name: "María González",
@@ -318,7 +318,7 @@ const brisaData: ProductData = {
       angle: "Protección Inteligente · Vazlina Guard",
       name: "Protección que nunca duerme",
       desc: "Se desconecta solo cuando tu celular está lleno. Tú descansas, tu familia está segura.",
-      price: 1249,
+      price: 17997,
       reviews: "(156 evaluaciones)",
       image: "/images/products/guardian-hero.jpg",
     },
@@ -327,7 +327,7 @@ const brisaData: ProductData = {
       angle: "Estilo Inalámbrico · Vazlina Wings",
       name: "El accesorio que completa tu look",
       desc: "Diseño único que te hace sentir elegante y confiada. Música que suena bien y te hace ver mejor.",
-      price: 1299,
+      price: 19358,
       reviews: "(412 evaluaciones)",
       image: "/images/products/mariposa-hero.jpg",
     },

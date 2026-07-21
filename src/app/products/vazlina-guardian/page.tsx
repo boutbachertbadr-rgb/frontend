@@ -18,12 +18,12 @@ const guardianData: ProductData = {
     { stars: 2, count: 0 },
     { stars: 1, count: 0 },
   ],
-  priceFrom: 1249,
+  priceFrom: 17997,
   heroImage: "/images/products/guardian-hero.jpg",
   offers: [
-    { qty: 1, price: 1249, label: "1 Vazlina Guardián" },
-    { qty: 2, price: 2099, label: "2 Vazlina Guardián", badge: "Más popular", savings: 399 },
-    { qty: 3, price: 2699, label: "3 Vazlina Guardián", badge: "Máximo ahorro", savings: 1048 },
+    { qty: 1, price: 17997, label: "1 Vazlina Guardián" },
+    { qty: 2, price: 33115, label: "2 Vazlina Guardián", badge: "Más popular", savings: 2879 },
+    { qty: 3, price: 45892, label: "3 Vazlina Guardián", badge: "Máximo ahorro", savings: 8099 },
   ],
   statPills: [
     { icon: "Shield", label: "Auto-desconexión" },
@@ -130,7 +130,7 @@ const guardianData: ProductData = {
     },
   ],
   timelineSummary:
-    "Una unidad protege tu dispositivo. Dos o tres protegen a toda tu familia, y ahorras hasta ₡29,344 CRC.",
+    "Una unidad protege tu dispositivo. Dos o tres protegen a toda tu familia, y ahorras hasta ₡8,099 CRC.",
   reviews: [
     {
       name: "Roberto Méndez",
@@ -318,7 +318,7 @@ const guardianData: ProductData = {
       angle: "Confort Portátil · Vazlina Flow",
       name: "Frescura que te sigue a donde vayas",
       desc: "El calor ya no decide cómo te sientes. Silencioso, ligero y con batería para todo el día.",
-      price: 1199,
+      price: 18451,
       reviews: "(287 evaluaciones)",
       image: "/images/products/brisa-hero.jpg",
     },
@@ -327,7 +327,7 @@ const guardianData: ProductData = {
       angle: "Estilo Inalámbrico · Vazlina Wings",
       name: "El accesorio que completa tu look",
       desc: "Diseño único que te hace sentir elegante y confiada. Música que suena bien y te hace ver mejor.",
-      price: 1299,
+      price: 19358,
       reviews: "(412 evaluaciones)",
       image: "/images/products/mariposa-hero.jpg",
     },

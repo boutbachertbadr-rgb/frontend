@@ -18,12 +18,12 @@ const mariposaData: ProductData = {
     { stars: 2, count: 0 },
     { stars: 1, count: 0 },
   ],
-  priceFrom: 1299,
+  priceFrom: 19358,
   heroImage: "/images/products/mariposa-hero.jpg",
   offers: [
-    { qty: 1, price: 1299, label: "1 Vazlina Mariposa" },
-    { qty: 2, price: 2199, label: "2 Vazlina Mariposa", badge: "Más popular", savings: 399 },
-    { qty: 3, price: 2799, label: "3 Vazlina Mariposa", badge: "Máximo ahorro", savings: 1098 },
+    { qty: 1, price: 19358, label: "1 Vazlina Mariposa" },
+    { qty: 2, price: 35619, label: "2 Vazlina Mariposa", badge: "Más popular", savings: 3097 },
+    { qty: 3, price: 49361, label: "3 Vazlina Mariposa", badge: "Máximo ahorro", savings: 8713 },
   ],
   statPills: [
     { icon: "Battery", label: "24h con estuche" },
@@ -94,7 +94,7 @@ const mariposaData: ProductData = {
     },
   ],
   timelineSummary:
-    "Una unidad transforma tu estilo. Dos o tres te dan opciones para cada día, y ahorras hasta ₡30,744 CRC.",
+    "Una unidad transforma tu estilo. Dos o tres te dan opciones para cada día, y ahorras hasta ₡8,713 CRC.",
   reviews: [
     {
       name: "Ana Morales",
@@ -282,7 +282,7 @@ const mariposaData: ProductData = {
       angle: "Confort Portátil · Vazlina Flow",
       name: "Frescura que te sigue a donde vayas",
       desc: "El calor ya no decide cómo te sientes. Silencioso, ligero y con batería para todo el día.",
-      price: 1199,
+      price: 18451,
       reviews: "(287 evaluaciones)",
       image: "/images/products/brisa-hero.jpg",
     },
@@ -291,7 +291,7 @@ const mariposaData: ProductData = {
       angle: "Protección Inteligente · Vazlina Guard",
       name: "Protección que nunca duerme",
       desc: "Se desconecta solo cuando tu celular está lleno. Tú descansas, tu familia está segura.",
-      price: 1249,
+      price: 17997,
       reviews: "(156 evaluaciones)",
       image: "/images/products/guardian-hero.jpg",
     },
