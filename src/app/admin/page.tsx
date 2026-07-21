@@ -32,7 +32,7 @@ const STATUSES = [
 ];
 
 function fmtMoney(n: number) { return `\u20a1${n.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")} CRC`; }
-function productSlug(name: string): string { const n = name.toLowerCase(); if (n.includes("guardian") || n.includes("guard\u00e1n")) return "vazlina-guardian"; if (n.includes("brisa")) return "vazlina-brisa"; if (n.includes("mariposa")) return "vazlina-mariposa"; return ""; }
+function productSlug(name: string): string { const n = name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); if (n.includes("guardian")) return "vazlina-guardian"; if (n.includes("brisa")) return "vazlina-brisa"; if (n.includes("mariposa")) return "vazlina-mariposa"; return ""; }
 function productImage(name: string): string { const slug = productSlug(name); if (!slug) return ""; return `/images/products/${slug.replace("vazlina-", "")}-hero.jpg`; }
 function fmtUSD(n: number) { return `$${n.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`; }
 function statusBadge(status: string) {
