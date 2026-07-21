@@ -633,20 +633,26 @@ export default function AdminDashboard() {
                 <div className="space-y-2">
                   {previewOrder.items.map((item, i) => {
                     const slug = productSlug(item.product_name);
-                    const img = productImage(item.product_name);
+                    const img = slug ? `https://vazlina.shop/images/products/${slug.replace("vazlina-", "")}-hero.jpg` : "";
+                    const isUpsell = !item.product_name.toLowerCase().includes("unidad");
                     return (
                     <div key={i} className="flex items-center gap-3 bg-gray-50 rounded-lg px-3 py-2">
-                      {img && (
+                      {img ? (
                         <div className="w-12 h-12 rounded-lg overflow-hidden shrink-0 bg-white border border-gray-200">
                           <img src={img} alt={item.product_name} className="w-full h-full object-cover" />
                         </div>
+                      ) : (
+                        <div className="w-12 h-12 rounded-lg shrink-0 bg-gray-200 border border-gray-200 flex items-center justify-center text-[10px] text-gray-400">?</div>
                       )}
                       <div className="flex-1 min-w-0">
-                        {slug ? (
-                          <a href={`/products/${slug}`} target="_blank" rel="noreferrer" className="text-sm font-medium text-blue-600 hover:underline truncate block">{item.product_name}</a>
-                        ) : (
-                          <span className="text-sm text-gray-800">{item.product_name}</span>
-                        )}
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          {slug ? (
+                            <a href={`https://vazlina.shop/products/${slug}`} target="_blank" rel="noreferrer" className="text-sm font-medium text-blue-600 hover:underline truncate">{item.product_name}</a>
+                          ) : (
+                            <span className="text-sm text-gray-800">{item.product_name}</span>
+                          )}
+                          {isUpsell && <span className="text-[9px] font-bold bg-orange-100 text-orange-700 px-1.5 py-0.5 rounded-full uppercase shrink-0">Upsell</span>}
+                        </div>
                         <p className="text-xs text-gray-400">x{item.quantity}</p>
                       </div>
                       <div className="text-right shrink-0">
