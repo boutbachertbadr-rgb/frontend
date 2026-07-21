@@ -14,9 +14,11 @@ import { createOrder } from "@/lib/api";
 const schema = z.object({
   name: z.string().min(2, "Ingresa tu nombre completo."),
   phone: z.string().regex(MX_PHONE_REGEX, "Número inválido. Ingresa 8 dígitos (Costa Rica)."),
-  state: z.string().min(2, "Ingresa tu estado."),
-  city: z.string().min(2, "Ingresa tu ciudad o municipio."),
+  state: z.string().min(2, "Ingresa tu provincia."),
+  city: z.string().min(2, "Ingresa tu cantón."),
+  distrito: z.string().min(2, "Ingresa tu distrito."),
   address: z.string().min(5, "Ingresa tu dirección completa."),
+  reference: z.string().min(3, "Ingresa un punto de referencia."),
 });
 
 type CheckoutForm = z.infer<typeof schema>;
@@ -58,7 +60,9 @@ export default function CheckoutModal() {
         customer_phone: data.phone,
         customer_state: data.state,
         customer_city: data.city,
+        customer_distrito: data.distrito,
         customer_address: data.address,
+        customer_reference: data.reference,
         items: orderItems,
         is_upsell_accepted: false,
         total_price: total,
@@ -67,7 +71,7 @@ export default function CheckoutModal() {
         trackPurchase(total, eventId, data.phone);
       }).catch(() => {});
     } else {
-      openUpsell({ name: data.name, phone: data.phone, state: data.state, city: data.city, address: data.address });
+      openUpsell({ name: data.name, phone: data.phone, state: data.state, city: data.city, distrito: data.distrito, address: data.address, reference: data.reference });
     }
   };
 
@@ -166,10 +170,10 @@ export default function CheckoutModal() {
                 )}
               </div>
 
-              {/* State */}
+              {/* Provincia */}
               <div>
                 <label className="block text-sm font-semibold mb-1" htmlFor="state">
-                  Provincia / Estado <span className="text-red-500">*</span>
+                  Provincia <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
                   <input
@@ -191,16 +195,16 @@ export default function CheckoutModal() {
                 )}
               </div>
 
-              {/* City */}
+              {/* Cantón */}
               <div>
                 <label className="block text-sm font-semibold mb-1" htmlFor="city">
-                  Ciudad / Municipio <span className="text-red-500">*</span>
+                  Cantón <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
                   <input
                     id="city"
                     type="text"
-                    placeholder="Ej. Benito Juárez"
+                    placeholder="Ej. San José Centro"
                     className={`input-field pr-10 ${errors.city ? "border-red-500 bg-red-50 focus:ring-red-200" : ""}`}
                     {...register("city")}
                   />
@@ -216,7 +220,32 @@ export default function CheckoutModal() {
                 )}
               </div>
 
-              {/* Address */}
+              {/* Distrito */}
+              <div>
+                <label className="block text-sm font-semibold mb-1" htmlFor="distrito">
+                  Distrito <span className="text-red-500">*</span>
+                </label>
+                <div className="relative">
+                  <input
+                    id="distrito"
+                    type="text"
+                    placeholder="Ej. Carmen"
+                    className={`input-field pr-10 ${errors.distrito ? "border-red-500 bg-red-50 focus:ring-red-200" : ""}`}
+                    {...register("distrito")}
+                  />
+                  {errors.distrito && (
+                    <AlertCircle className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-red-500 pointer-events-none" />
+                  )}
+                </div>
+                {errors.distrito && (
+                  <p className="flex items-center gap-1 text-red-600 text-xs mt-1.5 font-medium">
+                    <AlertCircle className="w-3 h-3" />
+                    {errors.distrito.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Dirección Completa */}
               <div>
                 <label className="block text-sm font-semibold mb-1" htmlFor="address">
                   Dirección Completa <span className="text-red-500">*</span>
@@ -225,7 +254,7 @@ export default function CheckoutModal() {
                   <textarea
                     id="address"
                     rows={3}
-                    placeholder="Calle, número, colonia y referencias"
+                    placeholder="Calle, número, barrio"
                     className={`input-field resize-none pr-10 ${errors.address ? "border-red-500 bg-red-50 focus:ring-red-200" : ""}`}
                     {...register("address")}
                   />
@@ -237,6 +266,31 @@ export default function CheckoutModal() {
                   <p className="flex items-center gap-1 text-red-600 text-xs mt-1.5 font-medium">
                     <AlertCircle className="w-3 h-3" />
                     {errors.address.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Punto de referencia */}
+              <div>
+                <label className="block text-sm font-semibold mb-1" htmlFor="reference">
+                  Punto de referencia <span className="text-red-500">*</span>
+                </label>
+                <div className="relative">
+                  <input
+                    id="reference"
+                    type="text"
+                    placeholder="Ej. 100m norte del parque central"
+                    className={`input-field pr-10 ${errors.reference ? "border-red-500 bg-red-50 focus:ring-red-200" : ""}`}
+                    {...register("reference")}
+                  />
+                  {errors.reference && (
+                    <AlertCircle className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-red-500 pointer-events-none" />
+                  )}
+                </div>
+                {errors.reference && (
+                  <p className="flex items-center gap-1 text-red-600 text-xs mt-1.5 font-medium">
+                    <AlertCircle className="w-3 h-3" />
+                    {errors.reference.message}
                   </p>
                 )}
               </div>

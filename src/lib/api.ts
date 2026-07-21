@@ -11,7 +11,9 @@ export interface CreateOrderPayload {
   customer_phone: string;
   customer_state: string;
   customer_city: string;
+  customer_distrito: string;
   customer_address: string;
+  customer_reference: string;
   items: OrderItem[];
   is_upsell_accepted: boolean;
   total_price: number;

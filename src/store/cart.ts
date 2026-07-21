@@ -13,7 +13,9 @@ export interface CustomerForm {
   phone: string;
   state: string;
   city: string;
+  distrito: string;
   address: string;
+  reference: string;
 }
 
 interface UIState {
