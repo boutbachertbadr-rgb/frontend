@@ -15,20 +15,20 @@ const fontBody = Crimson_Pro({ subsets: ["latin"], weight: ['400', '500', '600']
 export const metadata: Metadata = {
   title: "Vazlina | Tecnología curada para tu día a día",
   description:
-    "Productos de tecnología premium seleccionados para México. Paga al recibir. Envío rápido.",
+    "Productos de tecnología premium seleccionados para Costa Rica. Paga al recibir. Envío rápido.",
   icons: {
     icon: "/favicon.svg?v=2",
   },
   openGraph: {
     siteName: "Vazlina",
-    locale: "es_MX",
+    locale: "es_CR",
     type: "website",
   },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es-MX" className={`${fontHeading.variable} ${fontBody.variable}`}>
+    <html lang="es-CR" className={`${fontHeading.variable} ${fontBody.variable}`}>
       <body>
         <PixelScripts />
         <AnnouncementBar />

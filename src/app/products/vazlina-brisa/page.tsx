@@ -8,7 +8,7 @@ const brisaData: ProductData = {
   angle: "Confort Portátil · Vazlina Flow",
   h1: "Fresca a donde vayas. Sin cargar nada.",
   subheadline: "Se clip a tu ropa y olvidas que está ahí. Tus manos libres en el metro, la oficina o la carriola. Aire fresco en tu cara. Tú decides dónde, tú decides cuándo.",
-  urgencyText: "Envío gratis esta semana a todo México",
+  urgencyText: "Envío gratis esta semana a todo Costa Rica",
   rating: 4.9,
   reviewCount: 2847,
   ratingBreakdown: [
@@ -39,12 +39,12 @@ const brisaData: ProductData = {
   ],
   problemStat: {
     number: "76%",
-    text: "de los mexicanos llegan sudados, agotados e irritados a su destino, y el calor les roba energía, paciencia y concentración durante todo el día.",
-    source: "Fuente: estudios de confort térmico en México, 2024",
+    text: "de los costarricenses llegan sudados, agotados e irritados a su destino, y el calor les roba energía, paciencia y concentración durante todo el día.",
+    source: "Fuente: estudios de confort térmico en Costa Rica, 2024",
   },
   problemSolution: [
     {
-      problem: "En el metro de CDMX el calor es sofocante. El sudor en la espalda, el olor cerrado, la gente pegada, y tú llegando a tu reunión sin energía y con la ropa húmeda...",
+      problem: "El calor en Costa Rica es sofocante. El sudor en la espalda, el olor cerrado, la gente pegada, y tú llegando a tu reunión sin energía y con la ropa húmeda...",
       solution: {
         title: "Llegas fresca, en control, como si el calor no existiera",
         desc: "Brisa se clip a tu ropa y apunta el aire exactamente a tu cara o cuello con rotación 360°. Tus manos libres, tu mente enfocada, tu cuerpo fresco. Nadie a tu alrededor lo escucha. 25dB, más silencioso que un susurro.",
@@ -109,8 +109,8 @@ const brisaData: ProductData = {
     { number: "25dB", label: "silencio" },
   ],
   expertQuote: {
-    text: "Evaluamos 12 modelos disponibles en México antes de elegir Brisa. Ganó en batería real (no la cifra del empaque, la real), en silencio medido a 25dB, y en durabilidad probada. Pero lo que nos convenció fue algo que no esperábamos: olvidamos que lo traíamos puesto. Eso no lo logra ningún otro. Por eso lo ofrecemos.",
-    author: "Equipo Vazlina · CDMX · Ingeniería de producto",
+    text: "Evaluamos 12 modelos disponibles en Costa Rica antes de elegir Brisa. Ganó en batería real (no la cifra del empaque, la real), en silencio medido a 25dB, y en durabilidad probada. Pero lo que nos convenció fue algo que no esperábamos: olvidamos que lo traíamos puesto. Eso no lo logra ningún otro. Por eso lo ofrecemos.",
+    author: "Equipo Vazlina · San José · Ingeniería de producto",
   },
   timeline: [
     {
@@ -135,7 +135,7 @@ const brisaData: ProductData = {
     {
       name: "María González",
       age: 32,
-      city: "CDMX",
+      city: "San José",
       quote:
         "El metro Línea 3 en julio era literalmente un infierno. Llegaba al trabajo con la blusa pegada, irritada, sin ganas de nada. Ahora lo clip al cuello, giro el aire hacia mi cara y llego fresca como si nada. Mis compañeras me preguntaron qué hice diferente. Pagué al recibir. Ni un peso de riesgo.",
       rating: 5,
@@ -144,7 +144,7 @@ const brisaData: ProductData = {
     {
       name: "Laura Hernández",
       age: 29,
-      city: "Guadalajara",
+      city: "Heredia",
       quote:
         "Mi bebé sudaba y lloraba en la carriola y yo moría de culpa y agotamiento. Los ventiladores con aspas me daban pánico cerca de sus dedos. Brisa no tiene aspas. Lo clip a la carriola, apunto el aire hacia él y duerme tranquilo. Yo por fin puedo caminar con las manos libres y sin miedo. Valió cada peso.",
       rating: 5,
@@ -153,9 +153,9 @@ const brisaData: ProductData = {
     {
       name: "Javier López",
       age: 26,
-      city: "Monterrey",
+      city: "Alajuela",
       quote:
-        "Soy repartidor y el calor de Monterrey me destruía a mediodía. Ya no podía más. Ahora clip Brisa al bolsillo de la playera, meto las manos al manubrio y siento el aire fresco todo el tiempo. Es tan silencioso que mis clientes ni lo notan. Me devolvió la energía y las ganas de trabajar.",
+        "Soy repartidor y el calor de Alajuela me destruía a mediodía. Ya no podía más. Ahora clip Brisa al bolsillo de la playera, meto las manos al manubrio y siento el aire fresco todo el tiempo. Es tan silencioso que mis clientes ni lo notan. Me devolvió la energía y las ganas de trabajar.",
       rating: 5,
       image: "/images/products/review-javier.jpg",
     },
@@ -198,7 +198,7 @@ const brisaData: ProductData = {
         "Sigues cargándolo con la mano. Nada de manos libres",
         "Aspas expuestas que no puedes usar cerca de tu bebé sin miedo",
         "Pagas por el logo. Las funciones son exactamente las mismas.",
-        "Sin soporte en México. Sin garantía real. Sin nadie que responda.",
+        "Sin soporte en Costa Rica. Sin garantía real. Sin nadie que responda.",
       ],
     },
   ],
@@ -269,7 +269,7 @@ const brisaData: ProductData = {
       desc: "3-5 días. Pagas al mensajero. Solo cuando lo tienes en tus manos.",
     },
   ],
-  cities: ["CDMX", "Guadalajara", "Monterrey", "Puebla", "Querétaro", "+ Más áreas"],
+  cities: ["San José", "Alajuela", "Cartago", "Heredia", "Liberia", "+ Más áreas"],
   faqs: [
     {
       category: "Sobre el producto",
@@ -309,7 +309,7 @@ const brisaData: ProductData = {
     {
       category: "Envío y pago",
       q: "¿Cuánto tarda en llegar?",
-      a: "3 a 5 días hábiles en CDMX, Guadalajara, Monterrey, Puebla y Querétaro. 5 a 7 días para el resto del país. Siempre gratis. Te avisamos cuando sale.",
+      a: "3 a 5 días hábiles en San José, Alajuela, Cartago y Heredia. 5 a 7 días para el resto del país. Siempre gratis. Te avisamos cuando sale.",
     },
   ],
   crossSell: [

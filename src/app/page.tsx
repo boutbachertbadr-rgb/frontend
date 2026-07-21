@@ -78,7 +78,7 @@ const PILLARS = [
   {
     icon: Headphones,
     title: "Somos reales, estamos aquí",
-    desc: "Números locales de CDMX. Confirmación por teléfono. Respuesta rápida por correo. No somos una empresa fantasma. Somos gente real que usa lo mismo que tú.",
+    desc: "Números locales de Costa Rica. Confirmación por teléfono. Respuesta rápida por correo. No somos una empresa fantasma. Somos gente real que usa lo mismo que tú.",
   },
 ];
 
@@ -88,42 +88,42 @@ const TESTIMONIALS = [
     quote:
       "El metro Línea 3 en julio era literalmente un infierno. Llegaba al trabajo con la blusa pegada, irritada, sin ganas de nada. Ahora lo clip al cuello, giro el aire hacia mi cara y llego fresca como si nada. Mis compañeras me preguntaron qué hice diferente. Pagué al recibir. Ni un peso de riesgo.",
     name: "María González",
-    detail: "32 años · CDMX · Brisa",
+    detail: "32 años · San José · Brisa",
     image: "/images/products/review-maria.jpg",
   },
   {
     quote:
       "Llevaba 3 horas en la universidad y mis audífonos viejos me dolían tanto que tenía que quitarme uno. Con Mariposa? Olvidé que los traía puestos. Y en el café una chica me dijo '¿Qué traes en las orejas? Se ven divinos.' Ese cumplido... no tiene precio.",
     name: "Ana Morales",
-    detail: "24 años · Monterrey · Mariposa",
+    detail: "24 años · Alajuela · Mariposa",
     image: "/images/products/review-ana.jpg",
   },
   {
     quote:
       "Mi iPhone 15 tenía 6 meses y la batería ya estaba al 89%. Con Guardián noté la diferencia en SEMANAS. Mi iPhone ya no amanece caliente. El LED azul a las 3am es la prueba de que la desconexión física SÍ funciona. No es marketing. Es real.",
     name: "Roberto Méndez",
-    detail: "28 años · Guadalajara · Guardián",
+    detail: "28 años · Cartago · Guardián",
     image: "/images/products/review-roberto.jpg",
   },
   {
     quote:
       "Mi bebé sudaba y lloraba en la carriola y yo moría de culpa. Los ventiladores con aspas me daban pánico. Brisa no tiene aspas. Lo clip a la carriola, apunto el aire hacia él y duerme tranquilo. Yo por fin puedo caminar con las manos libres y sin miedo. Valió cada peso.",
     name: "Laura Hernández",
-    detail: "29 años · Guadalajara · Brisa",
+    detail: "29 años · Heredia · Brisa",
     image: "/images/products/review-laura.jpg",
   },
   {
     quote:
       "No sabía qué regalarle a mi novia. Cuando abrió Mariposa, se quedó en silencio. Después se los puso y corrió al espejo. 'Parece que me puse joyería y música al mismo tiempo,' me dijo. Ahora no se los quita ni para dormir. Me dijo que es el mejor regalo que le han dado en años.",
     name: "Carlos Ramírez",
-    detail: "28 años · Guadalajara · Mariposa",
+    detail: "28 años · Liberia · Mariposa",
     image: "/images/products/review-carlos.jpg",
   },
   {
     quote:
       "A las 2am me despertaba para revisar los cuartos de mis hijos. Imaginate: 35 años, dos adolescentes, y yo vigilando cargadores como si fuera guardia de seguridad. Guardián me devolvió el sueño. Literalmente. Ahora duermo 8 horas y mi ansiedad de mamá bajó un 90%.",
     name: "Carmen Flores",
-    detail: "35 años · CDMX · Guardián",
+    detail: "35 años · San José · Guardián",
     image: "/images/products/review-carmen.jpg",
   },
 ];
@@ -138,7 +138,7 @@ const STEPS = [
   {
     num: "02",
     title: "Confirma sin compromiso",
-    desc: "Solo tu nombre, teléfono y dirección. Sin tarjeta, sin depósito, sin riesgo. Te llamamos desde CDMX para confirmar tu pedido.",
+    desc: "Solo tu nombre, teléfono y dirección. Sin tarjeta, sin depósito, sin riesgo. Te llamamos para confirmar tu pedido.",
   },
   {
     num: "03",
@@ -248,7 +248,7 @@ export default function Home() {
               <div className="relative aspect-[3/4] md:aspect-[4/3] bg-gradient-to-b from-background to-subtle rounded-2xl overflow-hidden shadow-lg flex items-center justify-center border border-border">
                 <Image
                   src="/images/home/hero.jpg"
-                  alt="Vazlina - Tecnología curada para México"
+                  alt="Vazlina - Tecnología curada para Costa Rica"
                   fill
                   unoptimized
                   className="object-cover"
@@ -270,7 +270,7 @@ export default function Home() {
               <div className="inline-flex items-center gap-1.5 bg-white border border-border rounded-full px-3 py-1.5">
                 <CheckCircle className="w-3.5 h-3.5 text-text-secondary" />
                 <span className="text-[13px] font-medium text-text-primary">
-                  Soluciones reales · Probadas en México
+                  Soluciones reales · Probadas en Costa Rica
                 </span>
               </div>
 
@@ -279,7 +279,7 @@ export default function Home() {
               </h1>
 
               <p className="text-sm md:text-lg text-text-secondary leading-relaxed max-w-[500px]">
-                ¿Por qué seguimos usando productos que nos hacen sentir peor? Probamos docenas en México. Solo los que mejoran tu día pasan. Envío gratis. Pago al recibir. Y si no sientes el cambio, te devolvemos cada peso.
+                ¿Por qué seguimos usando productos que nos hacen sentir peor? Probamos docenas en Costa Rica. Solo los que mejoran tu día pasan. Envío gratis. Pago al recibir. Y si no sientes el cambio, te devolvemos cada peso.
               </p>
 
               {/* Rating Breakdown */}
@@ -299,7 +299,7 @@ export default function Home() {
               <div className="relative">
                 <div className="flex gap-2 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden pr-4">
                   {[
-                    { icon: Shield, label: "Envío Gratis", sub: "A todo México" },
+                    { icon: Shield, label: "Envío Gratis", sub: "A todo Costa Rica" },
                     { icon: HandCoinsIcon, label: "Pago Contra Entrega", sub: "Sin tarjeta" },
                     { icon: Truck, label: "Entrega 3-5 Días", sub: "Rastreo incluido" },
                     { icon: RefreshCw, label: "Garantía 30 Días", sub: "Devolución sin drama" },
@@ -454,7 +454,7 @@ export default function Home() {
               No somos una tienda más. Somos la que usamos nosotros.
             </h2>
             <p className="mt-4 text-base md:text-lg text-text-secondary max-w-2xl mx-auto">
-              Cuatro pilares que no negociamos: probamos todo en México, no pedimos dinero antes, y si algo falla, hablas con una persona real.
+              Cuatro pilares que no negociamos: probamos todo en Costa Rica, no pedimos dinero antes, y si algo falla, hablas con una persona real.
             </p>
           </div>
 
@@ -496,7 +496,7 @@ export default function Home() {
               ELLOS YA LO SINTIERON. TÚ ERES EL SIGUIENTE.
             </p>
             <h2 className="font-heading text-2xl md:text-5xl font-bold tracking-[-0.02em]">
-              Más de 6,400 mexicanos ya sintieron la diferencia
+              Más de 6,400 costarricenses ya sintieron la diferencia
             </h2>
             <p className="mt-4 text-base md:text-lg text-text-secondary max-w-2xl mx-auto">
               No es lo que prometemos. Es lo que sienten.

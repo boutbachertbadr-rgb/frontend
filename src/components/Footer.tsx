@@ -83,12 +83,12 @@ export default function Footer() {
               VAZLINA
             </p>
             <p className="mt-3 text-sm text-text-secondary leading-relaxed">
-              Soluciones que mejoran tu día a día. Productos probados en México
+              Soluciones que mejoran tu día a día. Productos probados en Costa Rica
               por nosotros mismos, con pago al recibir, soporte real, y garantía
               que respaldamos con hechos.
             </p>
             <div className="mt-4 flex flex-wrap gap-2">
-              {["Probado en México", "Soporte Real", "30 Días Sin Riesgo"].map(
+              {["Probado en Costa Rica", "Soporte Real", "30 Días Sin Riesgo"].map(
                 (tag) => (
                   <span
                     key={tag}
@@ -118,9 +118,9 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="border-t border-border pt-6 flex flex-col sm:flex-row justify-between items-center gap-2 text-[13px] text-text-secondary">
           <p>
-            Envío gratis a todo México · Pago al Recibir · 30 días para sentir la diferencia
+            Envío gratis a todo Costa Rica · Pago al Recibir · 30 días para sentir la diferencia
           </p>
-          <p>© 2026 Vazlina. Construido con cuidado en México.</p>
+          <p>© 2026 Vazlina. Construido con cuidado en Costa Rica.</p>
         </div>
       </div>
     </footer>

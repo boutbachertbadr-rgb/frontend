@@ -43,7 +43,7 @@ export default function AboutPage() {
           <h2 className="font-heading font-bold text-3xl">Nuestro compromiso contigo</h2>
           <ul className="space-y-4">
             {[
-              { icon: Zap, title: "Funciona de verdad", desc: "Probamos cada producto en condiciones reales de México. Si no mejora tu día, no lo vendemos." },
+              { icon: Zap, title: "Funciona de verdad", desc: "Probamos cada producto en condiciones reales de Costa Rica. Si no mejora tu día, no lo vendemos." },
               { icon: ShieldCheck, title: "Tu tranquilidad primero", desc: "30 días para sentir la diferencia. Si no funciona, te devolvemos cada peso. Sin trámites." },
               { icon: Award, title: "Solo lo mejor", desc: "Seleccionamos productos que superan nuestros estándares de calidad y que nosotros usaríamos todos los días." },
             ].map(({ icon: Icon, title, desc }) => (

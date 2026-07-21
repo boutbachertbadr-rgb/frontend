@@ -21,7 +21,7 @@ const FEATURES = [
   {
     icon: <Globe className="w-10 h-10 text-brand" />,
     title: "Llega a tu puerta",
-    description: "Envío gratis a todo México. De 3 a 5 días en principales ciudades. Siempre con seguimiento."
+    description: "Envío gratis a todo Costa Rica. De 3 a 5 días en principales ciudades. Siempre con seguimiento."
   }
 ];
 

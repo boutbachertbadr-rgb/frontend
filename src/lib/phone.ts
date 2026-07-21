@@ -1,4 +1,4 @@
-export const MX_PHONE_REGEX = /^(\+52\s?)?\d{10}$/;
+export const MX_PHONE_REGEX = /^(\+506\s?)?\d{8}$/;
 
 export function validateMxPhone(value: string): boolean {
   return MX_PHONE_REGEX.test(value.trim());

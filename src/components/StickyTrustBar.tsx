@@ -3,7 +3,7 @@
 import { Truck, Banknote, RefreshCw, Headphones } from "lucide-react";
 
 const ITEMS = [
-  { icon: Truck, line1: "Envío Gratis", line2: "3-5 días a todo México" },
+  { icon: Truck, line1: "Envío Gratis", line2: "3-5 días a todo Costa Rica" },
   { icon: Banknote, line1: "Pago al Recibir", line2: "Sin tarjeta, sin riesgo" },
   { icon: RefreshCw, line1: "30 Días Sin Riesgo", line2: "Si no sientes la diferencia" },
   { icon: Headphones, line1: "Soporte Real", line2: "Llamada directa" },

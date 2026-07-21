@@ -662,7 +662,7 @@ export default function ProductPageTemplate({ data }: { data: ProductData }) {
               PERSONAS REALES, CAMBIOS REALES
             </p>
             <h2 className="font-heading text-2xl md:text-5xl font-bold tracking-[-0.02em]">
-              Más de {data.reviewCount.toLocaleString("es-MX")} mexicanos ya sintieron la diferencia.
+              Más de {data.reviewCount.toLocaleString("es-CR")} costarricenses ya sintieron la diferencia.
             </h2>
             <p className="mt-4 text-lg text-text-secondary">
               Esto es lo que dicen quienes ya lo viven.
@@ -766,7 +766,7 @@ export default function ProductPageTemplate({ data }: { data: ProductData }) {
 
           <div className="bg-brand rounded-2xl p-4 md:p-6">
             <div className="grid grid-cols-2 gap-2 mb-3">
-              {["Probado en México ✓", "Resultado real ✓", "Garantía 30 días ✓", "Ahorro real ✓"].map(
+              {["Probado en Costa Rica ✓", "Resultado real ✓", "Garantía 30 días ✓", "Ahorro real ✓"].map(
                 (pill, i) => (
                   <span
                     key={i}
@@ -902,7 +902,7 @@ export default function ProductPageTemplate({ data }: { data: ProductData }) {
               ))}
             </div>
             <p className="text-xs text-text-secondary text-center">
-              Enviamos vía: DHL · FedEx · Estafeta · RedPack · Correos de México
+              Enviamos vía: DHL · FedEx · Correos de Costa Rica
             </p>
           </div>
         </div>

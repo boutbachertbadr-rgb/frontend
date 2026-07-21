@@ -13,7 +13,7 @@ import { createOrder } from "@/lib/api";
 
 const schema = z.object({
   name: z.string().min(2, "Ingresa tu nombre completo."),
-  phone: z.string().regex(MX_PHONE_REGEX, "Número inválido. Ingresa 10 dígitos MX."),
+  phone: z.string().regex(MX_PHONE_REGEX, "Número inválido. Ingresa 8 dígitos (Costa Rica)."),
   state: z.string().min(2, "Ingresa tu estado."),
   city: z.string().min(2, "Ingresa tu ciudad o municipio."),
   address: z.string().min(5, "Ingresa tu dirección completa."),

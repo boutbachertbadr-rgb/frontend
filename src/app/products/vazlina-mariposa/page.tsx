@@ -8,7 +8,7 @@ const mariposaData: ProductData = {
   angle: "Estilo Inalámbrico · Vazlina Wings",
   h1: "El accesorio que cambia cómo te sientes y cómo te ven",
   subheadline: "Mariposa no entra a tu oído. Se posa en tu oreja como joyería. Alas de cristal que transforman tu look en un segundo. Y si quieres algo más sutil: las quitas. Tú eliges quién eres hoy. Cada mañana.",
-  urgencyText: "Envío gratis esta semana a todo México",
+  urgencyText: "Envío gratis esta semana a todo Costa Rica",
   rating: 4.9,
   reviewCount: 4128,
   ratingBreakdown: [
@@ -73,8 +73,8 @@ const mariposaData: ProductData = {
     { number: "IPX4", label: "resistencia" },
   ],
   expertQuote: {
-    text: "Probamos 15 audífonos TWS en México. Los mejores en sonido costaban 5x más. Pero ninguno hacía lo que Mariposa hace: hacerte sentir que tienes estilo sin intentarlo. Es el único que el equipo usa para sentirse bien consigo mismo. En el gym, en reuniones, en citas. Por eso te lo ofrecemos.",
-    author: "Equipo Vazlina · CDMX · Ingeniería de producto",
+    text: "Probamos 15 audífonos TWS en Costa Rica. Los mejores en sonido costaban 5x más. Pero ninguno hacía lo que Mariposa hace: hacerte sentir que tienes estilo sin intentarlo. Es el único que el equipo usa para sentirse bien consigo mismo. En el gym, en reuniones, en citas. Por eso te lo ofrecemos.",
+    author: "Equipo Vazlina · San José · Ingeniería de producto",
   },
   timeline: [
     {
@@ -99,7 +99,7 @@ const mariposaData: ProductData = {
     {
       name: "Ana Morales",
       age: 24,
-      city: "Monterrey",
+      city: "Alajuela",
       quote:
         "Llevaba 3 horas en la universidad y mis audífonos viejos me dolían tanto que tenía que quitarme uno. Con Mariposa? Olvidé que los traía puestos. Se sienten como nada. Y la primera vez que fui al gym con las alas quitadas, no se cayeron ni en burpees. Pero lo mejor fue en el café: una chica me dijo '¿Qué traes en las orejas? Se ven divinos.' Ese cumplido... no tiene precio.",
       rating: 5,
@@ -108,7 +108,7 @@ const mariposaData: ProductData = {
     {
       name: "Carlos Ramírez",
       age: 28,
-      city: "Guadalajara",
+      city: "Heredia",
       quote:
         "No sabía qué regalarle a mi novia en su cumpleaños. Flores se marchitan. Chocolate se acaba. Quería algo que la hiciera sentir especial cada vez que lo usara. Cuando abrió Mariposa, se quedó en silencio unos segundos. Después se los puso y corrió al espejo. 'Parece que me puse joyería y música al mismo tiempo,' me dijo. Ahora no se los quita ni para dormir. Me dijo que es el mejor regalo que le han dado en años.",
       rating: 5,
@@ -117,7 +117,7 @@ const mariposaData: ProductData = {
     {
       name: "Sofía Vega",
       age: 22,
-      city: "CDMX",
+      city: "San José",
       quote:
         "Tengo videollamadas de 4 horas al día para mi trabajo. Con mis audífonos viejos, a las 2 horas tenía una marca roja en el oído y dolía. Con Mariposa? Ni siquiera los siento. Se posan en mi oreja, no dentro. Y cuando prendo la cámara, se ven elegantes. No escondo nada. Me siento profesional, me siento segura, me siento yo. Es mi accesorio de confianza literal.",
       rating: 5,
@@ -233,7 +233,7 @@ const mariposaData: ProductData = {
       desc: "3-5 días. Pagas al mensajero. Solo cuando lo tienes en tus manos.",
     },
   ],
-  cities: ["CDMX", "Guadalajara", "Monterrey", "Puebla", "Querétaro", "+ Más áreas"],
+  cities: ["San José", "Alajuela", "Cartago", "Heredia", "Liberia", "+ Más áreas"],
   faqs: [
     {
       category: "Sobre el producto",
@@ -273,7 +273,7 @@ const mariposaData: ProductData = {
     {
       category: "Envío y pago",
       q: "¿Cuánto tarda el envío?",
-      a: "3 a 5 días hábiles en CDMX, Guadalajara, Monterrey, Puebla, Querétaro. 5 a 7 días para el resto del país. Siempre gratis. Siempre COD. Pagas cuando lo tienes en tus manos. Cero riesgo. Máximo estilo.",
+      a: "3 a 5 días hábiles en San José, Alajuela, Cartago y Heredia. 5 a 7 días para el resto del país. Siempre gratis. Siempre COD. Pagas cuando lo tienes en tus manos. Cero riesgo. Máximo estilo.",
     },
   ],
   crossSell: [

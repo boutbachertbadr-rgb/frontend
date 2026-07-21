@@ -8,7 +8,7 @@ const guardianData: ProductData = {
   angle: "Protección Inteligente · Vazlina Guard",
   h1: "Duerme tranquilo. Guardián vigila lo que tú no puedes.",
   subheadline: "Desconexión física real al 100%. No es software. No es promesa. Es una protección tangible que ves y sientes. Mientras tú duermes, Guardián desconecta tu dispositivo al llenarse, y protege a tu familia de lo que nunca debió pasar.",
-  urgencyText: "Envío gratis esta semana a todo México",
+  urgencyText: "Envío gratis esta semana a todo Costa Rica",
   rating: 4.8,
   reviewCount: 1247,
   ratingBreakdown: [
@@ -39,7 +39,7 @@ const guardianData: ProductData = {
   ],
   problemStat: {
     number: "82%",
-    text: "de los mexicanos cargan sus dispositivos toda la noche sin saber que están matando su batería gota a gota, y jugando con fuego al lado de su familia dormida.",
+    text: "de los costarricenses cargan sus dispositivos toda la noche sin saber que están matando su batería gota a gota, y jugando con fuego al lado de su familia dormida.",
     source: "Fuente: estudios de degradación de baterías de litio, 2024",
   },
   problemSolution: [
@@ -109,8 +109,8 @@ const guardianData: ProductData = {
     { number: "1 año", label: "garantía" },
   ],
   expertQuote: {
-    text: "Probamos 18 dispositivos en México. 17 prometen 'auto-stop' pero nunca desconectan de verdad. Solo Guardián tiene un mecanismo interno que corta la corriente al 100%, y un LED que lo confirma visualmente. Por eso es el único que dejamos conectado cerca de donde duermen nuestros hijos.",
-    author: "Equipo Vazlina · CDMX · Ingeniería de producto",
+    text: "Probamos 18 dispositivos en Costa Rica. 17 prometen 'auto-stop' pero nunca desconectan de verdad. Solo Guardián tiene un mecanismo interno que corta la corriente al 100%, y un LED que lo confirma visualmente. Por eso es el único que dejamos conectado cerca de donde duermen nuestros hijos.",
+    author: "Equipo Vazlina · San José · Ingeniería de producto",
   },
   timeline: [
     {
@@ -135,7 +135,7 @@ const guardianData: ProductData = {
     {
       name: "Roberto Méndez",
       age: 28,
-      city: "Guadalajara",
+      city: "Cartago",
       image: "/images/products/review-roberto.jpg",
       quote:
         "Mi iPhone 15 tenía 6 meses y la batería ya estaba al 89%. Me quería morir. Con Guardián noté la diferencia en SEMANAS. Mi iPhone ya no amanece caliente. El LED azul a las 3am es la prueba de que la desconexión física SÍ funciona. No es marketing. Es real.",
@@ -144,7 +144,7 @@ const guardianData: ProductData = {
     {
       name: "Carmen Flores",
       age: 35,
-      city: "CDMX",
+      city: "San José",
       image: "/images/products/review-carmen.jpg",
       quote:
         "A las 2am me despertaba para revisar los cuartos de mis hijos. Imaginate: 35 años, dos adolescentes, y yo vigilando cargadores como si fuera guardia de seguridad. Guardián me devolvió el sueño. Literalmente. Ahora duermo 8 horas y mi ansiedad de mamá bajó un 90%.",
@@ -153,7 +153,7 @@ const guardianData: ProductData = {
     {
       name: "Miguel Torres",
       age: 42,
-      city: "Monterrey",
+      city: "Liberia",
       image: "/images/products/review-miguel.jpg",
       quote:
         "Soy ingeniero. No confío en promesas de software. Medí la corriente con mi multímetro: al 100%, Guardián corta el flujo completamente. Cero amperios. Lo confirmé yo mismo. Compré tres. Mi familia carga todo. Yo duermo tranquilo. Datos sobre marketing.",
@@ -269,7 +269,7 @@ const guardianData: ProductData = {
       desc: "3-5 días. Pagas al mensajero. Solo cuando lo tienes en tus manos.",
     },
   ],
-  cities: ["CDMX", "Guadalajara", "Monterrey", "Puebla", "Querétaro", "+ Más áreas"],
+  cities: ["San José", "Alajuela", "Cartago", "Heredia", "Liberia", "+ Más áreas"],
   faqs: [
     {
       category: "Sobre el producto",
@@ -309,7 +309,7 @@ const guardianData: ProductData = {
     {
       category: "Envío y pago",
       q: "¿Cuándo llega?",
-      a: "3 a 5 días hábiles en CDMX, Guadalajara, Monterrey, Puebla, Querétaro. 5 a 7 días para el resto del país. Siempre gratis. Y cuando llegue, conectas, ves el LED azul, y esa misma noche duermes diferente.",
+      a: "3 a 5 días hábiles en San José, Alajuela, Cartago y Heredia. 5 a 7 días para el resto del país. Siempre gratis. Y cuando llegue, conectas, ves el LED azul, y esa misma noche duermes diferente.",
     },
   ],
   crossSell: [
