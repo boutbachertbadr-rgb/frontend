@@ -8,7 +8,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "https://api.vazlina.shop";
 interface OrderItem { product_name: string; quantity: number; price_per_item: number; }
 interface Order {
   id: number; created_at: string; customer_name: string; customer_phone: string;
-  customer_state: string; customer_city: string; customer_address: string;
+  customer_state: string; customer_city: string; customer_distrito?: string; customer_address: string; customer_reference?: string;
   total_price: number; status: string; is_upsell_accepted: boolean; items: OrderItem[];
 }
 interface Metrics {
@@ -31,7 +31,9 @@ const STATUSES = [
   { value: "cancelled", label: "Cancelled", color: "bg-red-100 text-red-800", bar: "#EF4444" },
 ];
 
-function fmtMoney(n: number) { return `${n.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")} MXN`; }
+function fmtMoney(n: number) { return `\u20a1${n.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")} CRC`; }
+function productSlug(name: string): string { const n = name.toLowerCase(); if (n.includes("guardian") || n.includes("guard\u00e1n")) return "vazlina-guardian"; if (n.includes("brisa")) return "vazlina-brisa"; if (n.includes("mariposa")) return "vazlina-mariposa"; return ""; }
+function productImage(name: string): string { const slug = productSlug(name); if (!slug) return ""; return `/images/products/${slug.replace("vazlina-", "")}-hero.jpg`; }
 function fmtUSD(n: number) { return `$${n.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`; }
 function statusBadge(status: string) {
   const s = STATUSES.find((x) => x.value === status);
@@ -574,7 +576,7 @@ export default function AdminDashboard() {
                         <td className="px-3 py-2.5 text-gray-700 max-w-[200px]">
                           <div className="truncate">{order.items.map((i) => `${i.product_name} x${i.quantity}`).join(", ")}</div>
                         </td>
-                        <td className="px-3 py-2.5 font-bold text-gray-900 whitespace-nowrap">{order.total_price.toFixed(2)} MXN</td>
+                        <td className="px-3 py-2.5 font-bold text-gray-900 whitespace-nowrap">{fmtMoney(order.total_price)}</td>
                         <td className="px-3 py-2.5">{statusBadge(order.status)}</td>
                         <td className="px-3 py-2.5">
                           <div className="flex items-center gap-1">
@@ -615,27 +617,44 @@ export default function AdminDashboard() {
                   <p className="text-xs text-gray-500">{previewOrder.customer_phone}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold text-gray-400 uppercase">Location</p>
-                  <p className="text-sm text-gray-900">{previewOrder.customer_state}</p>
-                  <p className="text-xs text-gray-500">{previewOrder.customer_city}</p>
+                  <p className="text-[10px] font-bold text-gray-400 uppercase">Ubicación</p>
+                  <p className="text-sm text-gray-900"><span className="text-gray-400">Prov:</span> {previewOrder.customer_state}</p>
+                  <p className="text-xs text-gray-600"><span className="text-gray-400">Cantón:</span> {previewOrder.customer_city}</p>
+                  {previewOrder.customer_distrito && <p className="text-xs text-gray-600"><span className="text-gray-400">Distrito:</span> {previewOrder.customer_distrito}</p>}
                 </div>
               </div>
               <div>
-                <p className="text-[10px] font-bold text-gray-400 uppercase">Address</p>
+                <p className="text-[10px] font-bold text-gray-400 uppercase">Dirección</p>
                 <p className="text-sm text-gray-900">{previewOrder.customer_address}</p>
+                {previewOrder.customer_reference && <p className="text-xs text-gray-500 mt-0.5"><span className="font-semibold">Ref:</span> {previewOrder.customer_reference}</p>}
               </div>
               <div>
                 <p className="text-[10px] font-bold text-gray-400 uppercase mb-2">Products</p>
                 <div className="space-y-2">
-                  {previewOrder.items.map((item, i) => (
-                    <div key={i} className="flex items-center justify-between bg-gray-50 rounded-lg px-3 py-2">
-                      <span className="text-sm text-gray-800">{item.product_name}</span>
-                      <div className="text-right">
-                        <span className="text-xs text-gray-500">x{item.quantity}</span>
-                        <span className="text-sm font-bold text-gray-900 ml-2">{(item.price_per_item * item.quantity).toFixed(2)} MXN</span>
+                  {previewOrder.items.map((item, i) => {
+                    const slug = productSlug(item.product_name);
+                    const img = productImage(item.product_name);
+                    return (
+                    <div key={i} className="flex items-center gap-3 bg-gray-50 rounded-lg px-3 py-2">
+                      {img && (
+                        <div className="w-12 h-12 rounded-lg overflow-hidden shrink-0 bg-white border border-gray-200">
+                          <img src={img} alt={item.product_name} className="w-full h-full object-cover" />
+                        </div>
+                      )}
+                      <div className="flex-1 min-w-0">
+                        {slug ? (
+                          <a href={`/products/${slug}`} target="_blank" rel="noreferrer" className="text-sm font-medium text-blue-600 hover:underline truncate block">{item.product_name}</a>
+                        ) : (
+                          <span className="text-sm text-gray-800">{item.product_name}</span>
+                        )}
+                        <p className="text-xs text-gray-400">x{item.quantity}</p>
+                      </div>
+                      <div className="text-right shrink-0">
+                        <span className="text-sm font-bold text-gray-900">{fmtMoney(item.price_per_item * item.quantity)}</span>
                       </div>
                     </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
               <div className="border-t border-gray-100 pt-4 flex items-center justify-between">
@@ -645,7 +664,7 @@ export default function AdminDashboard() {
                 </div>
                 <div className="text-right">
                   <p className="text-[10px] font-bold text-gray-400 uppercase">Total</p>
-                  <p className="text-xl font-bold text-gray-900">{previewOrder.total_price.toFixed(2)} MXN</p>
+                  <p className="text-xl font-bold text-gray-900">{fmtMoney(previewOrder.total_price)}</p>
                   {previewOrder.is_upsell_accepted && <span className="text-[10px] bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full">Upsell Accepted</span>}
                 </div>
               </div>
