@@ -51,12 +51,12 @@ function ThankYouContent() {
           </p>
         </div>
 
-        {/* Trust Badges Bar — COD Mexico Dropshipping */}
+        {/* Trust Badges Bar — COD Costa Rica */}
         <div className="bg-white rounded-xl shadow-sm border border-border p-4 flex items-center justify-around text-center">
           <div className="flex flex-col items-center gap-1">
             <Truck size={20} className="text-brand" />
             <p className="text-[11px] font-bold text-text-primary uppercase tracking-wide">Envío rápido</p>
-            <p className="text-[10px] text-text-secondary">3-5 días MX</p>
+            <p className="text-[10px] text-text-secondary">3-5 días CR</p>
           </div>
           <div className="w-px h-8 bg-border" />
           <div className="flex flex-col items-center gap-1">

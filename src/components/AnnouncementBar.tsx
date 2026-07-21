@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Truck, HandCoins, Clock, Shield } from "lucide-react";
 
 const MESSAGES = [
-  { icon: Truck, text: "Envío gratis MX" },
+  { icon: Truck, text: "Envío gratis Costa Rica" },
   { icon: HandCoins, text: "Pago al recibir" },
   { icon: Clock, text: "3-5 días hábiles" },
   { icon: Shield, text: "30 días sin riesgo" },

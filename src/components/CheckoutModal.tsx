@@ -143,7 +143,7 @@ export default function CheckoutModal() {
               {/* Phone */}
               <div>
                 <label className="block text-sm font-semibold mb-1" htmlFor="phone">
-                  Teléfono (10 dígitos MX) <span className="text-red-500">*</span>
+                  Teléfono (8 dígitos CR) <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
                   <input
@@ -175,7 +175,7 @@ export default function CheckoutModal() {
                   <input
                     id="state"
                     type="text"
-                    placeholder="Ej. CDMX"
+                    placeholder="Ej. San José"
                     className={`input-field pr-10 ${errors.state ? "border-red-500 bg-red-50 focus:ring-red-200" : ""}`}
                     {...register("state")}
                   />

@@ -34,7 +34,7 @@ export default function RatingBreakdown({
             ))}
           </div>
           <span className="text-sm font-bold text-text-primary">
-            {totalCount.toLocaleString("es-MX")} Reseñas
+            {totalCount.toLocaleString("es-CR")} Reseñas
           </span>
           <ChevronUp size={14} className="text-text-secondary" />
         </div>
@@ -80,7 +80,7 @@ export default function RatingBreakdown({
 
               {/* Count */}
               <span className="text-sm text-text-secondary w-16 text-right shrink-0">
-                ({item.count.toLocaleString("es-MX")})
+                ({item.count.toLocaleString("es-CR")})
               </span>
             </div>
           );

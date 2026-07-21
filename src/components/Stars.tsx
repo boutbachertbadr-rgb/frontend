@@ -27,7 +27,7 @@ export default function Stars({ rating = 4.8, count = 1547 }: StarsProps) {
         ))}
       </div>
       <span className="text-sm text-text-secondary font-medium">
-        {rating.toFixed(1)} <span className="text-text-secondary/60">({count.toLocaleString("es-MX")} reseñas)</span>
+        {rating.toFixed(1)} <span className="text-text-secondary/60">({count.toLocaleString("es-CR")} reseñas)</span>
       </span>
     </div>
   );
