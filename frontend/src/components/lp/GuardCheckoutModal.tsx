@@ -10,16 +10,16 @@ import { createOrder } from "@/lib/api";
 import { generateEventId } from "@/lib/pixels";
 
 const schema = z.object({
-  name: z.string().optional(),
-  phone: z.string().optional(),
-  state: z.string().optional(),
-  city: z.string().optional(),
-  distrito: z.string().optional(),
-  address: z.string().optional(),
-  reference: z.string().optional(),
+  name: z.any(),
+  phone: z.any(),
+  state: z.any(),
+  city: z.any(),
+  distrito: z.any(),
+  address: z.any(),
+  reference: z.any(),
 });
 
-type GuardForm = z.infer<typeof schema>;
+type GuardForm = Record<string, string>;
 
 export interface LPVariant {
   name: string;
@@ -62,8 +62,8 @@ export default function GuardCheckoutModal({
     sessionStorage.setItem("order_status", "pending");
 
     const addr = {
-      name: data.name ?? "", phone: data.phone ?? "", state: data.state ?? "",
-      city: data.city ?? "", distrito: data.distrito ?? "", address: data.address ?? "", reference: data.reference ?? "",
+      name: String(data.name ?? ""), phone: String(data.phone ?? ""), state: String(data.state ?? ""),
+      city: String(data.city ?? ""), distrito: String(data.distrito ?? ""), address: String(data.address ?? ""), reference: String(data.reference ?? ""),
     };
     const orderItems = express
       ? [...variant.items, { product_name: "Envío Express (1-3 días)", quantity: 1, price_per_item: EXPRESS_FEE }]
