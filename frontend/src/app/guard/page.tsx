@@ -196,7 +196,7 @@ export default function GuardPage() {
           <div className="lp-animate lp-delay-3 mt-6 mx-auto max-w-xs rounded-2xl overflow-hidden" style={{ backgroundColor: CARD, border: "1px solid #2A2E35" }}>
             <button onClick={() => setReviewsOpen(!reviewsOpen)} className="w-full flex items-center justify-center gap-2 px-5 py-3.5">
               <span className="flex gap-0.5">
-                {[...Array(5)].map((_, i) => (<Star key={i} size={13} fill="#FF6B35" style={{ color: "#FF6B35" }} />))}
+                {[...Array(5)].map((_, i) => (<Star key={i} size={13} fill="#F5B301" style={{ color: "#F5B301" }} />))}
               </span>
               <span className="text-xs font-bold text-white">1,247 Reseñas</span>
               {reviewsOpen ? <ChevronUp size={14} className="text-gray-400" /> : <ChevronDown size={14} className="text-gray-400" />}
@@ -204,7 +204,7 @@ export default function GuardPage() {
             {reviewsOpen && (
               <div className="px-5 pb-5 pt-4" style={{ borderTop: "1px solid #2A2E35" }}>
                 <div className="flex items-center justify-center gap-2 mb-4">
-                  <Star size={22} fill="#FF6B35" style={{ color: "#FF6B35" }} />
+                  <Star size={22} fill="#F5B301" style={{ color: "#F5B301" }} />
                   <span className="font-heading text-3xl font-bold text-white">4.8</span>
                 </div>
                 {[
@@ -217,7 +217,7 @@ export default function GuardPage() {
                   <div key={stars} className="flex items-center gap-2 mb-1.5">
                     <div className="flex gap-0.5 w-16 shrink-0">
                       {[...Array(5)].map((_, i) => (
-                        <Star key={i} size={10} fill={i < stars ? "#FF6B35" : "transparent"} style={{ color: i < stars ? "#FF6B35" : "#3A3E45" }} />
+                        <Star key={i} size={10} fill={i < stars ? "#F5B301" : "transparent"} style={{ color: i < stars ? "#F5B301" : "#3A3E45" }} />
                       ))}
                     </div>
                     <div className="flex-1 h-1.5 rounded-full" style={{ backgroundColor: "#2A2E35" }}>
@@ -452,7 +452,7 @@ export default function GuardPage() {
         <div className="max-w-lg mx-auto">
           <h2 className="lp-animate text-3xl font-bold text-center mb-2" style={{ color: INK }}>Clientes que ya probaron Vazlina Guard</h2>
           <div className="lp-animate lp-delay-1 flex justify-center items-center gap-1 mb-8">
-            {[...Array(5)].map((_, i) => <Star key={i} size={16} fill="#FF6B35" style={{ color: "#FF6B35" }} />)}
+            {[...Array(5)].map((_, i) => <Star key={i} size={16} fill="#F5B301" style={{ color: "#F5B301" }} />)}
             <span className="ml-2 text-sm text-gray-600">Reseñas verificadas</span>
           </div>
 
