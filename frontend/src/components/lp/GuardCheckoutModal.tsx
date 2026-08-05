@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { X, ShieldCheck, Truck, ChevronDown, Zap } from "lucide-react";
 import { createOrder } from "@/lib/api";
-import { generateEventId, trackPurchase } from "@/lib/pixels";
+import { generateEventId } from "@/lib/pixels";
 
 const PROVINCES = ["San José", "Alajuela", "Cartago", "Heredia", "Guanacaste", "Puntarenas", "Limón"];
 
@@ -97,7 +97,7 @@ export default function GuardCheckoutModal({
       localStorage.setItem("guard_order", updatedPayload);
       sessionStorage.setItem("guard_order", updatedPayload);
       sessionStorage.setItem("order_status", "confirmed");
-      trackPurchase(total, eventId, addr.phone);
+      sessionStorage.setItem("guard_pixel_purchase", JSON.stringify({ value: total, eventId, phone: addr.phone }));
       window.location.href = "/guard/thank-you";
     } catch (err) {
       console.error("[checkout] createOrder failed:", err);

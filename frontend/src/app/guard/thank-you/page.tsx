@@ -3,6 +3,7 @@
 import { Suspense, useState, useEffect } from "react";
 import { CheckCircle, Truck, Phone, RefreshCw, ShieldCheck } from "lucide-react";
 import { createOrder, getOrderById } from "@/lib/api";
+import { trackPurchase } from "@/lib/pixels";
 
 const ACCENT = "#111111";
 const ACCENT_D = "#C9CDD3";
@@ -19,6 +20,17 @@ function GuardThankYouContent() {
     addr: Addr | null;
     items: OrderItem[];
   } | null>(null);
+
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem("guard_pixel_purchase");
+      if (raw) {
+        const { value, eventId, phone } = JSON.parse(raw);
+        sessionStorage.removeItem("guard_pixel_purchase");
+        trackPurchase(value, eventId, phone);
+      }
+    } catch {}
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
