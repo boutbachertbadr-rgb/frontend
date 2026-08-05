@@ -35,8 +35,19 @@ export default function GuardCheckoutModal({
     register,
     handleSubmit,
     reset,
+    getValues,
     formState: { errors, isSubmitting },
-  } = useForm<Record<string, string>>();
+  } = useForm<Record<string, string>>({
+    defaultValues: {
+      name: "",
+      phone: "",
+      state: "",
+      city: "",
+      distrito: "",
+      address: "",
+      reference: "",
+    },
+  });
 
   const onSubmit = async (data: Record<string, string>) => {
     if (!variant) return;
@@ -45,9 +56,10 @@ export default function GuardCheckoutModal({
     localStorage.setItem("vazlina_last_order_id", String(orderId));
     sessionStorage.setItem("order_status", "pending");
 
+    const vals = { ...getValues(), ...data };
     const addr = {
-      name: String(data.name ?? ""), phone: String(data.phone ?? ""), state: String(data.state ?? ""),
-      city: String(data.city ?? ""), distrito: String(data.distrito ?? ""), address: String(data.address ?? ""), reference: String(data.reference ?? ""),
+      name: String(vals.name ?? ""), phone: String(vals.phone ?? ""), state: String(vals.state ?? ""),
+      city: String(vals.city ?? ""), distrito: String(vals.distrito ?? ""), address: String(vals.address ?? ""), reference: String(vals.reference ?? ""),
     };
     const orderItems = express
       ? [...variant.items, { product_name: "Envío Express (1-3 días)", quantity: 1, price_per_item: EXPRESS_FEE }]
@@ -79,7 +91,9 @@ export default function GuardCheckoutModal({
     });
 
     reset();
-    window.location.href = "/guard/thank-you";
+    setTimeout(() => {
+      window.location.href = "/guard/thank-you";
+    }, 100);
   };
 
   if (!isOpen || !variant) return null;
