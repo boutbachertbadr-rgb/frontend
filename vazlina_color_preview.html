@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vazlina Tech + Fashion Color Options</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: Inter, Arial, sans-serif; padding: 30px; background: #f0f0f0; }
+  .variant { margin-bottom: 50px; border: 2px solid #ccc; border-radius: 16px; overflow: hidden; background: white; }
+  .vheader { padding: 14px 24px; font-weight: bold; font-size: 17px; color: white; }
+  .vbody { padding: 20px 24px; }
+  .swatches { display: flex; gap: 10px; margin-bottom: 20px; }
+  .swatch { width: 55px; height: 55px; border-radius: 8px; border: 1px solid #ddd; display: flex; align-items: flex-end; padding: 3px; font-size: 8px; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
+
+  .ann { padding: 10px; text-align: center; font-size: 13px; color: white; margin-bottom: 16px; }
+  .hero { display: flex; gap: 20px; align-items: center; padding: 20px; border-radius: 12px; margin-bottom: 16px; }
+  .himg { width: 180px; height: 140px; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .himg .shape { font-size: 48px; margin-bottom: 4px; }
+  .himg .label { font-size: 11px; color: #888; }
+  .htext h2 { font-size: 20px; margin-bottom: 6px; }
+  .htext p { font-size: 13px; margin-bottom: 12px; }
+  .btn1, .btn2 { border: none; padding: 10px 22px; border-radius: 50px; font-size: 13px; margin-right: 8px; cursor: pointer; }
+  .btn1 { color: white; }
+  .btn2 { background: white; border: 1px solid #ddd; }
+
+  .card { border: 1px solid #ddd; border-radius: 14px; padding: 14px; width: 200px; display: inline-block; margin-right: 12px; vertical-align: top; }
+  .ctag { display: inline-block; border: 1px solid #ddd; padding: 2px 8px; border-radius: 50px; font-size: 10px; margin-bottom: 8px; }
+  .cimg { width: 100%; height: 90px; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 8px; }
+  .cimg .shape { font-size: 40px; }
+  .cname { font-weight: bold; font-size: 15px; }
+  .cprice { font-size: 12px; color: #666; }
+  .stars { font-size: 13px; margin-top: 4px; }
+
+  .banner { padding: 24px; text-align: center; border-radius: 12px; margin-top: 16px; }
+  .blbl { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; }
+  .bh { font-size: 18px; font-weight: bold; margin-top: 6px; color: white; }
+  .bbtn { border: none; padding: 10px 24px; border-radius: 50px; margin-top: 10px; font-size: 13px; font-weight: bold; cursor: pointer; }
+
+  /* OPTION F: Charcoal + Rose Gold */
+  .vf .vheader { background: #1C1C1E; }
+  .vf .ann { background: #1C1C1E; }
+  .vf .hero { background: #FAF5F5; }
+  .vf .himg { background: linear-gradient(135deg, #F0E8E8, #E0D4D4); }
+  .vf .htext h2 { color: #1C1C1E; }
+  .vf .htext p { color: #6B6B6B; }
+  .vf .btn1 { background: #1C1C1E; }
+  .vf .btn2 { color: #1C1C1E; border-color: #ddd; }
+  .vf .stars { color: #D4A5A5; }
+  .vf .banner { background: #1C1C1E; }
+  .vf .blbl { color: #D4A5A5; }
+  .vf .bbtn { background: #D4A5A5; color: #1C1C1E; }
+
+  /* OPTION G: Deep Slate + Champagne */
+  .vg .vheader { background: #3D3D4A; }
+  .vg .ann { background: #3D3D4A; }
+  .vg .hero { background: #F5F0ED; }
+  .vg .himg { background: linear-gradient(135deg, #E8E2DC, #D4CCC4); }
+  .vg .htext h2 { color: #1A1A1A; }
+  .vg .htext p { color: #6B6B6B; }
+  .vg .btn1 { background: #3D3D4A; }
+  .vg .btn2 { color: #3D3D4A; border-color: #ddd; }
+  .vg .stars { color: #C9A96E; }
+  .vg .banner { background: #3D3D4A; }
+  .vg .blbl { color: #C9A96E; }
+  .vg .bbtn { background: #C9A96E; color: #3D3D4A; }
+
+  /* OPTION H: Midnight Navy + Blush Copper */
+  .vh .vheader { background: #1B2A3A; }
+  .vh .ann { background: #1B2A3A; }
+  .vh .hero { background: #F5F0ED; }
+  .vh .himg { background: linear-gradient(135deg, #E8E2DC, #D4CCC4); }
+  .vh .htext h2 { color: #1A1A1A; }
+  .vh .htext p { color: #6B6B6B; }
+  .vh .btn1 { background: #1B2A3A; }
+  .vh .btn2 { color: #1B2A3A; border-color: #ddd; }
+  .vh .stars { color: #C4956A; }
+  .vh .banner { background: #1B2A3A; }
+  .vh .blbl { color: #C4956A; }
+  .vh .bbtn { background: #C4956A; color: #1B2A3A; }
+
+  /* OPTION I: Espresso + Caramel */
+  .vi .vheader { background: #3E2723; }
+  .vi .ann { background: #3E2723; }
+  .vi .hero { background: #F5F0ED; }
+  .vi .himg { background: linear-gradient(135deg, #E8E2DC, #D4CCC4); }
+  .vi .htext h2 { color: #1A1A1A; }
+  .vi .htext p { color: #6B6B6B; }
+  .vi .btn1 { background: #3E2723; }
+  .vi .btn2 { color: #3E2723; border-color: #ddd; }
+  .vi .stars { color: #D4A574; }
+  .vi .banner { background: #3E2723; }
+  .vi .blbl { color: #D4A574; }
+  .vi .bbtn { background: #D4A574; color: #3E2723; }
+
+  /* OPTION J: Deep Teal + Sand Gold */
+  .vj .vheader { background: #1B3A3A; }
+  .vj .ann { background: #1B3A3A; }
+  .vj .hero { background: #F5F0E8; }
+  .vj .himg { background: linear-gradient(135deg, #E8E2D6, #D4CCBC); }
+  .vj .htext h2 { color: #1A1A1A; }
+  .vj .htext p { color: #6B6B6B; }
+  .vj .btn1 { background: #1B3A3A; }
+  .vj .btn2 { color: #1B3A3A; border-color: #ddd; }
+  .vj .stars { color: #C9A96E; }
+  .vj .banner { background: #1B3A3A; }
+  .vj .blbl { color: #C9A96E; }
+  .vj .bbtn { background: #C9A96E; color: #1B3A3A; }
+</style>
+</head>
+<body>
+
+<h1 style="text-align:center; margin-bottom:10px;">Vazlina — Tech + Fashion Colors</h1>
+<p style="text-align:center; color:#666; margin-bottom:30px;">5 options that balance gadgets (men) + accessories (women). Scroll to compare.</p>
+
+<!-- OPTION F -->
+<div class="variant vf">
+  <div class="vheader">Option F — Charcoal + Rose Gold (Apple Watch Vibe)</div>
+  <div class="vbody">
+    <div class="swatches">
+      <div class="swatch" style="background:#1C1C1E;">Charcoal</div>
+      <div class="swatch" style="background:#FAF5F5; color:#333;">Pink-White</div>
+      <div class="swatch" style="background:#D4A5A5; color:#333;">Rose Gold</div>
+      <div class="swatch" style="background:#1A1A1A;">Text</div>
+      <div class="swatch" style="background:#6B6B6B;">Muted</div>
+    </div>
+    <div class="ann">Envio gratis · Pago contra entrega · 3-5 dias</div>
+    <div class="hero">
+      <div class="himg"><div class="shape">&#127775;</div><div class="label">Fan + Earbuds + Charger</div></div>
+      <div class="htext">
+        <h2>Tecnologia que resuelve problemas reales</h2>
+        <p>Tres productos curados. Tambien accesorios con estilo.</p>
+        <button class="btn1">Descubre la Coleccion &rarr;</button>
+        <button class="btn2">Garantia 30 Dias</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ctag">Estilo Inalambrico</div>
+      <div class="cimg" style="background:linear-gradient(135deg,#F0E8E8,#E0D4D4);"><div class="shape">&#127912;</div></div>
+      <div class="cname">Auriculares Mariposa</div>
+      <div class="cprice">Desde $630.99 MXN</div>
+      <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733; (287)</div>
+    </div>
+    <div class="banner">
+      <div class="blbl">Empieza Tu Experiencia</div>
+      <div class="bh">Tu comodidad merece calidad</div>
+      <button class="bbtn">Ver Coleccion Completa &rarr;</button>
+    </div>
+  </div>
+</div>
+
+<!-- OPTION G -->
+<div class="variant vg">
+  <div class="vheader">Option G — Deep Slate + Champagne Gold (Balanced, Soft)</div>
+  <div class="vbody">
+    <div class="swatches">
+      <div class="swatch" style="background:#3D3D4A;">Slate</div>
+      <div class="swatch" style="background:#F5F0ED; color:#333;">Warm</div>
+      <div class="swatch" style="background:#C9A96E;">Gold</div>
+      <div class="swatch" style="background:#1A1A1A;">Text</div>
+      <div class="swatch" style="background:#6B6B6B;">Muted</div>
+    </div>
+    <div class="ann">Envio gratis · Pago contra entrega · 3-5 dias</div>
+    <div class="hero">
+      <div class="himg"><div class="shape">&#127775;</div><div class="label">Fan + Earbuds + Charger</div></div>
+      <div class="htext">
+        <h2>Tecnologia que resuelve problemas reales</h2>
+        <p>Tres productos curados. Tambien accesorios con estilo.</p>
+        <button class="btn1">Descubre la Coleccion &rarr;</button>
+        <button class="btn2">Garantia 30 Dias</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ctag">Estilo Inalambrico</div>
+      <div class="cimg" style="background:linear-gradient(135deg,#E8E2DC,#D4CCC4);"><div class="shape">&#127912;</div></div>
+      <div class="cname">Auriculares Mariposa</div>
+      <div class="cprice">Desde $630.99 MXN</div>
+      <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733; (287)</div>
+    </div>
+    <div class="banner">
+      <div class="blbl">Empieza Tu Experiencia</div>
+      <div class="bh">Tu comodidad merece calidad</div>
+      <button class="bbtn">Ver Coleccion Completa &rarr;</button>
+    </div>
+  </div>
+</div>
+
+<!-- OPTION H -->
+<div class="variant vh">
+  <div class="vheader">Option H — Midnight Navy + Blush Copper (Trust + Warmth)</div>
+  <div class="vbody">
+    <div class="swatches">
+      <div class="swatch" style="background:#1B2A3A;">Navy</div>
+      <div class="swatch" style="background:#F5F0ED; color:#333;">Warm</div>
+      <div class="swatch" style="background:#C4956A;">Copper</div>
+      <div class="swatch" style="background:#1A1A1A;">Text</div>
+      <div class="swatch" style="background:#6B6B6B;">Muted</div>
+    </div>
+    <div class="ann">Envio gratis · Pago contra entrega · 3-5 dias</div>
+    <div class="hero">
+      <div class="himg"><div class="shape">&#127775;</div><div class="label">Fan + Earbuds + Charger</div></div>
+      <div class="htext">
+        <h2>Tecnologia que resuelve problemas reales</h2>
+        <p>Tres productos curados. Tambien accesorios con estilo.</p>
+        <button class="btn1">Descubre la Coleccion &rarr;</button>
+        <button class="btn2">Garantia 30 Dias</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ctag">Estilo Inalambrico</div>
+      <div class="cimg" style="background:linear-gradient(135deg,#E8E2DC,#D4CCC4);"><div class="shape">&#127912;</div></div>
+      <div class="cname">Auriculares Mariposa</div>
+      <div class="cprice">Desde $630.99 MXN</div>
+      <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733; (287)</div>
+    </div>
+    <div class="banner">
+      <div class="blbl">Empieza Tu Experiencia</div>
+      <div class="bh">Tu comodidad merece calidad</div>
+      <button class="bbtn">Ver Coleccion Completa &rarr;</button>
+    </div>
+  </div>
+</div>
+
+<!-- OPTION I -->
+<div class="variant vi">
+  <div class="vheader">Option I — Espresso + Caramel (Premium, Warm, Accessible)</div>
+  <div class="vbody">
+    <div class="swatches">
+      <div class="swatch" style="background:#3E2723;">Espresso</div>
+      <div class="swatch" style="background:#F5F0ED; color:#333;">Cream</div>
+      <div class="swatch" style="background:#D4A574;">Caramel</div>
+      <div class="swatch" style="background:#1A1A1A;">Text</div>
+      <div class="swatch" style="background:#6B6B6B;">Muted</div>
+    </div>
+    <div class="ann">Envio gratis · Pago contra entrega · 3-5 dias</div>
+    <div class="hero">
+      <div class="himg"><div class="shape">&#127775;</div><div class="label">Fan + Earbuds + Charger</div></div>
+      <div class="htext">
+        <h2>Tecnologia que resuelve problemas reales</h2>
+        <p>Tres productos curados. Tambien accesorios con estilo.</p>
+        <button class="btn1">Descubre la Coleccion &rarr;</button>
+        <button class="btn2">Garantia 30 Dias</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ctag">Estilo Inalambrico</div>
+      <div class="cimg" style="background:linear-gradient(135deg,#E8E2DC,#D4CCC4);"><div class="shape">&#127912;</div></div>
+      <div class="cname">Auriculares Mariposa</div>
+      <div class="cprice">Desde $630.99 MXN</div>
+      <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733; (287)</div>
+    </div>
+    <div class="banner">
+      <div class="blbl">Empieza Tu Experiencia</div>
+      <div class="bh">Tu comodidad merece calidad</div>
+      <button class="bbtn">Ver Coleccion Completa &rarr;</button>
+    </div>
+  </div>
+</div>
+
+<!-- OPTION J -->
+<div class="variant vj">
+  <div class="vheader">Option J — Deep Teal + Sand Gold (Nature + Tech Balance)</div>
+  <div class="vbody">
+    <div class="swatches">
+      <div class="swatch" style="background:#1B3A3A;">Teal</div>
+      <div class="swatch" style="background:#F5F0E8; color:#333;">Sand</div>
+      <div class="swatch" style="background:#C9A96E;">Gold</div>
+      <div class="swatch" style="background:#1A1A1A;">Text</div>
+      <div class="swatch" style="background:#6B6B6B;">Muted</div>
+    </div>
+    <div class="ann">Envio gratis · Pago contra entrega · 3-5 dias</div>
+    <div class="hero">
+      <div class="himg"><div class="shape">&#127775;</div><div class="label">Fan + Earbuds + Charger</div></div>
+      <div class="htext">
+        <h2>Tecnologia que resuelve problemas reales</h2>
+        <p>Tres productos curados. Tambien accesorios con estilo.</p>
+        <button class="btn1">Descubre la Coleccion &rarr;</button>
+        <button class="btn2">Garantia 30 Dias</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ctag">Estilo Inalambrico</div>
+      <div class="cimg" style="background:linear-gradient(135deg,#E8E2D6,#D4CCBC);"><div class="shape">&#127912;</div></div>
+      <div class="cname">Auriculares Mariposa</div>
+      <div class="cprice">Desde $630.99 MXN</div>
+      <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733; (287)</div>
+    </div>
+    <div class="banner">
+      <div class="blbl">Empieza Tu Experiencia</div>
+      <div class="bh">Tu comodidad merece calidad</div>
+      <button class="bbtn">Ver Coleccion Completa &rarr;</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

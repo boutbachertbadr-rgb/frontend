@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paleta: Alerta Nocturna</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: Georgia, 'Segoe UI', serif; }
+  body { background: #10161D; color: #F5F1EA; }
+  .hero { min-height: 70vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 60px 24px; background: radial-gradient(ellipse at 50% 20%, rgba(230,57,70,0.12) 0%, transparent 60%), #10161D; }
+  .badge { display: inline-block; padding: 6px 16px; border-radius: 999px; border: 1px solid #E63946; color: #E63946; font-size: 12px; letter-spacing: 2px; margin-bottom: 24px; }
+  h1 { font-size: 42px; line-height: 1.15; max-width: 640px; margin-bottom: 16px; }
+  h1 span { color: #E63946; }
+  .sub { color: #9AA5B1; font-size: 17px; max-width: 480px; margin-bottom: 32px; line-height: 1.6; }
+  .cta { background: #E63946; color: #fff; padding: 18px 48px; border-radius: 14px; font-size: 15px; font-weight: bold; letter-spacing: 2px; border: none; cursor: pointer; }
+  .cta.secondary { background: transparent; border: 1.5px solid #9AA5B1; color: #F5F1EA; margin-left: 12px; }
+  .strip { background: #1A232E; padding: 28px 24px; display: flex; justify-content: center; gap: 48px; flex-wrap: wrap; }
+  .strip div { text-align: center; font-size: 13px; color: #9AA5B1; }
+  .strip strong { display: block; color: #F5F1EA; font-size: 15px; margin-bottom: 4px; }
+  .cards { background: #10161D; padding: 60px 24px; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+  .card { background: #1A232E; border: 1px solid #26313D; border-radius: 18px; padding: 28px; width: 240px; }
+  .card .icon { width: 40px; height: 40px; border-radius: 10px; background: rgba(230,57,70,0.12); display: flex; align-items: center; justify-content: center; color: #E63946; font-size: 18px; margin-bottom: 16px; }
+  .card h3 { font-size: 15px; margin-bottom: 8px; }
+  .card p { font-size: 13px; color: #9AA5B1; line-height: 1.5; }
+  .offer { background: #F5F1EA; color: #10161D; padding: 60px 24px; text-align: center; }
+  .offer h2 { font-size: 28px; margin-bottom: 32px; }
+  .offer-card { background: #fff; border: 2px solid #E63946; border-radius: 18px; max-width: 360px; margin: 0 auto; padding: 28px; }
+  .offer-card .price { font-size: 34px; font-weight: bold; color: #E63946; }
+  .offer-card .old { text-decoration: line-through; color: #9AA5B1; font-size: 15px; }
+  .offer-card button { margin-top: 18px; width: 100%; background: #E63946; color: #fff; padding: 15px; border-radius: 12px; border: none; font-weight: bold; letter-spacing: 1px; font-size: 14px; }
+  .palette { padding: 40px 24px; background: #0B0F14; text-align: center; }
+  .swatches { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; margin-top: 20px; }
+  .swatch { width: 110px; }
+  .swatch .box { height: 60px; border-radius: 12px; border: 1px solid #333; }
+  .swatch p { font-size: 11px; color: #9AA5B1; margin-top: 6px; }
+  .swatch code { font-size: 11px; color: #F5F1EA; }
+</style>
+</head>
+<body>
+  <section class="hero">
+    <div class="badge">PROTECCIÓN INTELIGENTE</div>
+    <h1>Tu cargador puede <span>quemar tu casa</span> mientras duermes.</h1>
+    <p class="sub">Vazlina Guard corta la energía automáticamente antes de que ocurra un desastre. Protege tu teléfono y a tu familia.</p>
+    <div><button class="cta">PROTEGER MI FAMILIA</button><button class="cta secondary">Ver cómo funciona</button></div>
+  </section>
+  <section class="strip">
+    <div><strong>🚚 Envío Gratis</strong>A todo Costa Rica</div>
+    <div><strong>💳 Pago al Recibir</strong>Cero riesgo</div>
+    <div><strong>🛡️ Garantía 30 días</strong>Devolución total</div>
+  </section>
+  <section class="cards">
+    <div class="card"><div class="icon">⚡</div><h3>Corte Automático</h3><p>Detecta fallas eléctricas y corta la energía en milisegundos.</p></div>
+    <div class="card"><div class="icon">🔥</div><h3>Prevención de Incendios</h3><p>Reduce el riesgo de incendios por sobrecarga o fallas.</p></div>
+    <div class="card"><div class="icon">🔋</div><h3>Protege tu Batería</h3><p>Detiene la carga al 100%. Tu batería dura años más.</p></div>
+  </section>
+  <section class="offer">
+    <h2>Vazlina Guard™</h2>
+    <div class="offer-card">
+      <p class="old">₡24,900</p>
+      <p class="price">₡16,900</p>
+      <p style="font-size:13px;color:#666;margin-top:4px;">Envío gratis · Pago al recibir</p>
+      <button>ORDENAR AHORA</button>
+    </div>
+  </section>
+  <section class="palette">
+    <h2 style="font-size:20px;">Paleta "Alerta Nocturna"</h2>
+    <div class="swatches">
+      <div class="swatch"><div class="box" style="background:#10161D;"></div><p>Fondo Noche</p><code>#10161D</code></div>
+      <div class="swatch"><div class="box" style="background:#1A232E;"></div><p>Card</p><code>#1A232E</code></div>
+      <div class="swatch"><div class="box" style="background:#E63946;"></div><p>Rojo Alerta (CTA)</p><code>#E63946</code></div>
+      <div class="swatch"><div class="box" style="background:#F5F1EA;"></div><p>Blanco Cálido</p><code>#F5F1EA</code></div>
+      <div class="swatch"><div class="box" style="background:#9AA5B1;"></div><p>Plata</p><code>#9AA5B1</code></div>
+    </div>
+  </section>
+</body>
+</html>

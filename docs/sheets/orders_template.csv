@@ -1,0 +1,3 @@
+Date,Order ID,Customer Name,Phone,State,City,Address,Main Product,Upsell (Yes/No),Upsell Product,Total to Collect,Status
+02/07/2026 21:00,#1001,María García,5512345678,CDMX,Benito Juárez,"Calle Insurgentes 45, Col. Del Valle","Vazlina Brisa (2 unidades)",Yes,Vazlina Guardián,$2348.00 MXN,Pending confirmation
+02/07/2026 21:15,#1002,Carlos López,3312345678,Jalisco,Guadalajara,"Av. Chapultepec 120, Col. Americana","Vazlina Guardián (1 unidad)",No,,$1099.00 MXN,Pending confirmation

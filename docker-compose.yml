@@ -1,0 +1,52 @@
+version: "3.9"
+
+services:
+  vazlina_database:
+    image: postgres:16-alpine
+    container_name: vazlina_database
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: vazlina
+      POSTGRES_USER: vazlina
+      POSTGRES_PASSWORD: vazlina
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vazlina -d vazlina"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: vazlina_backend
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    environment:
+      DATABASE_URL: postgresql://vazlina:vazlina@vazlina_database:5432/vazlina
+    ports:
+      - "8000:8000"
+    depends_on:
+      vazlina_database:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: vazlina_frontend
+    restart: unless-stopped
+    env_file:
+      - ./frontend/.env
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:

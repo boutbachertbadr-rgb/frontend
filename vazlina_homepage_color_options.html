@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Vazlina Homepage Colors</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:Inter,Arial; padding:20px; background:#f0f0f0; }
+.v { margin-bottom:40px; border:2px solid #ccc; border-radius:12px; overflow:hidden; }
+.vt { padding:12px 20px; font-weight:bold; font-size:15px; color:white; }
+.vb { padding:0; }
+.ann { padding:8px; text-align:center; font-size:12px; color:white; }
+.nav { padding:12px 20px; display:flex; justify-content:space-between; background:white; }
+.hero { display:flex; gap:20px; padding:30px 20px; }
+.hi { width:180px; height:140px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:48px; }
+.ht h1 { font-size:22px; margin-bottom:6px; }
+.ht p { font-size:13px; margin-bottom:14px; }
+.btn { border:none; padding:10px 22px; border-radius:50px; font-size:13px; cursor:pointer; margin-right:6px; }
+.prod { padding:30px 20px; text-align:center; }
+.prod h2 { font-size:11px; text-transform:uppercase; letter-spacing:2px; margin-bottom:6px; }
+.prod h3 { font-size:20px; margin-bottom:20px; }
+.cards { display:flex; gap:14px; justify-content:center; }
+.c { width:170px; border-radius:12px; padding:12px; text-align:left; }
+.c .tag { display:inline-block; padding:2px 8px; border-radius:50px; font-size:10px; margin-bottom:6px; }
+.c .ci { width:100%; height:90px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:36px; margin-bottom:8px; }
+.c .cn { font-weight:bold; font-size:14px; }
+.c .cp { font-size:12px; margin-top:2px; }
+.c .st { font-size:12px; margin-top:4px; }
+.bn { padding:30px 20px; text-align:center; }
+.bn .bl { font-size:11px; text-transform:uppercase; letter-spacing:2px; margin-bottom:6px; }
+.bn .bh { font-size:20px; font-weight:bold; color:white; margin-bottom:4px; }
+.bn .bs { font-size:14px; color:rgba(255,255,255,0.8); margin-bottom:14px; }
+.bn .bb { border:none; padding:10px 24px; border-radius:50px; font-size:13px; font-weight:bold; cursor:pointer; }
+
+/* F: Charcoal + Rose Gold */
+.vf .vt { background:#1C1C1E; }
+.vf .ann { background:#1C1C1E; }
+.vf .nav .logo { color:#1C1C1E; font-weight:bold; }
+.vf .hero { background:#FAF5F5; }
+.vf .hi { background:linear-gradient(135deg,#F0E8E8,#E0D4D4); }
+.vf .ht h1 { color:#1C1C1E; }
+.vf .ht p { color:#6B6B6B; }
+.vf .btn-p { background:#1C1C1E; color:white; }
+.vf .btn-s { background:white; color:#1C1C1E; border:1px solid #ddd; }
+.vf .prod { background:#FAF5F5; }
+.vf .prod h2 { color:#D4A5A5; }
+.vf .prod h3 { color:#1C1C1E; }
+.vf .c { background:white; border:1px solid #E8E0E0; }
+.vf .c .tag { background:white; border:1px solid #E8E0E0; color:#1C1C1E; }
+.vf .c .ci { background:linear-gradient(135deg,#F0E8E8,#E0D4D4); }
+.vf .c .cp { color:#6B6B6B; }
+.vf .c .st { color:#D4A5A5; }
+.vf .bn { background:#1C1C1E; }
+.vf .bn .bl { color:#D4A5A5; }
+.vf .bn .bb { background:#D4A5A5; color:#1C1C1E; }
+
+/* G: Deep Slate + Champagne Gold */
+.vg .vt { background:#3D3D4A; }
+.vg .ann { background:#3D3D4A; }
+.vg .nav .logo { color:#3D3D4A; font-weight:bold; }
+.vg .hero { background:#F5F0ED; }
+.vg .hi { background:linear-gradient(135deg,#E8E2DC,#D4CCC4); }
+.vg .ht h1 { color:#1A1A1A; }
+.vg .ht p { color:#6B6B6B; }
+.vg .btn-p { background:#3D3D4A; color:white; }
+.vg .btn-s { background:white; color:#3D3D4A; border:1px solid #ddd; }
+.vg .prod { background:#F5F0ED; }
+.vg .prod h2 { color:#C9A96E; }
+.vg .prod h3 { color:#1A1A1A; }
+.vg .c { background:white; border:1px solid #E0D8D0; }
+.vg .c .tag { background:white; border:1px solid #E0D8D0; color:#1A1A1A; }
+.vg .c .ci { background:linear-gradient(135deg,#E8E2DC,#D4CCC4); }
+.vg .c .cp { color:#6B6B6B; }
+.vg .c .st { color:#C9A96E; }
+.vg .bn { background:#3D3D4A; }
+.vg .bn .bl { color:#C9A96E; }
+.vg .bn .bb { background:#C9A96E; color:#3D3D4A; }
+
+/* H: Midnight Navy + Blush Copper */
+.vh .vt { background:#1B2A3A; }
+.vh .ann { background:#1B2A3A; }
+.vh .nav .logo { color:#1B2A3A; font-weight:bold; }
+.vh .hero { background:#F5F0ED; }
+.vh .hi { background:linear-gradient(135deg,#E8E2DC,#D4CCC4); }
+.vh .ht h1 { color:#1A1A1A; }
+.vh .ht p { color:#6B6B6B; }
+.vh .btn-p { background:#1B2A3A; color:white; }
+.vh .btn-s { background:white; color:#1B2A3A; border:1px solid #ddd; }
+.vh .prod { background:#F5F0ED; }
+.vh .prod h2 { color:#C4956A; }
+.vh .prod h3 { color:#1A1A1A; }
+.vh .c { background:white; border:1px solid #E0D8D0; }
+.vh .c .tag { background:white; border:1px solid #E0D8D0; color:#1A1A1A; }
+.vh .c .ci { background:linear-gradient(135deg,#E8E2DC,#D4CCC4); }
+.vh .c .cp { color:#6B6B6B; }
+.vh .c .st { color:#C4956A; }
+.vh .bn { background:#1B2A3A; }
+.vh .bn .bl { color:#C4956A; }
+.vh .bn .bb { background:#C4956A; color:#1B2A3A; }
+
+/* I: Espresso + Caramel */
+.vi .vt { background:#3E2723; }
+.vi .ann { background:#3E2723; }
+.vi .nav .logo { color:#3E2723; font-weight:bold; }
+.vi .hero { background:#F5F0ED; }
+.vi .hi { background:linear-gradient(135deg,#E8E2DC,#D4CCC4); }
+.vi .ht h1 { color:#1A1A1A; }
+.vi .ht p { color:#6B6B6B; }
+.vi .btn-p { background:#3E2723; color:white; }
+.vi .btn-s { background:white; color:#3E2723; border:1px solid #ddd; }
+.vi .prod { background:#F5F0ED; }
+.vi .prod h2 { color:#D4A574; }
+.vi .prod h3 { color:#1A1A1A; }
+.vi .c { background:white; border:1px solid #E0D8D0; }
+.vi .c .tag { background:white; border:1px solid #E0D8D0; color:#1A1A1A; }
+.vi .c .ci { background:linear-gradient(135deg,#E8E2DC,#D4CCC4); }
+.vi .c .cp { color:#6B6B6B; }
+.vi .c .st { color:#D4A574; }
+.vi .bn { background:#3E2723; }
+.vi .bn .bl { color:#D4A574; }
+.vi .bn .bb { background:#D4A574; color:#3E2723; }
+
+/* J: Deep Teal + Sand Gold */
+.vj .vt { background:#1B3A3A; }
+.vj .ann { background:#1B3A3A; }
+.vj .nav .logo { color:#1B3A3A; font-weight:bold; }
+.vj .hero { background:#F5F0E8; }
+.vj .hi { background:linear-gradient(135deg,#E8E2D6,#D4CCBC); }
+.vj .ht h1 { color:#1A1A1A; }
+.vj .ht p { color:#6B6B6B; }
+.vj .btn-p { background:#1B3A3A; color:white; }
+.vj .btn-s { background:white; color:#1B3A3A; border:1px solid #ddd; }
+.vj .prod { background:#F5F0E8; }
+.vj .prod h2 { color:#C9A96E; }
+.vj .prod h3 { color:#1A1A1A; }
+.vj .c { background:white; border:1px solid #E0D8D0; }
+.vj .c .tag { background:white; border:1px solid #E0D8D0; color:#1A1A1A; }
+.vj .c .ci { background:linear-gradient(135deg,#E8E2D6,#D4CCBC); }
+.vj .c .cp { color:#6B6B6B; }
+.vj .c .st { color:#C9A96E; }
+.vj .bn { background:#1B3A3A; }
+.vj .bn .bl { color:#C9A96E; }
+.vj .bn .bb { background:#C9A96E; color:#1B3A3A; }
+</style>
+</head>
+<body>
+
+<h2 style="text-align:center; margin-bottom:8px;">Vazlina Homepage — 5 Color Variants</h2>
+<p style="text-align:center; color:#666; margin-bottom:24px; font-size:13px;">Scroll to compare. All show: Announcement, Nav, Hero, Product Cards, CTA Banner.</p>
+
+<script>
+const variants = [
+  {cls:'vf',name:'F: Charcoal + Rose Gold',pri:'#1C1C1E',acc:'#D4A5A5'},
+  {cls:'vg',name:'G: Deep Slate + Champagne Gold',pri:'#3D3D4A',acc:'#C9A96E'},
+  {cls:'vh',name:'H: Midnight Navy + Blush Copper',pri:'#1B2A3A',acc:'#C4956A'},
+  {cls:'vi',name:'I: Espresso + Caramel',pri:'#3E2723',acc:'#D4A574'},
+  {cls:'vj',name:'J: Deep Teal + Sand Gold',pri:'#1B3A3A',acc:'#C9A96E'}
+];
+
+variants.forEach(v=>{
+  document.write(`
+  <div class="v ${v.cls}">
+    <div class="vt">${v.name}</div>
+    <div class="vb">
+      <div class="ann">Envio gratis a todo Mexico · Pago contra entrega · Entrega en 3-5 dias</div>
+      <div class="nav"><span class="logo">VAZLINA</span><span>Inicio &nbsp; Coleccion &nbsp; Sobre &nbsp; Contacto</span></div>
+      <div class="hero">
+        <div class="hi">&#128168;</div>
+        <div class="ht">
+          <h1>Tecnologia que resuelve problemas reales</h1>
+          <p>Tres productos curados. Envio gratis, pago contra entrega, garantia 30 dias.</p>
+          <button class="btn btn-p">Descubre la Coleccion &rarr;</button>
+          <button class="btn btn-s">Garantia 30 Dias</button>
+        </div>
+      </div>
+      <div class="prod">
+        <h2>La Coleccion</h2>
+        <h3>Tres productos. Tres soluciones.</h3>
+        <div class="cards">
+          <div class="c"><div class="tag">Confort Portatil</div><div class="ci">&#128168;</div><div class="cn">Ventilador Brisa</div><div class="cp">Desde $649 MXN</div><div class="st">&#9733;&#9733;&#9733;&#9733;&#9733; (287)</div></div>
+          <div class="c"><div class="tag">Carga Inteligente</div><div class="ci">&#128267;</div><div class="cn">Cargador Guardian</div><div class="cp">Desde $502.99 MXN</div><div class="st">&#9733;&#9733;&#9733;&#9733;&#9733; (198)</div></div>
+          <div class="c"><div class="tag">Estilo Inalambrico</div><div class="ci">&#127912;</div><div class="cn">Auriculares Mariposa</div><div class="cp">Desde $630.99 MXN</div><div class="st">&#9733;&#9733;&#9733;&#9733;&#9733; (412)</div></div>
+        </div>
+      </div>
+      <div class="bn">
+        <div class="bl">Empieza Tu Experiencia</div>
+        <div class="bh">Tu comodidad merece calidad</div>
+        <div class="bs">Pago contra entrega. Envio gratis. Garantia 30 dias.</div>
+        <button class="bb">Ver Coleccion Completa &rarr;</button>
+      </div>
+    </div>
+  </div>`);
+});
+</script>
+
+</body>
+</html>
