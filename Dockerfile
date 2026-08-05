@@ -1,8 +1,8 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
-COPY package.json package-lock.json* ./
+COPY frontend/package.json frontend/package-lock.json* ./
 RUN npm ci
-COPY . .
+COPY frontend/ .
 ARG NEXT_PUBLIC_API_URL
 ARG NEXT_PUBLIC_FACEBOOK_PIXEL_ID
 ARG NEXT_PUBLIC_TIKTOK_PIXEL_ID
