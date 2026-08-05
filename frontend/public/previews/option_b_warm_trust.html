@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Option B — Warm Trust</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Inter',sans-serif;background:#FAF7F2;color:#1C1C1E;max-width:480px;margin:0 auto;}
+
+  /* TIMER */
+  .timer-bar{background:#1C1C1E;padding:10px 16px;text-align:center;font-size:12px;font-weight:700;letter-spacing:1.5px;color:#aaa;border-bottom:2px solid #C0392B;}
+  .timer-bar span{color:#E8503A;font-variant-numeric:tabular-nums;}
+
+  /* HERO */
+  .hero{background:linear-gradient(180deg,#FAF7F2 0%,#F2EBE1 100%);padding:48px 24px 0;}
+  .logo-row{display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:32px;}
+  .logo-circle{width:36px;height:36px;border-radius:50%;background:#1C1C1E;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;color:#FAF7F2;}
+  .logo-text{font-weight:800;font-size:16px;letter-spacing:3px;color:#1C1C1E;}
+  .logo-sub{font-size:9px;letter-spacing:2px;color:#aaa;margin-top:1px;}
+  .badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:999px;background:rgba(192,57,43,0.07);border:1px solid rgba(192,57,43,0.25);font-size:10px;font-weight:700;letter-spacing:2px;color:#C0392B;margin-bottom:20px;}
+  h1{font-size:36px;font-weight:900;line-height:1.1;letter-spacing:-1px;color:#1C1C1E;margin-bottom:16px;}
+  h1 em{font-style:normal;color:#C0392B;}
+  .hero-sub{font-size:15px;color:#888;line-height:1.6;margin-bottom:28px;}
+  .hero-sub strong{color:#1C1C1E;}
+  .cta-main{display:block;width:100%;padding:18px;border-radius:14px;background:#C0392B;color:#fff;font-weight:800;font-size:13px;letter-spacing:2px;text-align:center;border:none;cursor:pointer;box-shadow:0 8px 32px rgba(192,57,43,0.25);margin-bottom:12px;}
+  .trust-row{display:flex;justify-content:center;gap:18px;font-size:11px;color:#aaa;}
+
+  /* HERO IMAGE */
+  .hero-img{width:100%;display:block;margin-top:32px;}
+  .hero-img img{width:100%;display:block;}
+
+  /* TRUST STRIP */
+  .trust-strip{background:#F2EBE1;border-top:1px solid #E8DECE;border-bottom:1px solid #E8DECE;padding:20px 16px;display:flex;justify-content:space-around;gap:8px;}
+  .trust-item{text-align:center;flex:1;}
+  .trust-item .icon{font-size:20px;margin-bottom:4px;}
+  .trust-item .label{font-size:10px;font-weight:700;letter-spacing:1px;color:#1C1C1E;}
+  .trust-item .sub{font-size:10px;color:#aaa;margin-top:2px;}
+
+  /* SECTIONS */
+  .section{padding:56px 24px;}
+  .sec-warm{background:#FAF7F2;}
+  .sec-cream{background:#F2EBE1;}
+  .sec-dark{background:#1C1C1E;}
+  .eyebrow{font-size:10px;font-weight:700;letter-spacing:3px;color:#C0392B;margin-bottom:16px;text-transform:uppercase;}
+  h2{font-size:28px;font-weight:800;line-height:1.2;letter-spacing:-0.5px;color:#1C1C1E;margin-bottom:12px;}
+  h2 span{color:#C0392B;}
+  h2.on-dark{color:#FAF7F2;}
+  h2.on-dark span{color:#E8A89C;}
+  .section-sub{font-size:14px;color:#888;line-height:1.65;margin-bottom:32px;}
+  .section-sub.on-dark{color:#aaa;}
+
+  /* FULL IMG */
+  .full-img img{width:100%;display:block;}
+
+  /* DANGER CARDS */
+  .danger-cards{display:flex;flex-direction:column;gap:12px;margin-top:28px;}
+  .danger-card{background:#fff;border:1px solid #E8DECE;border-radius:16px;padding:20px;display:flex;gap:14px;align-items:flex-start;}
+  .danger-icon{width:40px;height:40px;border-radius:10px;background:rgba(192,57,43,0.07);border:1px solid rgba(192,57,43,0.15);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+  .danger-card h3{font-size:14px;font-weight:700;color:#1C1C1E;margin-bottom:4px;}
+  .danger-card p{font-size:12px;color:#888;line-height:1.5;}
+
+  /* STEPS */
+  .steps{display:flex;flex-direction:column;gap:14px;margin-top:28px;}
+  .step{display:flex;gap:14px;align-items:flex-start;background:#fff;border:1px solid #E8DECE;border-radius:14px;padding:18px;}
+  .step-num{width:32px;height:32px;border-radius:50%;background:#C0392B;color:#fff;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .step h3{font-size:13px;font-weight:700;color:#1C1C1E;margin-bottom:3px;}
+  .step p{font-size:12px;color:#888;line-height:1.5;}
+
+  /* SPECS */
+  .specs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:28px;}
+  .spec-card{background:#fff;border:1px solid #E8DECE;border-radius:14px;padding:18px;}
+  .spec-card .spec-icon{font-size:22px;margin-bottom:10px;}
+  .spec-card h3{font-size:13px;font-weight:700;color:#1C1C1E;margin-bottom:4px;}
+  .spec-card p{font-size:11px;color:#888;line-height:1.5;}
+
+  /* COMPARISON */
+  .comparison{background:#fff;border:1px solid #E8DECE;border-radius:18px;overflow:hidden;margin-top:28px;}
+  .comp-row{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid #F2EBE1;}
+  .comp-row:last-child{border-bottom:none;background:rgba(192,57,43,0.04);}
+  .comp-row .item-name{font-size:13px;font-weight:600;color:#1C1C1E;}
+  .comp-row .item-sub{font-size:11px;color:#aaa;margin-top:2px;}
+  .comp-row .price-old{font-size:15px;color:#ccc;text-decoration:line-through;font-weight:700;}
+  .comp-row .price-new{font-size:22px;font-weight:900;color:#C0392B;}
+  .comp-row .price-new span{font-size:12px;}
+
+  /* OFFER */
+  .offer-section{background:#FAF7F2;padding:56px 24px;}
+  .timer-pill{display:flex;align-items:center;justify-content:center;gap:8px;background:#1C1C1E;border-radius:999px;padding:12px 20px;margin-bottom:28px;font-size:12px;font-weight:700;letter-spacing:1px;color:#FAF7F2;}
+  .timer-pill .dot{width:8px;height:8px;border-radius:50%;background:#E8503A;animation:pulse 1.5s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
+  .bundle-card{background:#fff;border:2px solid #E8DECE;border-radius:18px;overflow:hidden;margin-bottom:14px;}
+  .bundle-card.best{border-color:#C0392B;}
+  .bundle-best-label{background:#C0392B;color:#fff;font-size:10px;font-weight:800;letter-spacing:2px;text-align:center;padding:8px;}
+  .bundle-body{padding:20px;}
+  .bundle-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;}
+  .bundle-name{font-size:16px;font-weight:800;color:#1C1C1E;}
+  .bundle-note{font-size:11px;color:#aaa;margin-top:3px;}
+  .bundle-price-old{font-size:12px;color:#ccc;text-decoration:line-through;}
+  .bundle-price{font-size:26px;font-weight:900;color:#C0392B;line-height:1;}
+  .bundle-price span{font-size:13px;}
+  .bundle-save{display:inline-block;background:rgba(192,57,43,0.08);color:#C0392B;border:1px solid rgba(192,57,43,0.2);font-size:10px;font-weight:700;padding:3px 10px;border-radius:999px;margin-bottom:14px;}
+  .bundle-cta{width:100%;padding:14px;border-radius:12px;background:#C0392B;color:#fff;font-weight:800;font-size:12px;letter-spacing:2px;border:none;cursor:pointer;}
+  .bundle-cta.secondary{background:#FAF7F2;color:#1C1C1E;border:1.5px solid #1C1C1E;}
+  .offer-footer{text-align:center;font-size:11px;color:#aaa;margin-top:16px;line-height:1.7;}
+
+  /* REVIEWS */
+  .review-card{background:#fff;border:1px solid #E8DECE;border-radius:16px;padding:20px;margin-bottom:12px;}
+  .review-header{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+  .review-avatar{width:38px;height:38px;border-radius:50%;background:#1C1C1E;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;color:#FAF7F2;flex-shrink:0;}
+  .review-name{font-size:13px;font-weight:700;color:#1C1C1E;}
+  .review-loc{font-size:11px;color:#aaa;}
+  .stars{color:#F5B301;font-size:13px;letter-spacing:1px;margin-bottom:8px;}
+  .review-text{font-size:13px;color:#777;line-height:1.6;}
+  .review-verified{font-size:10px;color:#27AE60;margin-top:8px;font-weight:600;}
+
+  /* FAQ */
+  .faq-item{border-bottom:1px solid #E8DECE;padding:18px 0;}
+  .faq-item:last-child{border-bottom:none;}
+  .faq-q{font-size:14px;font-weight:700;color:#1C1C1E;margin-bottom:8px;}
+  .faq-a{font-size:13px;color:#888;line-height:1.6;}
+
+  /* PALETTE */
+  .palette-section{background:#F2EBE1;padding:40px 24px;border-top:1px solid #E8DECE;}
+  .palette-label{font-size:10px;letter-spacing:3px;color:#aaa;font-weight:700;text-align:center;margin-bottom:20px;}
+  .swatches{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+  .swatch{text-align:center;}
+  .swatch .box{width:56px;height:40px;border-radius:8px;border:1px solid #E8DECE;}
+  .swatch p{font-size:9px;color:#aaa;margin-top:5px;}
+</style>
+</head>
+<body>
+
+<!-- TIMER BAR -->
+<div class="timer-bar">⏱ LA OFERTA TERMINA EN &nbsp;<span>01:23:47</span></div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="logo-row">
+    <div class="logo-circle">V</div>
+    <div>
+      <div class="logo-text">VAZLINA</div>
+      <div class="logo-sub">TECNOLOGÍA CURADA</div>
+    </div>
+  </div>
+  <div class="badge">VAZLINA GUARD™ · PROTECCIÓN INTELIGENTE</div>
+  <h1>Un solo dispositivo protege a tu <em>familia</em> y tu <em>bolsillo</em>.</h1>
+  <p class="hero-sub">Vazlina Guard corta la energía antes de que un cargador sobrecalentado cause un desastre mientras todos duermen — y detiene la sobrecarga que <strong>destruye tu batería noche tras noche</strong>.</p>
+  <button class="cta-main">PROTEGER LO QUE MÁS IMPORTA — ₡17700</button>
+  <div class="trust-row">
+    <span>🚚 Envío gratis</span>
+    <span>💳 Pago al recibir</span>
+    <span>🛡️ Garantía 30 días</span>
+  </div>
+</section>
+
+<!-- HERO IMAGE -->
+<div class="hero-img"><img src="../lp-guard/hero.jpg" alt="Lifestyle" /></div>
+
+<!-- TRUST STRIP -->
+<div class="trust-strip">
+  <div class="trust-item"><div class="icon">🚚</div><div class="label">Envío Gratis</div><div class="sub">A todo Costa Rica</div></div>
+  <div class="trust-item"><div class="icon">💳</div><div class="label">Pago al Recibir</div><div class="sub">Cero riesgo</div></div>
+  <div class="trust-item"><div class="icon">🛡️</div><div class="label">Garantía 30 días</div><div class="sub">Devolución total</div></div>
+  <div class="trust-item"><div class="icon">🏅</div><div class="label">Certificado</div><div class="sub">Calidad curada</div></div>
+</div>
+
+<!-- PROBLEM -->
+<section class="section sec-warm">
+  <div class="eyebrow">El problema</div>
+  <h2>Dos riesgos silenciosos.<br><span>Un mismo culpable: tu cargador.</span></h2>
+  <p class="section-sub">Cada noche, tu cargador queda enchufado 8 horas seguidas. Eso tiene dos consecuencias que casi nadie ve venir — hasta que es tarde.</p>
+</section>
+<div class="full-img"><img src="../lp-guard/peligro.jpg" alt="Peligro" /></div>
+<section class="section sec-warm" style="padding-top:32px;">
+  <div class="danger-cards">
+    <div class="danger-card"><div class="danger-icon">🔥</div><div><h3>Sobrecalentamiento nocturno</h3><p>Un cargador caliente 8 horas es la causa #1 de incendios eléctricos. Ocurre mientras todos duermen — incluidos tus hijos.</p></div></div>
+    <div class="danger-card"><div class="danger-icon">⚡</div><div><h3>Cortocircuitos sin aviso</h3><p>Una falla eléctrica toma milisegundos. El fuego toma minutos. Tu familia no tiene tiempo de reaccionar.</p></div></div>
+    <div class="danger-card"><div class="danger-icon">🔋</div><div><h3>La sobrecarga mata tu batería</h3><p>Cargar toda la noche degrada tu batería carga tras carga. A los 2 años tu teléfono "ya no dura nada".</p></div></div>
+    <div class="danger-card"><div class="danger-icon">👦</div><div><h3>Tus hijos no conocen el peligro</h3><p>Los adolescentes dejan el teléfono bajo la almohada toda la noche. Ellos no miden el riesgo — vos sí podés protegerlos.</p></div></div>
+  </div>
+</section>
+
+<!-- SOLUTION -->
+<section class="section sec-cream">
+  <div class="eyebrow">La solución</div>
+  <h2>Un solo dispositivo.<br><span>Dos protecciones.</span></h2>
+  <p class="section-sub">Monitorea el flujo eléctrico en tiempo real: corta la energía antes de un desastre y detiene la carga al 100% para que tu batería dure años más.</p>
+</section>
+<div class="full-img"><img src="../lp-guard/product.jpg" alt="Producto" /></div>
+<div class="full-img"><img src="../lp-guard/demo.jpg" alt="Demo" /></div>
+<section class="section sec-cream" style="padding-top:32px;">
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div><h3>Conectalo en segundos</h3><p>Directo al puerto USB-C — o entre la cabeza del cargador y el cable (iPhone Lightning). Plug & play, sin apps.</p></div></div>
+    <div class="step"><div class="step-num">2</div><div><h3>Monitorea en tiempo real</h3><p>Su chip interno vigila temperatura, voltaje y corriente durante toda la carga.</p></div></div>
+    <div class="step"><div class="step-num">3</div><div><h3>Corta si detecta anomalía</h3><p>Sobrecalentamiento, sobrecarga o cortocircuito: corta en milisegundos. Al 100%, detiene la carga.</p></div></div>
+  </div>
+</section>
+
+<!-- FAMILIA -->
+<section class="section sec-dark" style="padding-bottom:16px;">
+  <div class="eyebrow" style="color:#E8A89C;">Para toda tu familia</div>
+  <h2 class="on-dark">La seguridad que no podés ver,<br><span>la tranquilidad que sí podés sentir.</span></h2>
+</section>
+<div class="full-img"><img src="../lp-guard/familia.jpg" alt="Familia" /></div>
+
+<!-- SPECS -->
+<section class="section sec-warm">
+  <div class="specs">
+    <div class="spec-card"><div class="spec-icon">⚡</div><h3>Corte Automático</h3><p>Detecta fallas y corta en milisegundos.</p></div>
+    <div class="spec-card"><div class="spec-icon">🔥</div><h3>Anti-Incendios</h3><p>Reduce riesgo de incendios por sobrecarga.</p></div>
+    <div class="spec-card"><div class="spec-icon">🔋</div><h3>Protege Batería</h3><p>Detiene al 100%. Años más de vida útil.</p></div>
+    <div class="spec-card"><div class="spec-icon">📱</div><h3>Compatible TODO</h3><p>iPhone (Lightning + USB-C), Android, tablets, laptops.</p></div>
+  </div>
+</section>
+
+<!-- SAVINGS -->
+<section class="section sec-cream">
+  <div class="eyebrow">El ahorro real</div>
+  <h2>No solo protege tu casa.<br><span>Protege tu bolsillo.</span></h2>
+  <p class="section-sub">La sobrecarga nocturna destruye tu batería poco a poco. Guard paga por sí mismo desde la primera vez que evita un cambio de batería.</p>
+  <div class="comparison">
+    <div class="comp-row"><div><div class="item-name">Teléfono nuevo</div><div class="item-sub">Cuando la batería muere para siempre</div></div><div class="price-old">₡200,000+</div></div>
+    <div class="comp-row"><div><div class="item-name">Cambio de batería</div><div class="item-sub">Cada 1-2 años, si tenés suerte</div></div><div class="price-old">₡25,000+</div></div>
+    <div class="comp-row" style="border-top:1.5px solid #C0392B;"><div><div class="item-name" style="color:#C0392B;">Vazlina Guard™</div><div class="item-sub">Tu batería dura años más. Pagás una sola vez.</div></div><div><div class="price-new"><span>₡</span>17700</div></div></div>
+  </div>
+</section>
+
+<!-- OFFER -->
+<section class="offer-section" id="oferta">
+  <div style="text-align:center;">
+    <div class="eyebrow" style="text-align:center;">Elegí tu protección</div>
+    <h2>Aprovechá la oferta<br><span>antes de que termine.</span></h2>
+  </div>
+  <div class="timer-pill"><div class="dot"></div>Oferta termina en &nbsp;<strong>01:23:47</strong></div>
+
+  <div class="bundle-card best">
+    <div class="bundle-best-label">🔥 MEJOR OFERTA — EL MÁS ELEGIDO</div>
+    <div class="bundle-body">
+      <div class="bundle-top">
+        <div><div class="bundle-name">Pack Familia (x3)</div><div class="bundle-note">Un Guard por cargador — protección total</div></div>
+        <div style="text-align:right;"><div class="bundle-price-old">₡53100</div><div class="bundle-price"><span>₡</span>44100</div></div>
+      </div>
+      <div class="bundle-save">AHORRÁS ₡9000</div>
+      <button class="bundle-cta">ORDENAR AHORA</button>
+    </div>
+  </div>
+
+  <div class="bundle-card">
+    <div class="bundle-body">
+      <div class="bundle-top">
+        <div><div class="bundle-name">Pack Pareja (x2)</div><div class="bundle-note">Vos y tu pareja protegidos</div></div>
+        <div style="text-align:right;"><div class="bundle-price-old">₡35400</div><div class="bundle-price"><span>₡</span>30600</div></div>
+      </div>
+      <div class="bundle-save">AHORRÁS ₡4800</div>
+      <button class="bundle-cta secondary">ORDENAR AHORA</button>
+    </div>
+  </div>
+
+  <div class="bundle-card">
+    <div class="bundle-body">
+      <div class="bundle-top">
+        <div><div class="bundle-name">Guard Individual (x1)</div><div class="bundle-note">Protección básica para empezar</div></div>
+        <div style="text-align:right;"><div class="bundle-price-old">₡22665</div><div class="bundle-price"><span>₡</span>17700</div></div>
+      </div>
+      <div class="bundle-save">AHORRÁS ₡4965</div>
+      <button class="bundle-cta secondary">ORDENAR AHORA</button>
+    </div>
+  </div>
+
+  <p class="offer-footer">🔒 Pagás únicamente cuando recibís el producto.<br>Si no te convence, te devolvemos tu dinero. Garantía 30 días.</p>
+</section>
+
+<!-- REVIEWS -->
+<section class="section sec-cream">
+  <div class="eyebrow" style="text-align:center;">Lo que dicen nuestros clientes</div>
+  <h2 style="text-align:center;margin-bottom:28px;">1,247 familias ya<br><span>duermen tranquilas.</span></h2>
+  <div class="review-card">
+    <div class="review-header"><div class="review-avatar">M</div><div><div class="review-name">María G.</div><div class="review-loc">San José, Costa Rica</div></div></div>
+    <div class="stars">★★★★★</div>
+    <p class="review-text">Mi hijo adolescente dormía con el cargador bajo la almohada. Desde que tenemos el Guard duermo tranquila. Ya no me preocupo más por eso.</p>
+    <div class="review-verified">✓ Compra verificada</div>
+  </div>
+  <div class="review-card">
+    <div class="review-header"><div class="review-avatar">C</div><div><div class="review-name">Carlos R.</div><div class="review-loc">Heredia, Costa Rica</div></div></div>
+    <div class="stars">★★★★★</div>
+    <p class="review-text">Pensé que era exagerado pero le compré 3 — uno para cada cuarto. La batería de mi teléfono mejoró notablemente al mes de usarlo. 100% recomendado.</p>
+    <div class="review-verified">✓ Compra verificada</div>
+  </div>
+  <div class="review-card">
+    <div class="review-header"><div class="review-avatar">A</div><div><div class="review-name">Ana P.</div><div class="review-loc">Cartago, Costa Rica</div></div></div>
+    <div class="stars">★★★★★</div>
+    <p class="review-text">Llegó en 2 días, funciona perfecto con mi iPhone 13. El pago fue al recibir así que no arriesgué nada. Muy buen producto.</p>
+    <div class="review-verified">✓ Compra verificada</div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section sec-warm">
+  <div class="eyebrow" style="text-align:center;">Preguntas frecuentes</div>
+  <h2 style="text-align:center;margin-bottom:28px;">Todo lo que<br><span>necesitás saber.</span></h2>
+  <div class="faq-item"><div class="faq-q">¿Funciona con iPhone?</div><div class="faq-a">Sí, con todos los modelos. iPhone 15+ y Android: conexión directa USB-C. iPhone 14 y anteriores (Lightning): colocás Guard entre la cabeza del cargador y el cable. Misma protección.</div></div>
+  <div class="faq-item"><div class="faq-q">¿Cómo funciona el pago?</div><div class="faq-a">Pagás únicamente cuando recibís el producto en tu puerta. Cero riesgo, sin tarjeta anticipada.</div></div>
+  <div class="faq-item"><div class="faq-q">¿Cuánto tarda en llegar?</div><div class="faq-a">3 a 5 días hábiles a todo Costa Rica. Envío completamente gratis.</div></div>
+  <div class="faq-item"><div class="faq-q">¿Y si no me convence?</div><div class="faq-a">Garantía de satisfacción 30 días. Si no te convence, te devolvemos el dinero sin preguntas.</div></div>
+  <div class="faq-item"><div class="faq-q">¿Cuántos necesito?</div><div class="faq-a">Uno por cargador que usés de noche. La mayoría de familias usan 2-3.</div></div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="section sec-dark" style="text-align:center;">
+  <h2 class="on-dark" style="margin-bottom:12px;">Protegé lo que<br>más importa.</h2>
+  <p class="section-sub on-dark" style="margin-bottom:28px;">Una sola noche sin protección puede costarte todo.</p>
+  <button class="cta-main" style="max-width:360px;margin:0 auto 12px;">ORDENAR AHORA — ₡17700</button>
+  <div class="trust-row" style="justify-content:center;color:#666;">🚚 Gratis &nbsp;·&nbsp; 💳 Al recibir &nbsp;·&nbsp; 🛡️ 30 días</div>
+</section>
+
+<!-- PALETTE -->
+<div class="palette-section">
+  <div class="palette-label">OPTION B — WARM TRUST</div>
+  <div class="swatches">
+    <div class="swatch"><div class="box" style="background:#FAF7F2;"></div><p>#FAF7F2 Cream</p></div>
+    <div class="swatch"><div class="box" style="background:#F2EBE1;"></div><p>#F2EBE1 Warm Beige</p></div>
+    <div class="swatch"><div class="box" style="background:#C0392B;"></div><p>#C0392B Trust Red</p></div>
+    <div class="swatch"><div class="box" style="background:#1C1C1E;"></div><p>#1C1C1E Ink</p></div>
+    <div class="swatch"><div class="box" style="background:#E8A89C;border-color:#E8DECE;"></div><p>#E8A89C Blush</p></div>
+  </div>
+</div>
+
+</body>
+</html>
