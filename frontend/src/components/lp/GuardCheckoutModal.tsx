@@ -10,13 +10,13 @@ import { createOrder } from "@/lib/api";
 import { generateEventId } from "@/lib/pixels";
 
 const schema = z.object({
-  name: z.string().min(2, "Ingresa tu nombre completo."),
-  phone: z.string().min(8, "Ingresa tu número de teléfono."),
-  state: z.string().min(2, "Selecciona tu provincia."),
-  city: z.string().min(2, "Ingresa tu cantón."),
-  distrito: z.string().min(2, "Ingresa tu distrito."),
-  address: z.string().min(5, "Ingresa tu dirección exacta."),
-  reference: z.string().min(3, "Ingresa un punto de referencia."),
+  name: z.string().optional(),
+  phone: z.string().optional(),
+  state: z.string().optional(),
+  city: z.string().optional(),
+  distrito: z.string().optional(),
+  address: z.string().optional(),
+  reference: z.string().optional(),
 });
 
 type GuardForm = z.infer<typeof schema>;
