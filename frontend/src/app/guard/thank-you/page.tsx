@@ -2,7 +2,7 @@
 
 import { Suspense, useState, useEffect } from "react";
 import { CheckCircle, Truck, Phone, RefreshCw, ShieldCheck } from "lucide-react";
-import { createOrder, getOrderById } from "@/lib/api";
+import { createOrder } from "@/lib/api";
 import { trackPurchase } from "@/lib/pixels";
 
 const ACCENT = "#FF4500";
@@ -55,35 +55,6 @@ function GuardThankYouContent() {
         }
       } catch (e) {
         console.error("[thank-you] error parsing guard_order:", e);
-      }
-
-      if (storedOrderId) {
-        console.log("[thank-you] fetching order from API, orderId:", storedOrderId);
-        try {
-          const apiOrder = await getOrderById(storedOrderId);
-          console.log("[thank-you] API response:", apiOrder);
-          if (apiOrder && !cancelled) {
-            const apiAddr: Addr = {
-              name: apiOrder.customer_name || "",
-              phone: apiOrder.customer_phone || "",
-              state: apiOrder.customer_state || "",
-              city: apiOrder.customer_city || "",
-              distrito: apiOrder.customer_distrito || "",
-              address: apiOrder.customer_address || "",
-              reference: apiOrder.customer_reference || "",
-            };
-            console.log("[thank-you] addr from API:", apiAddr);
-            setOrderData({
-              orderId: String(apiOrder.order_id),
-              total: apiOrder.total_price,
-              addr: apiAddr,
-              items: apiOrder.items || [],
-            });
-            return;
-          }
-        } catch (e) {
-          console.error("[thank-you] API fetch failed:", e);
-        }
       }
 
       if (fallbackData && !cancelled) {
