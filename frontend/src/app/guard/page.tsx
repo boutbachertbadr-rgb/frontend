@@ -43,18 +43,20 @@ const FAQS = [
 function useOfferTimer() {
   const [left, setLeft] = useState("--:--:--");
   useEffect(() => {
-    const DAY = 24 * 60 * 60 * 1000;
+    const MIN_H = 3;
+    const MAX_H = 14;
+    const randomDuration = () => (MIN_H + Math.floor(Math.random() * (MAX_H - MIN_H + 1))) * 60 * 60 * 1000;
     let end = Number(localStorage.getItem("guard_offer_end") ?? 0);
     if (!end || end <= Date.now()) {
-      end = Date.now() + DAY;
+      end = Date.now() + randomDuration();
       localStorage.setItem("guard_offer_end", String(end));
     }
     const tick = () => {
       let diff = end - Date.now();
       if (diff <= 0) {
-        end = Date.now() + DAY;
+        end = Date.now() + randomDuration();
         localStorage.setItem("guard_offer_end", String(end));
-        diff = DAY;
+        diff = end - Date.now();
       }
       const h = Math.floor(diff / 3600000);
       const m = Math.floor((diff % 3600000) / 60000);
@@ -138,7 +140,7 @@ export default function GuardPage() {
       {/* ── TOP TIMER BAR ── */}
       <div className="fixed top-0 left-0 right-0 z-50 px-4 py-3 text-center" style={{ background: "linear-gradient(90deg, #F5B301 0%, #FFD43B 50%, #F5B301 100%)" }}>
         <p className="text-sm font-extrabold tracking-wide flex items-center justify-center gap-2 flex-wrap" style={{ color: "#1A1200" }}>
-          <span className="pulse inline-flex items-center gap-1"><Timer size={15} /> OFERTA DE 24H TERMINA EN <span className="tabular-nums" style={{ color: "#D32F2F" }}>{timer}</span></span>
+          <span className="pulse inline-flex items-center gap-1"><Timer size={15} /> LA OFERTA TERMINA EN <span className="tabular-nums" style={{ color: "#D32F2F" }}>{timer}</span></span>
           <span className="hidden sm:inline opacity-40">|</span>
           <span className="hidden sm:inline"><s className="opacity-50 font-heading tracking-tight">Antes <span className="text-[11px] align-top">₡</span>22665</s> · <span style={{ color: "#B71C1C" }} className="font-heading tracking-tight">Hoy <span className="text-[11px] align-top">₡</span>17700</span></span>
         </p>
