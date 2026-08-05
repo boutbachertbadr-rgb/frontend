@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { X, ShieldCheck, Truck, ChevronDown, Zap } from "lucide-react";
-import { useForm } from "react-hook-form";
 import { createOrder } from "@/lib/api";
 import { generateEventId } from "@/lib/pixels";
 
@@ -29,38 +28,31 @@ export default function GuardCheckoutModal({
   variant: LPVariant | null;
 }) {
   const [express, setExpress] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const EXPRESS_FEE = 2000;
   const total = (variant?.price ?? 0) + (express ? EXPRESS_FEE : 0);
-  const {
-    register,
-    handleSubmit,
-    reset,
-    getValues,
-    formState: { errors, isSubmitting },
-  } = useForm<Record<string, string>>({
-    defaultValues: {
-      name: "",
-      phone: "",
-      state: "",
-      city: "",
-      distrito: "",
-      address: "",
-      reference: "",
-    },
-  });
 
-  const onSubmit = async (data: Record<string, string>) => {
+  const handleNativeSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     if (!variant) return;
+    setSubmitting(true);
+
+    const formData = new FormData(e.currentTarget);
+    const addr = {
+      name: String(formData.get("name") ?? ""),
+      phone: String(formData.get("phone") ?? ""),
+      state: String(formData.get("state") ?? ""),
+      city: String(formData.get("city") ?? ""),
+      distrito: String(formData.get("distrito") ?? ""),
+      address: String(formData.get("address") ?? ""),
+      reference: String(formData.get("reference") ?? ""),
+    };
+
     const eventId = generateEventId();
     const orderId = parseInt(localStorage.getItem("vazlina_last_order_id") ?? "799") + 1;
     localStorage.setItem("vazlina_last_order_id", String(orderId));
     sessionStorage.setItem("order_status", "pending");
 
-    const vals = { ...getValues(), ...data };
-    const addr = {
-      name: String(vals.name ?? ""), phone: String(vals.phone ?? ""), state: String(vals.state ?? ""),
-      city: String(vals.city ?? ""), distrito: String(vals.distrito ?? ""), address: String(vals.address ?? ""), reference: String(vals.reference ?? ""),
-    };
     const orderItems = express
       ? [...variant.items, { product_name: "Envío Express (1-3 días)", quantity: 1, price_per_item: EXPRESS_FEE }]
       : variant.items;
@@ -90,7 +82,6 @@ export default function GuardCheckoutModal({
       sessionStorage.setItem("order_status", "failed");
     });
 
-    reset();
     setTimeout(() => {
       window.location.href = "/guard/thank-you";
     }, 100);
@@ -127,21 +118,21 @@ export default function GuardCheckoutModal({
             <span className="flex items-center gap-1.5"><ShieldCheck size={13} /> Pago al recibir</span>
           </div>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
+          <form onSubmit={handleNativeSubmit} className="space-y-3">
             <div>
               <label className="block text-xs font-semibold text-gray-700 mb-1">Nombre completo</label>
-              <input {...register("name")} type="text" placeholder="Ana García" className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-neutral-400 bg-white" />
+              <input name="name" type="text" placeholder="Ana García" className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-neutral-400 bg-white" />
             </div>
             <div>
               <label className="block text-xs font-semibold text-gray-700 mb-1">Teléfono</label>
-              <input {...register("phone")} type="tel" placeholder="8888-0000" className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-neutral-400 bg-white" />
+              <input name="phone" type="tel" placeholder="8888-0000" className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-neutral-400 bg-white" />
             </div>
 
             <div>
               <label className="block text-xs font-semibold text-gray-700 mb-1">Provincia</label>
               <div className="relative">
                 <select
-                  {...register("state")}
+                  name="state"
                   className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none appearance-none bg-white"
                 >
                   <option value="">Selecciona tu provincia</option>
@@ -153,19 +144,19 @@ export default function GuardCheckoutModal({
 
             <div>
               <label className="block text-xs font-semibold text-gray-700 mb-1">Cantón</label>
-              <input {...register("city")} type="text" placeholder="Escazú" className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-neutral-400 bg-white" />
+              <input name="city" type="text" placeholder="Escazú" className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-neutral-400 bg-white" />
             </div>
             <div>
               <label className="block text-xs font-semibold text-gray-700 mb-1">Distrito</label>
-              <input {...register("distrito")} type="text" placeholder="San Rafael" className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-neutral-400 bg-white" />
+              <input name="distrito" type="text" placeholder="San Rafael" className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-neutral-400 bg-white" />
             </div>
             <div>
               <label className="block text-xs font-semibold text-gray-700 mb-1">Dirección exacta</label>
-              <input {...register("address")} type="text" placeholder="Calle 5, Casa #12" className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-neutral-400 bg-white" />
+              <input name="address" type="text" placeholder="Calle 5, Casa #12" className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-neutral-400 bg-white" />
             </div>
             <div>
               <label className="block text-xs font-semibold text-gray-700 mb-1">Punto de referencia</label>
-              <input {...register("reference")} type="text" placeholder="Frente al supermercado" className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-neutral-400 bg-white" />
+              <input name="reference" type="text" placeholder="Frente al supermercado" className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-neutral-400 bg-white" />
             </div>
 
             <div className="pt-1">
@@ -203,11 +194,11 @@ export default function GuardCheckoutModal({
 
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={submitting}
               className="w-full py-4 rounded-2xl text-white font-bold text-sm tracking-widest transition-all disabled:opacity-60 active:scale-95 mt-1"
               style={{ backgroundColor: ACCENT }}
             >
-              {isSubmitting ? "Procesando..." : "✓ CONFIRMAR PEDIDO"}
+              {submitting ? "Procesando..." : "✓ CONFIRMAR PEDIDO"}
             </button>
             <p className="text-center text-xs text-gray-400 pb-2">Pagas únicamente al recibir tu pedido. 100% sin riesgo.</p>
           </form>
