@@ -54,7 +54,7 @@ export default function GuardCheckoutModal({
     formState: { errors, isSubmitting },
   } = useForm<GuardForm>({ resolver: zodResolver(schema), mode: "onBlur" });
 
-  const onSubmit = (data: GuardForm) => {
+  const onSubmit = async (data: GuardForm) => {
     if (!variant) return;
     const eventId = generateEventId();
     const orderId = parseInt(localStorage.getItem("vazlina_last_order_id") ?? "799") + 1;
@@ -70,9 +70,7 @@ export default function GuardCheckoutModal({
       : variant.items;
     const itemsParam = encodeURIComponent(JSON.stringify(orderItems));
 
-    onClose();
-    reset();
-    router.push(`/guard/thank-you?order_id=${orderId}&total=${total.toFixed(2)}&addr=${addrParam}&items=${itemsParam}`);
+    const thankYouUrl = `/guard/thank-you?order_id=${orderId}&total=${total.toFixed(2)}&addr=${addrParam}&items=${itemsParam}`;
 
     createOrder({
       customer_name: data.name,
@@ -91,6 +89,10 @@ export default function GuardCheckoutModal({
     }).catch(() => {
       sessionStorage.setItem("order_status", "failed");
     });
+
+    reset();
+    onClose();
+    router.push(thankYouUrl);
   };
 
   if (!isOpen || !variant) return null;
