@@ -177,9 +177,9 @@ export default function GuardPage() {
       </div>
 
       {/* ── HERO ── */}
-      <section className="relative flex flex-col items-center px-5 pt-24 pb-16 text-center overflow-hidden" style={{ backgroundColor: NIGHT }}>
+      <section className="relative flex flex-col items-center pt-24 pb-16 text-center overflow-hidden" style={{ backgroundColor: NIGHT }}>
         <div className="absolute inset-0 opacity-25 pointer-events-none" style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(201,205,211,0.15) 0%, transparent 55%)" }} />
-        <div className="relative z-10 max-w-lg mx-auto w-full">
+        <div className="relative z-10 max-w-lg mx-auto w-full px-5">
           <div className="lp-animate flex items-center justify-center gap-2.5 mb-8">
             <div className="w-9 h-9 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: "#FFFFFF" }}>
               <span className="font-heading font-bold text-base leading-none" style={{ color: "#111111" }}>V</span>
@@ -240,9 +240,9 @@ export default function GuardPage() {
               </div>
             )}
           </div>
-          <div className="lp-animate lp-delay-3 mt-8 rounded-3xl overflow-hidden shadow-2xl" style={{ border: "1px solid #2A2E35" }}>
-            <Img src="/lp-guard/hero.jpg" label="hero.jpg — collage lifestyle (mujer trabajando, pareja durmiendo)" className="w-full" />
-          </div>
+        </div>
+        <div className="lp-animate lp-delay-3 mt-8 overflow-hidden shadow-2xl w-full">
+          <Img src="/lp-guard/hero.jpg" label="hero.jpg — collage lifestyle (mujer trabajando, pareja durmiendo)" className="w-full block" />
         </div>
       </section>
 
