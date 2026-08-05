@@ -295,7 +295,7 @@ export default function GuardPage() {
           </p>
         </div>
 
-        <div className="lp-animate lp-delay-1 grid grid-cols-2 mb-10 w-full">
+        <div className="lp-animate lp-delay-1 flex flex-col mb-10 w-full">
           <div className="overflow-hidden shadow-lg">
             <Img src="/lp-guard/product.jpg" label="product.jpg — producto sobre tela beige" className="w-full block" />
           </div>
