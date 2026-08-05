@@ -114,8 +114,14 @@ export default function GuardCheckoutModal({
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
-            <Field label="Nombre completo" placeholder="Ana García" error={errors.name?.message} {...register("name")} />
-            <Field label="Teléfono" placeholder="8888-0000" type="tel" error={errors.phone?.message} {...register("phone")} />
+            <div>
+              <label className="block text-xs font-semibold text-gray-700 mb-1">Nombre completo</label>
+              <input {...register("name")} type="text" placeholder="Ana García" className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-neutral-400 bg-white" />
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-gray-700 mb-1">Teléfono</label>
+              <input {...register("phone")} type="tel" placeholder="8888-0000" className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-neutral-400 bg-white" />
+            </div>
 
             <div>
               <label className="block text-xs font-semibold text-gray-700 mb-1">Provincia</label>
@@ -129,13 +135,24 @@ export default function GuardCheckoutModal({
                 </select>
                 <ChevronDown size={15} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
               </div>
-              {errors.state && <p className="text-red-500 text-xs mt-1">{errors.state.message}</p>}
             </div>
 
-            <Field label="Cantón" placeholder="Escazú" error={errors.city?.message} {...register("city")} />
-            <Field label="Distrito" placeholder="San Rafael" error={errors.distrito?.message} {...register("distrito")} />
-            <Field label="Dirección exacta" placeholder="Calle 5, Casa #12" error={errors.address?.message} {...register("address")} />
-            <Field label="Punto de referencia" placeholder="Frente al supermercado" error={errors.reference?.message} {...register("reference")} />
+            <div>
+              <label className="block text-xs font-semibold text-gray-700 mb-1">Cantón</label>
+              <input {...register("city")} type="text" placeholder="Escazú" className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-neutral-400 bg-white" />
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-gray-700 mb-1">Distrito</label>
+              <input {...register("distrito")} type="text" placeholder="San Rafael" className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-neutral-400 bg-white" />
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-gray-700 mb-1">Dirección exacta</label>
+              <input {...register("address")} type="text" placeholder="Calle 5, Casa #12" className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-neutral-400 bg-white" />
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-gray-700 mb-1">Punto de referencia</label>
+              <input {...register("reference")} type="text" placeholder="Frente al supermercado" className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-neutral-400 bg-white" />
+            </div>
 
             <div className="pt-1">
               <label className="block text-xs font-semibold text-gray-700 mb-2">Método de envío</label>
@@ -182,26 +199,6 @@ export default function GuardCheckoutModal({
           </form>
         </div>
       </div>
-    </div>
-  );
-}
-
-function Field({
-  label, placeholder, error, type = "text", ...rest
-}: {
-  label: string; placeholder: string; error?: string; type?: string;
-  [key: string]: unknown;
-}) {
-  return (
-    <div>
-      <label className="block text-xs font-semibold text-gray-700 mb-1">{label}</label>
-      <input
-        {...(rest as React.InputHTMLAttributes<HTMLInputElement>)}
-        type={type}
-        placeholder={placeholder}
-        className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-neutral-400 bg-white"
-      />
-      {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
     </div>
   );
 }
