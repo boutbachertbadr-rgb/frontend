@@ -46,16 +46,16 @@ function useOfferTimer() {
     const MIN_H = 3;
     const MAX_H = 14;
     const randomDuration = () => (MIN_H + Math.floor(Math.random() * (MAX_H - MIN_H + 1))) * 60 * 60 * 1000;
-    let end = Number(localStorage.getItem("guard_offer_end") ?? 0);
+    let end = Number(localStorage.getItem("guard_offer_end_v2") ?? 0);
     if (!end || end <= Date.now()) {
       end = Date.now() + randomDuration();
-      localStorage.setItem("guard_offer_end", String(end));
+      localStorage.setItem("guard_offer_end_v2", String(end));
     }
     const tick = () => {
       let diff = end - Date.now();
       if (diff <= 0) {
         end = Date.now() + randomDuration();
-        localStorage.setItem("guard_offer_end", String(end));
+        localStorage.setItem("guard_offer_end_v2", String(end));
         diff = end - Date.now();
       }
       const h = Math.floor(diff / 3600000);
