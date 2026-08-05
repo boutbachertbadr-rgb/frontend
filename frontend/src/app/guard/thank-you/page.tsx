@@ -13,27 +13,27 @@ interface OrderItem { product_name: string; quantity: number; price_per_item: nu
 interface Addr { name: string; phone: string; state: string; city: string; distrito: string; address: string; reference: string; }
 
 function GuardThankYouContent() {
-  const [orderData, setOrderData] = useState<{
+  const [orderData] = useState<{
     orderId: string;
     total: number;
     addr: Addr | null;
     items: OrderItem[];
-  } | null>(null);
-
-  useEffect(() => {
+  } | null>(() => {
+    if (typeof window === "undefined") return null;
     try {
       const raw = sessionStorage.getItem("guard_order");
       if (raw) {
         const parsed = JSON.parse(raw);
-        setOrderData({
+        return {
           orderId: String(parsed.orderId ?? "-"),
           total: parseFloat(parsed.total ?? "0"),
           addr: parsed.addr ?? null,
           items: parsed.items ?? [],
-        });
+        };
       }
     } catch {}
-  }, []);
+    return null;
+  });
 
   const orderId = orderData?.orderId ?? "-";
   const total = orderData?.total ?? 0;
