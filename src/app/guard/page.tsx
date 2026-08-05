@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Flame, Zap, BatteryCharging, ShieldCheck, Star, ChevronDown, ChevronUp, Check, Truck, Phone, Timer, Smartphone } from "lucide-react";
 import GuardCheckoutModal, { LPVariant } from "@/components/lp/GuardCheckoutModal";
 
@@ -43,18 +43,20 @@ const FAQS = [
 function useOfferTimer() {
   const [left, setLeft] = useState("--:--:--");
   useEffect(() => {
-    const DAY = 24 * 60 * 60 * 1000;
-    let end = Number(localStorage.getItem("guard_offer_end") ?? 0);
+    const MIN_H = 3;
+    const MAX_H = 14;
+    const randomDuration = () => (MIN_H + Math.floor(Math.random() * (MAX_H - MIN_H + 1))) * 60 * 60 * 1000;
+    let end = Number(localStorage.getItem("guard_offer_end_v2") ?? 0);
     if (!end || end <= Date.now()) {
-      end = Date.now() + DAY;
-      localStorage.setItem("guard_offer_end", String(end));
+      end = Date.now() + randomDuration();
+      localStorage.setItem("guard_offer_end_v2", String(end));
     }
     const tick = () => {
       let diff = end - Date.now();
       if (diff <= 0) {
-        end = Date.now() + DAY;
-        localStorage.setItem("guard_offer_end", String(end));
-        diff = DAY;
+        end = Date.now() + randomDuration();
+        localStorage.setItem("guard_offer_end_v2", String(end));
+        diff = end - Date.now();
       }
       const h = Math.floor(diff / 3600000);
       const m = Math.floor((diff % 3600000) / 60000);
@@ -87,13 +89,24 @@ export default function GuardPage() {
   const [selectedVariant, setSelectedVariant] = useState<LPVariant | null>(null);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [showSticky, setShowSticky] = useState(false);
+  const offerInView = useRef(false);
+  const offerRef = useRef<HTMLElement | null>(null);
   const [reviewsOpen, setReviewsOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setShowSticky(window.scrollY > 550);
+    const offerObserver = new IntersectionObserver(
+      ([entry]) => {
+        offerInView.current = entry.isIntersecting;
+        setShowSticky(window.scrollY > 550 && !entry.isIntersecting);
+      },
+      { threshold: 0.05 }
+    );
+    if (offerRef.current) offerObserver.observe(offerRef.current);
+
+    const onScroll = () => setShowSticky(window.scrollY > 550 && !offerInView.current);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => { offerObserver.disconnect(); window.removeEventListener("scroll", onScroll); };
   }, []);
 
   useEffect(() => {
@@ -124,23 +137,25 @@ export default function GuardPage() {
         .lp-delay-1 { transition-delay: 0.1s; }
         .lp-delay-2 { transition-delay: 0.2s; }
         .lp-delay-3 { transition-delay: 0.3s; }
-        .bundle-card { border: 2px solid #E5E0D6; border-radius: 20px; overflow: hidden; transition: border-color 0.2s, box-shadow 0.2s; background: #fff; cursor: pointer; }
-        .bundle-card.active { border-color: #FF4500; box-shadow: 0 0 0 4px rgba(255,69,0,0.12); }
+        .bundle-card { border: 2px solid #1E1E1E; border-radius: 20px; overflow: hidden; transition: border-color 0.2s, box-shadow 0.2s; background: #111; cursor: pointer; }
+        .bundle-card.active { border-color: #FF4500; box-shadow: 0 0 0 3px rgba(255,69,0,0.2); }
         @keyframes pulse-red { 0%,100% { opacity: 1; } 50% { opacity: 0.75; } }
         .pulse { animation: pulse-red 2s ease-in-out infinite; }
+        @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(200%); } }
         @keyframes cta-breathe {
-          0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,69,0,0.5), 0 8px 30px rgba(255,69,0,0.25); }
-          50% { transform: scale(1.04); box-shadow: 0 0 0 12px rgba(255,69,0,0), 0 8px 40px rgba(255,69,0,0.45); }
+          0%, 100% { box-shadow: 0 12px 40px rgba(255,69,0,0.4), 0 0 0 0 rgba(255,69,0,0.3); }
+          50% { box-shadow: 0 16px 56px rgba(255,69,0,0.55), 0 0 0 10px rgba(255,69,0,0); }
         }
-        .cta-attention { animation: cta-breathe 1.8s ease-in-out infinite; will-change: transform, box-shadow; }
+        .cta-attention { animation: cta-breathe 2.5s ease-in-out infinite; will-change: box-shadow; position: relative; overflow: hidden; }
+        .cta-attention::before { content: ''; position: absolute; top: 0; left: -100%; width: 60%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent); animation: shimmer 2.8s ease-in-out infinite; }
       `}</style>
 
       {/* ── TOP TIMER BAR ── */}
-      <div className="fixed top-0 left-0 right-0 z-50 px-4 py-3 text-center" style={{ background: "#0A0A0A", borderBottom: "2px solid #FF4500" }}>
-        <p className="text-sm font-extrabold tracking-wide flex items-center justify-center gap-2 flex-wrap" style={{ color: "#fff" }}>
-          <span className="pulse inline-flex items-center gap-1"><Timer size={15} /> OFERTA DE 24H TERMINA EN <span className="tabular-nums" style={{ color: "#FF4500" }}>{timer}</span></span>
+      <div className="fixed top-0 left-0 right-0 z-50 px-3 sm:px-4 py-3 text-center" style={{ background: "#FF4500" }}>
+        <p className="text-xs sm:text-sm font-extrabold tracking-wide flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2" style={{ color: "#fff" }}>
+          <span className="pulse inline-flex items-center gap-1"><Timer size={15} /> LA OFERTA TERMINA EN <span className="tabular-nums" style={{ background: "rgba(0,0,0,0.2)", padding: "1px 8px", borderRadius: "4px" }}>{timer}</span></span>
           <span className="hidden sm:inline opacity-40">|</span>
-          <span className="hidden sm:inline"><s className="opacity-50 font-heading tracking-tight">Antes <span className="text-[11px] align-top">₡</span>22665</s> · <span style={{ color: "#B71C1C" }} className="font-heading tracking-tight">Hoy <span className="text-[11px] align-top">₡</span>17700</span></span>
+          <span className="inline"><s className="opacity-60 font-heading tracking-tight">Antes <span className="text-[11px] align-top">₡</span>22665</s> · <span className="font-heading tracking-tight">Hoy <span className="text-[11px] align-top">₡</span>17700</span></span>
         </p>
       </div>
 
@@ -154,19 +169,19 @@ export default function GuardPage() {
           pointerEvents: showSticky ? "auto" : "none",
         }}
       >
-        <button
-          onClick={() => openCheckout(bundle)}
-          className="w-full sm:max-w-sm sm:mx-auto sm:block py-4 rounded-2xl font-bold text-sm tracking-widest active:scale-95 transition-all shadow-xl cta-attention"
+        <a
+          href="#oferta"
+          className="w-full sm:max-w-sm sm:mx-auto block text-center py-4 rounded-2xl font-bold text-sm tracking-widest active:scale-95 transition-all shadow-xl cta-attention"
           style={{ backgroundColor: "#FF4500", color: "#fff" }}
         >
-          ORDENAR {bundle.shortName.toUpperCase()} — <span className="font-heading tracking-tight"><span className="text-[10px] align-top">₡</span>{bundle.price}</span>
-        </button>
+          ORDENAR AHORA
+        </a>
       </div>
 
       {/* ── HERO ── */}
-      <section className="relative flex flex-col items-center px-5 pt-24 pb-16 text-center overflow-hidden" style={{ backgroundColor: NIGHT }}>
+      <section className="relative flex flex-col items-center pt-24 pb-16 text-center overflow-hidden" style={{ backgroundColor: NIGHT }}>
         <div className="absolute inset-0 opacity-25 pointer-events-none" style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(201,205,211,0.15) 0%, transparent 55%)" }} />
-        <div className="relative z-10 max-w-lg mx-auto w-full">
+        <div className="relative z-10 max-w-lg mx-auto w-full px-5">
           <div className="lp-animate flex items-center justify-center gap-2.5 mb-8">
             <div className="w-9 h-9 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: "#FFFFFF" }}>
               <span className="font-heading font-bold text-base leading-none" style={{ color: "#111111" }}>V</span>
@@ -176,7 +191,7 @@ export default function GuardPage() {
               <span className="text-[10px] font-medium mt-0.5 tracking-widest uppercase" style={{ color: ACCENT_D }}>Tecnología curada</span>
             </div>
           </div>
-          <div className="lp-animate inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold tracking-widest mb-6" style={{ backgroundColor: "rgba(255,255,255,0.06)", color: ACCENT_D, border: "1px solid #3A3E45" }}>
+          <div className="lp-animate inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold tracking-widest mb-6" style={{ backgroundColor: "rgba(255,69,0,0.07)", color: ACCENT_D, border: "1px solid rgba(255,69,0,0.25)" }}>
             VAZLINA GUARD™ · PROTECCIÓN INTELIGENTE
           </div>
           <h1 className="lp-animate lp-delay-1 text-4xl sm:text-5xl font-bold text-white leading-tight mb-5" style={{ letterSpacing: "-0.5px" }}>
@@ -194,7 +209,7 @@ export default function GuardPage() {
           <div className="lp-animate lp-delay-3 mt-6 mx-auto max-w-xs rounded-2xl overflow-hidden" style={{ backgroundColor: CARD, border: "1px solid #2A2E35" }}>
             <button onClick={() => setReviewsOpen(!reviewsOpen)} className="w-full flex items-center justify-center gap-2 px-5 py-3.5">
               <span className="flex gap-0.5">
-                {[...Array(5)].map((_, i) => (<Star key={i} size={13} fill="#FFD43B" style={{ color: "#FFD43B" }} />))}
+                {[...Array(5)].map((_, i) => (<Star key={i} size={13} fill="#F5B301" style={{ color: "#F5B301" }} />))}
               </span>
               <span className="text-xs font-bold text-white">1,247 Reseñas</span>
               {reviewsOpen ? <ChevronUp size={14} className="text-gray-400" /> : <ChevronDown size={14} className="text-gray-400" />}
@@ -202,7 +217,7 @@ export default function GuardPage() {
             {reviewsOpen && (
               <div className="px-5 pb-5 pt-4" style={{ borderTop: "1px solid #2A2E35" }}>
                 <div className="flex items-center justify-center gap-2 mb-4">
-                  <Star size={22} fill="#FFD43B" style={{ color: "#FFD43B" }} />
+                  <Star size={22} fill="#F5B301" style={{ color: "#F5B301" }} />
                   <span className="font-heading text-3xl font-bold text-white">4.8</span>
                 </div>
                 {[
@@ -215,7 +230,7 @@ export default function GuardPage() {
                   <div key={stars} className="flex items-center gap-2 mb-1.5">
                     <div className="flex gap-0.5 w-16 shrink-0">
                       {[...Array(5)].map((_, i) => (
-                        <Star key={i} size={10} fill={i < stars ? "#FFD43B" : "transparent"} style={{ color: i < stars ? "#FFD43B" : "#3A3E45" }} />
+                        <Star key={i} size={10} fill={i < stars ? "#F5B301" : "transparent"} style={{ color: i < stars ? "#F5B301" : "#3A3E45" }} />
                       ))}
                     </div>
                     <div className="flex-1 h-1.5 rounded-full" style={{ backgroundColor: "#2A2E35" }}>
@@ -227,26 +242,28 @@ export default function GuardPage() {
               </div>
             )}
           </div>
-          <div className="lp-animate lp-delay-3 mt-8 rounded-3xl overflow-hidden shadow-2xl" style={{ border: "1px solid #2A2E35" }}>
-            <Img src="/lp-guard/hero.jpg" label="hero.jpg — collage lifestyle (mujer trabajando, pareja durmiendo)" className="w-full" />
-          </div>
+        </div>
+        <div className="lp-animate lp-delay-3 mt-8 overflow-hidden shadow-2xl w-full">
+          <Img src="/lp-guard/hero.jpg" label="hero.jpg — collage lifestyle (mujer trabajando, pareja durmiendo)" className="w-full block" />
         </div>
       </section>
 
       {/* ── PROBLEMA / PELIGRO ── */}
-      <section className="py-20 px-5" style={{ backgroundColor: NIGHT, borderTop: "1px solid #2A2E35" }}>
-        <div className="max-w-lg mx-auto">
+      <section className="py-20" style={{ backgroundColor: NIGHT, borderTop: "1px solid #2A2E35" }}>
+        <div className="max-w-lg mx-auto px-5">
           <h2 className="lp-animate text-3xl font-bold text-white text-center mb-3" style={{ fontFamily: "Georgia, serif" }}>
             Dos riesgos silenciosos.<br /><span style={{ color: ACCENT_D }}>Un mismo culpable: tu cargador.</span>
           </h2>
           <p className="lp-animate lp-delay-1 text-center text-gray-400 text-sm leading-relaxed mb-10">
             Cada noche, tu cargador queda enchufado 8 horas seguidas. Eso tiene dos consecuencias que casi nadie ve venir — hasta que es tarde.
           </p>
+        </div>
 
-          <div className="lp-animate lp-delay-1 rounded-3xl overflow-hidden mb-10 shadow-2xl" style={{ border: "1px solid #2A2E35" }}>
-            <Img src="/lp-guard/peligro.jpg" label="peligro.jpg — anuncio oscuro 'Corta la energía antes de que ocurran desastres'" className="w-full" />
-          </div>
+        <div className="lp-animate lp-delay-1 overflow-hidden mb-10 shadow-2xl w-full">
+          <Img src="/lp-guard/peligro.jpg" label="peligro.jpg — anuncio oscuro 'Corta la energía antes de que ocurran desastres'" className="w-full block" />
+        </div>
 
+        <div className="max-w-lg mx-auto px-5">
           <div className="space-y-4">
             {[
               { Icon: Flame, title: "Sobrecalentamiento nocturno", sub: "Un cargador caliente durante 8 horas es la causa #1 de incendios eléctricos en el hogar. Y ocurre mientras todos duermen — incluidos tus hijos.", delay: "" },
@@ -269,8 +286,8 @@ export default function GuardPage() {
       </section>
 
       {/* ── SOLUCIÓN ── */}
-      <section className="py-20 px-5" style={{ backgroundColor: IVORY }}>
-        <div className="max-w-lg mx-auto text-center">
+      <section className="py-20" style={{ backgroundColor: IVORY }}>
+        <div className="max-w-lg mx-auto px-5 text-center">
           <div className="lp-animate inline-block px-4 py-1 rounded-full text-xs font-bold tracking-widest mb-4 text-white" style={{ backgroundColor: ACCENT }}>LA SOLUCIÓN</div>
           <h2 className="lp-animate text-3xl font-bold mb-3" style={{ color: INK }}>
             Un solo dispositivo. <span style={{ color: ACCENT }}>Dos protecciones.</span>
@@ -278,16 +295,18 @@ export default function GuardPage() {
           <p className="lp-animate lp-delay-1 text-gray-500 text-sm leading-relaxed mb-10">
             Monitorea el flujo eléctrico en tiempo real: <strong>corta la energía antes de un desastre</strong> y <strong>detiene la carga al 100%</strong> para que tu batería dure años más.
           </p>
+        </div>
 
-          <div className="lp-animate lp-delay-1 grid grid-cols-2 gap-4 mb-10">
-            <div className="rounded-2xl overflow-hidden shadow-lg">
-              <Img src="/lp-guard/product.jpg" label="product.jpg — producto sobre tela beige" className="w-full" />
-            </div>
-            <div className="rounded-2xl overflow-hidden shadow-lg">
-              <Img src="/lp-guard/demo.gif" label="demo.gif — GIF del producto real en mano" className="w-full" />
-            </div>
+        <div className="lp-animate lp-delay-1 flex flex-col mb-10 w-full">
+          <div className="overflow-hidden shadow-lg">
+            <Img src="/lp-guard/product.jpg" label="product.jpg — producto sobre tela beige" className="w-full block" />
           </div>
+          <div className="overflow-hidden shadow-lg">
+            <Img src="/lp-guard/demo.jpg" label="demo.jpg — producto real en mano" className="w-full block" />
+          </div>
+        </div>
 
+        <div className="max-w-lg mx-auto px-5 text-center">
           <div className="space-y-4 text-left">
             {[
               { n: "1", title: "Conectalo en segundos", sub: "Directo al puerto USB-C de tu teléfono — o entre la cabeza del cargador y el cable (ideal para iPhone con Lightning). Plug & play, sin apps.", delay: "" },
@@ -357,14 +376,17 @@ export default function GuardPage() {
       </section>
 
       {/* ── CARACTERÍSTICAS ── */}
-      <section className="py-20 px-5" style={{ backgroundColor: NIGHT }}>
-        <div className="max-w-lg mx-auto">
+      <section className="py-20" style={{ backgroundColor: NIGHT }}>
+        <div className="max-w-lg mx-auto px-5">
           <h2 className="lp-animate text-3xl font-bold text-white text-center mb-2">La seguridad que no podés ver,</h2>
           <h2 className="lp-animate lp-delay-1 text-3xl font-bold text-center mb-12" style={{ color: ACCENT_D }}>la tranquilidad que sí podés sentir.</h2>
+        </div>
 
-          <div className="lp-animate lp-delay-1 rounded-3xl overflow-hidden mb-10 shadow-2xl" style={{ border: "1px solid #2A2E35" }}>
-            <Img src="/lp-guard/familia.jpg" label="familia.jpg — anuncio 'Protege a tus hijos'" className="w-full" />
-          </div>
+        <div className="lp-animate lp-delay-1 overflow-hidden mb-10 shadow-2xl w-full">
+          <Img src="/lp-guard/familia.jpg" label="familia.jpg — anuncio 'Protege a tus hijos'" className="w-full block" />
+        </div>
+
+        <div className="max-w-lg mx-auto px-5">
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             {[
@@ -386,7 +408,7 @@ export default function GuardPage() {
       </section>
 
       {/* ── OFERTA ── */}
-      <section id="oferta" className="py-20 px-4 scroll-mt-16" style={{ backgroundColor: IVORY }}>
+      <section ref={offerRef} id="oferta" className="py-20 px-4 scroll-mt-16" style={{ backgroundColor: IVORY }}>
         <div className="max-w-lg mx-auto">
           <h2 className="lp-animate text-3xl font-bold text-center mb-2" style={{ color: INK }}>Elegí tu protección</h2>
           <p className="lp-animate lp-delay-1 text-center text-gray-500 text-sm mb-3">Pago al recibir · Envío gratis · Garantía 30 días</p>
@@ -596,7 +618,7 @@ export default function GuardPage() {
             Esta noche, tu cargador volverá a quedarse enchufado 8 horas.<br />La pregunta es: ¿con protección o sin ella?
           </p>
           <p className="lp-animate lp-delay-1 text-base font-extrabold mb-8" style={{ color: "#FF4500" }}>
-            ⏳ Oferta termina en <span className="tabular-nums text-lg">{timer}</span>
+            ⏳ Oferta termina in <span className="tabular-nums text-lg">{timer}</span>
           </p>
           <a
             href="#oferta"
