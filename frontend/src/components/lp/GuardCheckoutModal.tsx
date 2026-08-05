@@ -61,25 +61,29 @@ export default function GuardCheckoutModal({
     localStorage.setItem("vazlina_last_order_id", String(orderId));
     sessionStorage.setItem("order_status", "pending");
 
-    const addrParam = encodeURIComponent(JSON.stringify({
-      name: data.name, phone: data.phone, state: data.state,
-      city: data.city, distrito: data.distrito, address: data.address, reference: data.reference,
-    }));
+    const addr = {
+      name: data.name ?? "", phone: data.phone ?? "", state: data.state ?? "",
+      city: data.city ?? "", distrito: data.distrito ?? "", address: data.address ?? "", reference: data.reference ?? "",
+    };
     const orderItems = express
       ? [...variant.items, { product_name: "Envío Express (1-3 días)", quantity: 1, price_per_item: EXPRESS_FEE }]
       : variant.items;
-    const itemsParam = encodeURIComponent(JSON.stringify(orderItems));
 
-    const thankYouUrl = `/guard/thank-you?order_id=${orderId}&total=${total.toFixed(2)}&addr=${addrParam}&items=${itemsParam}`;
+    sessionStorage.setItem("guard_order", JSON.stringify({
+      orderId,
+      total: total.toFixed(2),
+      addr,
+      items: orderItems,
+    }));
 
     createOrder({
-      customer_name: data.name ?? "",
-      customer_phone: data.phone ?? "",
-      customer_state: data.state ?? "",
-      customer_city: data.city ?? "",
-      customer_distrito: data.distrito ?? "",
-      customer_address: data.address ?? "",
-      customer_reference: data.reference ?? "",
+      customer_name: addr.name,
+      customer_phone: addr.phone,
+      customer_state: addr.state,
+      customer_city: addr.city,
+      customer_distrito: addr.distrito,
+      customer_address: addr.address,
+      customer_reference: addr.reference,
       items: orderItems,
       is_upsell_accepted: false,
       total_price: total,
@@ -91,7 +95,7 @@ export default function GuardCheckoutModal({
     });
 
     reset();
-    window.location.href = thankYouUrl;
+    window.location.href = "/guard/thank-you";
   };
 
   if (!isOpen || !variant) return null;

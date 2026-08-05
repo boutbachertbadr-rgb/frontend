@@ -1,7 +1,6 @@
 "use client";
 
 import { Suspense, useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
 import { CheckCircle, Truck, Phone, RefreshCw, ShieldCheck } from "lucide-react";
 import { createOrder } from "@/lib/api";
 
@@ -14,14 +13,32 @@ interface OrderItem { product_name: string; quantity: number; price_per_item: nu
 interface Addr { name: string; phone: string; state: string; city: string; distrito: string; address: string; reference: string; }
 
 function GuardThankYouContent() {
-  const params = useSearchParams();
-  const orderId = params.get("order_id") ?? "-";
-  const total = parseFloat(params.get("total") ?? "0");
+  const [orderData, setOrderData] = useState<{
+    orderId: string;
+    total: number;
+    addr: Addr | null;
+    items: OrderItem[];
+  } | null>(null);
 
-  let addr: Addr | null = null;
-  let items: OrderItem[] = [];
-  try { addr = JSON.parse(decodeURIComponent(params.get("addr") ?? "")); } catch {}
-  try { items = JSON.parse(decodeURIComponent(params.get("items") ?? "")); } catch {}
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem("guard_order");
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        setOrderData({
+          orderId: String(parsed.orderId ?? "-"),
+          total: parseFloat(parsed.total ?? "0"),
+          addr: parsed.addr ?? null,
+          items: parsed.items ?? [],
+        });
+      }
+    } catch {}
+  }, []);
+
+  const orderId = orderData?.orderId ?? "-";
+  const total = orderData?.total ?? 0;
+  const addr = orderData?.addr;
+  const items = orderData?.items ?? [];
   const isExpress = items.some((i) => i.product_name.includes("Envío Express"));
 
   const [connectionWarning, setConnectionWarning] = useState(false);
