@@ -29,6 +29,7 @@ export default function GuardCheckoutModal({
 }) {
   const [express, setExpress] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
   const EXPRESS_FEE = 2000;
   const total = (variant?.price ?? 0) + (express ? EXPRESS_FEE : 0);
 
@@ -36,6 +37,7 @@ export default function GuardCheckoutModal({
     e.preventDefault();
     if (!variant) return;
     setSubmitting(true);
+    setSubmitError("");
 
     const formData = new FormData(e.currentTarget);
     const addr = {
@@ -50,36 +52,25 @@ export default function GuardCheckoutModal({
     console.log("[checkout] FormData addr:", addr);
 
     const eventId = generateEventId();
-    const localOrderId = parseInt(localStorage.getItem("vazlina_last_order_id") ?? "799") + 1;
-    localStorage.setItem("vazlina_last_order_id", String(localOrderId));
-    sessionStorage.setItem("order_status", "pending");
 
     const orderItems = express
       ? [...variant.items, { product_name: "Envío Express (1-3 días)", quantity: 1, price_per_item: EXPRESS_FEE }]
       : variant.items;
 
-    const orderPayload = JSON.stringify({
-      orderId: localOrderId,
-      total: total.toFixed(2),
-      addr,
-      items: orderItems,
-    });
-    localStorage.setItem("guard_order", orderPayload);
-    sessionStorage.setItem("guard_order", orderPayload);
-
-    createOrder({
-      customer_name: addr.name,
-      customer_phone: addr.phone,
-      customer_state: addr.state,
-      customer_city: addr.city,
-      customer_distrito: addr.distrito,
-      customer_address: addr.address,
-      customer_reference: addr.reference,
-      items: orderItems,
-      is_upsell_accepted: false,
-      total_price: total,
-      browser_event_id: eventId,
-    }).then((response) => {
+    try {
+      const response = await createOrder({
+        customer_name: addr.name,
+        customer_phone: addr.phone,
+        customer_state: addr.state,
+        customer_city: addr.city,
+        customer_distrito: addr.distrito,
+        customer_address: addr.address,
+        customer_reference: addr.reference,
+        items: orderItems,
+        is_upsell_accepted: false,
+        total_price: total,
+        browser_event_id: eventId,
+      });
       console.log("[checkout] createOrder response:", response);
       const realOrderId = response.order_id;
       const updatedPayload = JSON.stringify({
@@ -91,13 +82,12 @@ export default function GuardCheckoutModal({
       localStorage.setItem("guard_order", updatedPayload);
       sessionStorage.setItem("guard_order", updatedPayload);
       sessionStorage.setItem("order_status", "confirmed");
-    }).catch(() => {
-      sessionStorage.setItem("order_status", "failed");
-    });
-
-    setTimeout(() => {
       window.location.href = "/guard/thank-you";
-    }, 200);
+    } catch (err) {
+      console.error("[checkout] createOrder failed:", err);
+      setSubmitError("No se pudo registrar el pedido. Verificá tu conexión o contactá soporte.");
+      setSubmitting(false);
+    }
   };
 
   if (!isOpen || !variant) return null;
@@ -213,6 +203,7 @@ export default function GuardCheckoutModal({
             >
               {submitting ? "Procesando..." : "✓ CONFIRMAR PEDIDO"}
             </button>
+            {submitError && <p className="text-center text-xs text-red-600 mt-2">{submitError}</p>}
             <p className="text-center text-xs text-gray-400 pb-2">Pagas únicamente al recibir tu pedido. 100% sin riesgo.</p>
           </form>
         </div>
