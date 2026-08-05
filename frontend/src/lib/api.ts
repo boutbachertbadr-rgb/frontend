@@ -54,6 +54,34 @@ export interface OrderResponse {
 
 
 
+export interface OrderPublicResponse {
+
+  order_id: number;
+
+  status: string;
+
+  total_price: number;
+
+  customer_name: string;
+
+  customer_phone: string;
+
+  customer_state: string;
+
+  customer_city: string;
+
+  customer_distrito: string | null;
+
+  customer_address: string;
+
+  customer_reference: string | null;
+
+  items: OrderItem[];
+
+}
+
+
+
 export async function createOrder(payload: CreateOrderPayload): Promise<OrderResponse> {
 
   const controller = new AbortController();
@@ -123,6 +151,54 @@ export async function createOrder(payload: CreateOrderPayload): Promise<OrderRes
 
 
     return mockResponse;
+
+  }
+
+}
+
+
+
+export async function getOrderById(orderId: number): Promise<OrderPublicResponse | null> {
+
+  const controller = new AbortController();
+
+  const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+
+
+  try {
+
+    const res = await fetch(`${API_URL}/orders/${orderId}`, {
+
+      method: "GET",
+
+      headers: { "Content-Type": "application/json" },
+
+      signal: controller.signal,
+
+    });
+
+
+
+    clearTimeout(timeoutId);
+
+
+
+    if (!res.ok) {
+
+      return null;
+
+    }
+
+
+
+    return res.json();
+
+  } catch {
+
+    clearTimeout(timeoutId);
+
+    return null;
 
   }
 

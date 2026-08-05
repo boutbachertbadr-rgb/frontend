@@ -50,8 +50,8 @@ export default function GuardCheckoutModal({
     console.log("[checkout] FormData addr:", addr);
 
     const eventId = generateEventId();
-    const orderId = parseInt(localStorage.getItem("vazlina_last_order_id") ?? "799") + 1;
-    localStorage.setItem("vazlina_last_order_id", String(orderId));
+    const localOrderId = parseInt(localStorage.getItem("vazlina_last_order_id") ?? "799") + 1;
+    localStorage.setItem("vazlina_last_order_id", String(localOrderId));
     sessionStorage.setItem("order_status", "pending");
 
     const orderItems = express
@@ -59,7 +59,7 @@ export default function GuardCheckoutModal({
       : variant.items;
 
     const orderPayload = JSON.stringify({
-      orderId,
+      orderId: localOrderId,
       total: total.toFixed(2),
       addr,
       items: orderItems,
@@ -79,7 +79,17 @@ export default function GuardCheckoutModal({
       is_upsell_accepted: false,
       total_price: total,
       browser_event_id: eventId,
-    }).then(() => {
+    }).then((response) => {
+      console.log("[checkout] createOrder response:", response);
+      const realOrderId = response.order_id;
+      const updatedPayload = JSON.stringify({
+        orderId: realOrderId,
+        total: total.toFixed(2),
+        addr,
+        items: orderItems,
+      });
+      localStorage.setItem("guard_order", updatedPayload);
+      sessionStorage.setItem("guard_order", updatedPayload);
       sessionStorage.setItem("order_status", "confirmed");
     }).catch(() => {
       sessionStorage.setItem("order_status", "failed");

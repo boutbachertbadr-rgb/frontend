@@ -2,7 +2,7 @@
 
 import { Suspense, useState, useEffect } from "react";
 import { CheckCircle, Truck, Phone, RefreshCw, ShieldCheck } from "lucide-react";
-import { createOrder } from "@/lib/api";
+import { createOrder, getOrderById } from "@/lib/api";
 
 const ACCENT = "#111111";
 const ACCENT_D = "#C9CDD3";
@@ -21,22 +21,67 @@ function GuardThankYouContent() {
   } | null>(null);
 
   useEffect(() => {
-    try {
-      const raw = sessionStorage.getItem("guard_order") ?? localStorage.getItem("guard_order");
-      console.log("[thank-you] raw guard_order:", raw);
-      if (raw) {
-        const parsed = JSON.parse(raw);
-        console.log("[thank-you] parsed addr:", parsed.addr);
-        setOrderData({
-          orderId: String(parsed.orderId ?? "-"),
-          total: parseFloat(parsed.total ?? "0"),
-          addr: parsed.addr ?? null,
-          items: parsed.items ?? [],
-        });
+    let cancelled = false;
+
+    const loadOrder = async () => {
+      let storedOrderId: number | null = null;
+      let fallbackData: typeof orderData = null;
+
+      try {
+        const raw = sessionStorage.getItem("guard_order") ?? localStorage.getItem("guard_order");
+        console.log("[thank-you] raw guard_order:", raw);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          console.log("[thank-you] parsed addr from storage:", parsed.addr);
+          storedOrderId = typeof parsed.orderId === "number" ? parsed.orderId : parseInt(parsed.orderId) || null;
+          fallbackData = {
+            orderId: String(parsed.orderId ?? "-"),
+            total: parseFloat(parsed.total ?? "0"),
+            addr: parsed.addr ?? null,
+            items: parsed.items ?? [],
+          };
+        }
+      } catch (e) {
+        console.error("[thank-you] error parsing guard_order:", e);
       }
-    } catch (e) {
-      console.error("[thank-you] error parsing guard_order:", e);
-    }
+
+      if (storedOrderId) {
+        console.log("[thank-you] fetching order from API, orderId:", storedOrderId);
+        try {
+          const apiOrder = await getOrderById(storedOrderId);
+          console.log("[thank-you] API response:", apiOrder);
+          if (apiOrder && !cancelled) {
+            const apiAddr: Addr = {
+              name: apiOrder.customer_name || "",
+              phone: apiOrder.customer_phone || "",
+              state: apiOrder.customer_state || "",
+              city: apiOrder.customer_city || "",
+              distrito: apiOrder.customer_distrito || "",
+              address: apiOrder.customer_address || "",
+              reference: apiOrder.customer_reference || "",
+            };
+            console.log("[thank-you] addr from API:", apiAddr);
+            setOrderData({
+              orderId: String(apiOrder.order_id),
+              total: apiOrder.total_price,
+              addr: apiAddr,
+              items: apiOrder.items || [],
+            });
+            return;
+          }
+        } catch (e) {
+          console.error("[thank-you] API fetch failed:", e);
+        }
+      }
+
+      if (fallbackData && !cancelled) {
+        console.log("[thank-you] using fallback data from storage");
+        setOrderData(fallbackData);
+      }
+    };
+
+    loadOrder();
+    return () => { cancelled = true; };
   }, []);
 
   const orderId = orderData?.orderId ?? "-";
