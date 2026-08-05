@@ -30,6 +30,7 @@ export default function GuardCheckoutModal({
   const [express, setExpress] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const EXPRESS_FEE = 2000;
   const total = (variant?.price ?? 0) + (express ? EXPRESS_FEE : 0);
 
@@ -50,6 +51,20 @@ export default function GuardCheckoutModal({
       reference: String(formData.get("reference") ?? ""),
     };
     console.log("[checkout] FormData addr:", addr);
+
+    const errors: Record<string, string> = {};
+    if (!addr.name.trim()) errors.name = "Ingresá tu nombre completo";
+    if (!addr.phone.trim()) errors.phone = "Ingresá tu teléfono";
+    if (!addr.state.trim()) errors.state = "Seleccioná tu provincia";
+    if (!addr.city.trim()) errors.city = "Ingresá tu cantón";
+    if (!addr.address.trim()) errors.address = "Ingresá tu dirección exacta";
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      setSubmitting(false);
+      return;
+    }
+    setFormErrors({});
+    setSubmitError("");
 
     const eventId = generateEventId();
 
@@ -124,11 +139,13 @@ export default function GuardCheckoutModal({
           <form onSubmit={handleNativeSubmit} className="space-y-3">
             <div>
               <label className="block text-xs font-semibold text-gray-700 mb-1">Nombre completo</label>
-              <input name="name" type="text" placeholder="Ana García" className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-neutral-400 bg-white" />
+              <input name="name" type="text" placeholder="Ana García" className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-neutral-400 bg-white ${formErrors.name ? "border-red-500" : "border-gray-200"}`} />
+              {formErrors.name && <p className="text-red-600 text-xs mt-1">{formErrors.name}</p>}
             </div>
             <div>
               <label className="block text-xs font-semibold text-gray-700 mb-1">Teléfono</label>
-              <input name="phone" type="tel" placeholder="8888-0000" className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-neutral-400 bg-white" />
+              <input name="phone" type="tel" placeholder="8888-0000" className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-neutral-400 bg-white ${formErrors.phone ? "border-red-500" : "border-gray-200"}`} />
+              {formErrors.phone && <p className="text-red-600 text-xs mt-1">{formErrors.phone}</p>}
             </div>
 
             <div>
@@ -136,18 +153,20 @@ export default function GuardCheckoutModal({
               <div className="relative">
                 <select
                   name="state"
-                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none appearance-none bg-white"
+                  className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none appearance-none bg-white ${formErrors.state ? "border-red-500" : "border-gray-200"}`}
                 >
                   <option value="">Selecciona tu provincia</option>
                   {PROVINCES.map(p => <option key={p} value={p}>{p}</option>)}
                 </select>
                 <ChevronDown size={15} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
               </div>
+              {formErrors.state && <p className="text-red-600 text-xs mt-1">{formErrors.state}</p>}
             </div>
 
             <div>
               <label className="block text-xs font-semibold text-gray-700 mb-1">Cantón</label>
-              <input name="city" type="text" placeholder="Escazú" className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-neutral-400 bg-white" />
+              <input name="city" type="text" placeholder="Escazú" className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-neutral-400 bg-white ${formErrors.city ? "border-red-500" : "border-gray-200"}`} />
+              {formErrors.city && <p className="text-red-600 text-xs mt-1">{formErrors.city}</p>}
             </div>
             <div>
               <label className="block text-xs font-semibold text-gray-700 mb-1">Distrito</label>
@@ -155,7 +174,8 @@ export default function GuardCheckoutModal({
             </div>
             <div>
               <label className="block text-xs font-semibold text-gray-700 mb-1">Dirección exacta</label>
-              <input name="address" type="text" placeholder="Calle 5, Casa #12" className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-neutral-400 bg-white" />
+              <input name="address" type="text" placeholder="Calle 5, Casa #12" className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-neutral-400 bg-white ${formErrors.address ? "border-red-500" : "border-gray-200"}`} />
+              {formErrors.address && <p className="text-red-600 text-xs mt-1">{formErrors.address}</p>}
             </div>
             <div>
               <label className="block text-xs font-semibold text-gray-700 mb-1">Punto de referencia</label>
