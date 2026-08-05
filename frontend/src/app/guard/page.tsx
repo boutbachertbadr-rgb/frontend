@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Flame, Zap, BatteryCharging, ShieldCheck, Star, ChevronDown, ChevronUp, Check, Truck, Phone, Timer, Smartphone } from "lucide-react";
 import GuardCheckoutModal, { LPVariant } from "@/components/lp/GuardCheckoutModal";
 
@@ -89,13 +89,24 @@ export default function GuardPage() {
   const [selectedVariant, setSelectedVariant] = useState<LPVariant | null>(null);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [showSticky, setShowSticky] = useState(false);
+  const offerInView = useRef(false);
+  const offerRef = useRef<HTMLElement | null>(null);
   const [reviewsOpen, setReviewsOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setShowSticky(window.scrollY > 550);
+    const offerObserver = new IntersectionObserver(
+      ([entry]) => {
+        offerInView.current = entry.isIntersecting;
+        setShowSticky(window.scrollY > 550 && !entry.isIntersecting);
+      },
+      { threshold: 0.05 }
+    );
+    if (offerRef.current) offerObserver.observe(offerRef.current);
+
+    const onScroll = () => setShowSticky(window.scrollY > 550 && !offerInView.current);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => { offerObserver.disconnect(); window.removeEventListener("scroll", onScroll); };
   }, []);
 
   useEffect(() => {
@@ -158,7 +169,7 @@ export default function GuardPage() {
       >
         <a
           href="#oferta"
-          className="w-full sm:max-w-sm sm:mx-auto sm:block text-center py-4 rounded-2xl font-bold text-sm tracking-widest active:scale-95 transition-all shadow-xl cta-attention"
+          className="w-full sm:max-w-sm sm:mx-auto block text-center py-4 rounded-2xl font-bold text-sm tracking-widest active:scale-95 transition-all shadow-xl cta-attention"
           style={{ backgroundColor: "#FFFFFF", color: "#111111" }}
         >
           ORDENAR AHORA
@@ -388,7 +399,7 @@ export default function GuardPage() {
       </section>
 
       {/* ── OFERTA ── */}
-      <section id="oferta" className="py-20 px-4 scroll-mt-16" style={{ backgroundColor: IVORY }}>
+      <section ref={offerRef} id="oferta" className="py-20 px-4 scroll-mt-16" style={{ backgroundColor: IVORY }}>
         <div className="max-w-lg mx-auto">
           <h2 className="lp-animate text-3xl font-bold text-center mb-2" style={{ color: INK }}>Elegí tu protección</h2>
           <p className="lp-animate lp-delay-1 text-center text-gray-500 text-sm mb-3">Pago al recibir · Envío gratis · Garantía 30 días</p>
