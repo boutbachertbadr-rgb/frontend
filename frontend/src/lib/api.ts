@@ -84,6 +84,8 @@ export interface OrderPublicResponse {
 
 export async function createOrder(payload: CreateOrderPayload): Promise<OrderResponse> {
 
+  console.log("[api.createOrder] payload:", payload);
+
   const controller = new AbortController();
 
   const timeoutId = setTimeout(() => controller.abort(), 3000);
@@ -112,19 +114,27 @@ export async function createOrder(payload: CreateOrderPayload): Promise<OrderRes
 
     if (!res.ok) {
 
-      const error = await res.json().catch(() => ({ detail: "Error al crear la orden." }));
+      const errorText = await res.text().catch(() => "Error al crear la orden.");
 
-      throw new Error(error.detail ?? "Error al crear la orden.");
+      console.error("[api.createOrder] HTTP error", res.status, errorText);
+
+      throw new Error(errorText || "Error al crear la orden.");
 
     }
 
 
 
-    return res.json();
+    const data = await res.json();
 
-  } catch {
+    console.log("[api.createOrder] response:", data);
+
+    return data;
+
+  } catch (err) {
 
     clearTimeout(timeoutId);
+
+    console.error("[api.createOrder] request failed, using local fallback. Error:", err);
 
     // Fallback: backend not running - store locally and return mock response
 
