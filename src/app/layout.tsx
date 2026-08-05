@@ -1,13 +1,8 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Crimson_Pro } from "next/font/google";
 import "./globals.css";
-import AnnouncementBar from "@/components/AnnouncementBar";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import CartDrawer from "@/components/CartDrawer";
-import CheckoutModal from "@/components/CheckoutModal";
-import UpsellOverlay from "@/components/UpsellOverlay";
 import PixelScripts from "@/components/PixelScripts";
+import StoreLayout from "@/components/StoreLayout";
 
 const fontHeading = Playfair_Display({ subsets: ["latin"], weight: ['700'], variable: "--font-heading", display: "swap" });
 const fontBody = Crimson_Pro({ subsets: ["latin"], weight: ['400', '500', '600'], variable: "--font-body", display: "swap" });
@@ -31,13 +26,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="es-CR" className={`${fontHeading.variable} ${fontBody.variable}`}>
       <body>
         <PixelScripts />
-        <AnnouncementBar />
-        <Header />
-        <main>{children}</main>
-        <Footer />
-        <CartDrawer />
-        <CheckoutModal />
-        <UpsellOverlay />
+        <StoreLayout>{children}</StoreLayout>
       </body>
     </html>
   );
