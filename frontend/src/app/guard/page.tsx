@@ -492,11 +492,11 @@ export default function GuardPage() {
               <div className="p-4 space-y-2.5" style={{ backgroundColor: WA_BG }}>
                 <div className="max-w-[85%] rounded-xl rounded-tl-none px-3 py-2 shadow-sm" style={{ backgroundColor: "#fff" }}>
                   <p className="text-sm text-gray-800 leading-snug">No les escribí hasta que pasaron 2 días para probarlo bien y asegurarme de que funcione de verdad</p>
-                  <p className="text-[10px] text-gray-400 text-right mt-1">8:40 pm <span style={{ color: "#53BDEB" }}>✓✓</span></p>
+                  <p className="text-[10px] text-gray-400 text-right mt-1">8:40 pm <span style={{ color: "#aaa" }}>✓✓</span></p>
                 </div>
                 <div className="max-w-[85%] rounded-xl rounded-tl-none px-3 py-2 shadow-sm" style={{ backgroundColor: "#fff" }}>
                   <p className="text-sm text-gray-800 leading-snug">Y sinceramente... es una belleza. Siento tranquilidad de verdad. Gracias por la atención tan profesional</p>
-                  <p className="text-[10px] text-gray-400 text-right mt-1">8:42 pm <span style={{ color: "#53BDEB" }}>✓✓</span></p>
+                  <p className="text-[10px] text-gray-400 text-right mt-1">8:42 pm <span style={{ color: "#aaa" }}>✓✓</span></p>
                 </div>
                 <div className="max-w-[85%] ml-auto rounded-xl rounded-tr-none px-3 py-2 shadow-sm" style={{ backgroundColor: WA_ACCENT }}>
                   <p className="text-sm text-gray-800 leading-snug">¡Gracias a vos por confiar! Nos alegra mucho que estés tranquila</p>
@@ -520,11 +520,11 @@ export default function GuardPage() {
               <div className="p-4 space-y-2.5" style={{ backgroundColor: WA_BG }}>
                 <div className="max-w-[85%] rounded-xl rounded-tl-none px-3 py-2 shadow-sm" style={{ backgroundColor: "#fff" }}>
                   <p className="text-sm text-gray-800 leading-snug">Sinceramente, somos dos con mi esposa y siempre dejamos el teléfono en el cargador y nos olvidamos, eso me estresaba bastante</p>
-                  <p className="text-[10px] text-gray-400 text-right mt-1">9:12 pm <span style={{ color: "#53BDEB" }}>✓✓</span></p>
+                  <p className="text-[10px] text-gray-400 text-right mt-1">9:12 pm <span style={{ color: "#aaa" }}>✓✓</span></p>
                 </div>
                 <div className="max-w-[85%] rounded-xl rounded-tl-none px-3 py-2 shadow-sm" style={{ backgroundColor: "#fff" }}>
                   <p className="text-sm text-gray-800 leading-snug">Ahora con el Guard los conecto directo cuando quieren cargar y listo. Problema resuelto</p>
-                  <p className="text-[10px] text-gray-400 text-right mt-1">9:14 pm <span style={{ color: "#53BDEB" }}>✓✓</span></p>
+                  <p className="text-[10px] text-gray-400 text-right mt-1">9:14 pm <span style={{ color: "#aaa" }}>✓✓</span></p>
                 </div>
                 <div className="max-w-[85%] ml-auto rounded-xl rounded-tr-none px-3 py-2 shadow-sm" style={{ backgroundColor: WA_ACCENT }}>
                   <p className="text-sm text-gray-800 leading-snug">¡Exacto! Para eso lo diseñamos. Cargar tranquilo es todo</p>
@@ -548,11 +548,11 @@ export default function GuardPage() {
               <div className="p-4 space-y-2.5" style={{ backgroundColor: WA_BG }}>
                 <div className="max-w-[85%] rounded-xl rounded-tl-none px-3 py-2 shadow-sm" style={{ backgroundColor: "#fff" }}>
                   <p className="text-sm text-gray-800 leading-snug">Sinceramente el producto hace que el teléfono aguante más batería. Antes mi celular duraba medio día y ahora llega tranquilo a la noche</p>
-                  <p className="text-[10px] text-gray-400 text-right mt-1">7:01 am <span style={{ color: "#53BDEB" }}>✓✓</span></p>
+                  <p className="text-[10px] text-gray-400 text-right mt-1">7:01 am <span style={{ color: "#aaa" }}>✓✓</span></p>
                 </div>
                 <div className="max-w-[85%] rounded-xl rounded-tl-none px-3 py-2 shadow-sm" style={{ backgroundColor: "#fff" }}>
                   <p className="text-sm text-gray-800 leading-snug">Creo que antes la batería se gastaba rápido por la sobrecarga de la noche. Ahora con Guard eso no pasa</p>
-                  <p className="text-[10px] text-gray-400 text-right mt-1">7:03 am <span style={{ color: "#53BDEB" }}>✓✓</span></p>
+                  <p className="text-[10px] text-gray-400 text-right mt-1">7:03 am <span style={{ color: "#aaa" }}>✓✓</span></p>
                 </div>
                 <div className="max-w-[85%] ml-auto rounded-xl rounded-tr-none px-3 py-2 shadow-sm" style={{ backgroundColor: WA_ACCENT }}>
                   <p className="text-sm text-gray-800 leading-snug">¡Justo eso! Guard corta la carga al 100% y protege la batería. Gracias por compartir</p>
