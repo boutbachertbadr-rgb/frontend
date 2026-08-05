@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --brand: 27 58 58;          /* #1B3A3A Deep Teal primary */
+  --brand-dark: 18 40 40;     /* #122828 darker for hover */
+  --brand-light: 232 242 242; /* #E8F2F2 light teal tint */
+  --accent: 201 169 110;      /* #C9A96E Sand Gold accent */
+  --background: 245 240 232;  /* #F5F0E8 Warm Sand */
+  --subtle: 239 235 228;      /* #EFEBE4 slightly darker sand for cards */
+  --border: 224 216 208;      /* #E0D8D0 Sand Border */
+  --text-primary: 26 26 26;   /* #1A1A1A soft black */
+  --text-secondary: 107 107 107; /* #6B6B6B text muted */
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: rgb(var(--background));
+  color: rgb(var(--text-primary));
+  font-family: var(--font-body), serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: var(--font-heading), serif;
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-brand text-white font-semibold py-3 px-8 rounded-full transition-colors hover:bg-brand-dark focus:outline-none focus:ring-2 focus:ring-brand focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed;
+  }
+
+  .btn-outline {
+    @apply border-2 border-brand text-brand rounded-full px-8 py-3 font-semibold hover:bg-brand hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-brand focus:ring-offset-2;
+  }
+
+  .input-field {
+    @apply w-full border border-border rounded-lg px-4 py-3 text-text-primary bg-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition;
+  }
+
+  .aspect-3\/4 {
+    aspect-ratio: 3 / 4;
+  }
+}

@@ -1,0 +1,48 @@
+VAZLINA IMAGE MAP — Save each generated image here:
+
+=== BRISA (7 images) ===
+Save to: frontend/public/images/products/
+
+1. brisa-hero.jpg        → Hero shot (front+back, beige bg)
+2. brisa-thumb-1.jpg     → Clip detail close-up
+3. brisa-thumb-2.jpg     → Baby in stroller lifestyle
+4. brisa-thumb-3.jpg     → Size comparison with phone
+5. brisa-problem.jpg     → Hot metro, exhausted woman
+6. brisa-features.jpg     → Fresh confident woman walking
+
+=== GUARDIAN (6 images) ===
+Save to: frontend/public/images/products/
+
+1. guardian-hero.jpg     → Device shot (LED, USB-C, beige bg)
+2. guardian-thumb-1.jpg  → LED indicator detail
+3. guardian-thumb-2.jpg  → Multi-device setup
+4. guardian-thumb-3.jpg  → Cable/mechanism detail
+5. guardian-problem.jpg  → 3am anxious, hot phone
+6. guardian-features.jpg → Family sleeping peacefully
+
+=== MARIPOSA (6 images) ===
+Save to: frontend/public/images/products/
+
+1. mariposa-hero.jpg     → Earbuds on ear, wings visible
+2. mariposa-thumb-1.jpg  → Crystal wings detail
+3. mariposa-thumb-2.jpg  → Minimalist mode (no wings)
+4. mariposa-thumb-3.jpg  → Charging case open
+5. mariposa-problem.jpg  → Hiding ugly generic earbuds
+6. mariposa-features.jpg → Confident woman, compliment moment
+
+=== HOMEPAGE (4 images) ===
+Save to: frontend/public/images/home/
+
+1. hero.jpg              → Brand lifestyle/editorial
+2. card-brisa.jpg        → Brisa product card
+3. card-guardian.jpg     → Guardian product card
+4. card-mariposa.jpg     → Mariposa product card
+
+=== ABOUT (2 images) ===
+Save to: frontend/public/images/about/
+
+1. about-team.jpg        → Team/workspace photo
+2. about-standard.jpg    → Product testing/quality photo
+
+ALL CODE ALREADY POINTS TO THESE PATHS.
+Just save the image with the exact filename above and refresh.
