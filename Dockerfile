@@ -1,23 +1,46 @@
 FROM node:20-alpine AS builder
+
 WORKDIR /app
-COPY frontend/package.json frontend/package-lock.json* ./
+
+COPY package.json package-lock.json* ./
+
 RUN npm ci
-COPY frontend/ .
+
+COPY . .
+
 ARG NEXT_PUBLIC_API_URL
+
 ARG NEXT_PUBLIC_FACEBOOK_PIXEL_ID
+
 ARG NEXT_PUBLIC_TIKTOK_PIXEL_ID
+
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+
 ENV NEXT_PUBLIC_FACEBOOK_PIXEL_ID=$NEXT_PUBLIC_FACEBOOK_PIXEL_ID
+
 ENV NEXT_PUBLIC_TIKTOK_PIXEL_ID=$NEXT_PUBLIC_TIKTOK_PIXEL_ID
+
 RUN npm run build
 
+
+
 FROM node:20-alpine AS runner
+
 WORKDIR /app
+
 ENV NODE_ENV=production
+
 ENV PORT=80
+
 ENV HOSTNAME=0.0.0.0
+
 COPY --from=builder /app/.next/standalone ./
+
 COPY --from=builder /app/.next/static ./.next/static
+
 COPY --from=builder /app/public ./public
+
 EXPOSE 80
+
 CMD ["node", "server.js"]
+

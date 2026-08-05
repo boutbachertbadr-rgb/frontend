@@ -2,8 +2,9 @@
 
 import Script from "next/script";
 
-const FB_PIXEL_ID = process.env.NEXT_PUBLIC_FACEBOOK_PIXEL_ID ?? "1008750638655257";
+const FB_PIXEL_ID = process.env.NEXT_PUBLIC_FACEBOOK_PIXEL_ID ?? "1063306036354529";
 const TT_PIXEL_ID = process.env.NEXT_PUBLIC_TIKTOK_PIXEL_ID ?? "D9578H3C77UDPAPRHJD0";
+const CLARITY_ID = "rucefv1s8i";
 
 export default function PixelScripts() {
   return (
@@ -39,6 +40,14 @@ export default function PixelScripts() {
           `}
         </Script>
       )}
+      <Script id="ms-clarity" strategy="afterInteractive">
+        {`
+          (function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+          t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+          y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+          })(window,document,"clarity","script","${CLARITY_ID}");
+        `}
+      </Script>
     </>
   );
 }
