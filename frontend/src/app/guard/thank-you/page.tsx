@@ -214,34 +214,34 @@ function GuardThankYouContent() {
         {addr && (
           <div className="rounded-3xl p-5 mb-5" style={{ backgroundColor: "#1E2128" }}>
             <p className="font-semibold text-sm mb-4 text-white">Dirección de entrega</p>
-            <div className="text-xs space-y-3" style={{ color: ACCENT_D }}>
-              <div className="flex gap-3">
-                <span className="font-semibold text-gray-300 w-28 shrink-0">Nombre</span>
-                <span className="text-white">{addr.name}</span>
+            <div className="text-xs space-y-4" style={{ color: ACCENT_D }}>
+              <div>
+                <span className="font-semibold text-gray-300 block mb-0.5 sm:inline sm:w-28 sm:shrink-0 sm:mr-3">Nombre</span>
+                <span className="text-white break-words">{addr.name}</span>
               </div>
-              <div className="flex gap-3">
-                <span className="font-semibold text-gray-300 w-28 shrink-0">Teléfono</span>
-                <span className="text-white">{addr.phone}</span>
+              <div>
+                <span className="font-semibold text-gray-300 block mb-0.5 sm:inline sm:w-28 sm:shrink-0 sm:mr-3">Teléfono</span>
+                <span className="text-white break-words">{addr.phone}</span>
               </div>
-              <div className="flex gap-3">
-                <span className="font-semibold text-gray-300 w-28 shrink-0">Provincia</span>
-                <span className="text-white">{addr.state}</span>
+              <div>
+                <span className="font-semibold text-gray-300 block mb-0.5 sm:inline sm:w-28 sm:shrink-0 sm:mr-3">Provincia</span>
+                <span className="text-white break-words">{addr.state}</span>
               </div>
-              <div className="flex gap-3">
-                <span className="font-semibold text-gray-300 w-28 shrink-0">Cantón</span>
-                <span className="text-white">{addr.city}</span>
+              <div>
+                <span className="font-semibold text-gray-300 block mb-0.5 sm:inline sm:w-28 sm:shrink-0 sm:mr-3">Cantón</span>
+                <span className="text-white break-words">{addr.city}</span>
               </div>
-              <div className="flex gap-3">
-                <span className="font-semibold text-gray-300 w-28 shrink-0">Distrito</span>
-                <span className="text-white">{addr.distrito}</span>
+              <div>
+                <span className="font-semibold text-gray-300 block mb-0.5 sm:inline sm:w-28 sm:shrink-0 sm:mr-3">Distrito</span>
+                <span className="text-white break-words">{addr.distrito}</span>
               </div>
-              <div className="flex gap-3">
-                <span className="font-semibold text-gray-300 w-28 shrink-0">Dirección</span>
-                <span className="text-white">{addr.address}</span>
+              <div>
+                <span className="font-semibold text-gray-300 block mb-0.5 sm:inline sm:w-28 sm:shrink-0 sm:mr-3">Dirección</span>
+                <span className="text-white break-words">{addr.address}</span>
               </div>
-              <div className="flex gap-3">
-                <span className="font-semibold text-gray-300 w-28 shrink-0">Referencia</span>
-                <span className="text-white">{addr.reference}</span>
+              <div>
+                <span className="font-semibold text-gray-300 block mb-0.5 sm:inline sm:w-28 sm:shrink-0 sm:mr-3">Referencia</span>
+                <span className="text-white break-words">{addr.reference}</span>
               </div>
             </div>
           </div>
