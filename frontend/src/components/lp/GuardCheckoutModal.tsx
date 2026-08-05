@@ -3,31 +3,16 @@
 import { useState } from "react";
 import { X, ShieldCheck, Truck, ChevronDown, Zap } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { useRouter } from "next/navigation";
 import { createOrder } from "@/lib/api";
 import { generateEventId } from "@/lib/pixels";
 
-const schema = z.object({
-  name: z.any(),
-  phone: z.any(),
-  state: z.any(),
-  city: z.any(),
-  distrito: z.any(),
-  address: z.any(),
-  reference: z.any(),
-});
-
-type GuardForm = Record<string, string>;
+const PROVINCES = ["San José", "Alajuela", "Cartago", "Heredia", "Guanacaste", "Puntarenas", "Limón"];
 
 export interface LPVariant {
   name: string;
   price: number;
   items: { product_name: string; quantity: number; price_per_item: number }[];
 }
-
-const PROVINCES = ["San José", "Alajuela", "Cartago", "Heredia", "Guanacaste", "Puntarenas", "Limón"];
 
 const ACCENT = "#111111";
 const DARK = "#14161A";
@@ -43,7 +28,6 @@ export default function GuardCheckoutModal({
   onClose: () => void;
   variant: LPVariant | null;
 }) {
-  const router = useRouter();
   const [express, setExpress] = useState(false);
   const EXPRESS_FEE = 2000;
   const total = (variant?.price ?? 0) + (express ? EXPRESS_FEE : 0);
@@ -52,9 +36,9 @@ export default function GuardCheckoutModal({
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<GuardForm>({ resolver: zodResolver(schema), mode: "onBlur" });
+  } = useForm<Record<string, string>>();
 
-  const onSubmit = async (data: GuardForm) => {
+  const onSubmit = async (data: Record<string, string>) => {
     if (!variant) return;
     const eventId = generateEventId();
     const orderId = parseInt(localStorage.getItem("vazlina_last_order_id") ?? "799") + 1;
