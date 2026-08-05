@@ -414,9 +414,9 @@ export default function GuardPage() {
           <p className="lp-animate lp-delay-1 text-center text-gray-500 text-sm mb-3">Pago al recibir · Envío gratis · Garantía 30 días</p>
 
           <div className="lp-animate lp-delay-1 mb-10 flex justify-center">
-            <div className="pulse inline-flex items-center gap-2 px-6 py-3.5 rounded-full font-extrabold text-base" style={{ background: "#111111", color: "#F5F2EC", border: "2px solid #FF6B35", boxShadow: "0 4px 20px rgba(255,107,53,0.35)" }}>
+            <div className="pulse inline-flex items-center gap-2 px-6 py-3.5 rounded-full font-extrabold text-base" style={{ background: "#111111", color: "#fff", border: "2px solid #FF4500", boxShadow: "0 4px 20px rgba(255,69,0,0.35)" }}>
               <Timer size={18} />
-              <span>La oferta termina en <span className="tabular-nums text-lg" style={{ color: "#FF6B35" }}>{timer}</span></span>
+              <span>La oferta termina en <span className="tabular-nums text-lg" style={{ color: "#FF4500" }}>{timer}</span></span>
             </div>
           </div>
 
@@ -435,24 +435,24 @@ export default function GuardPage() {
                 <div className="p-5">
                   <div className="flex items-start justify-between mb-2">
                     <div>
-                      <h3 className="font-bold text-base" style={{ color: INK }}>{b.shortName}</h3>
+                      <h3 className="font-bold text-base text-white">{b.shortName}</h3>
                       <p className="text-xs text-gray-500 mt-0.5">{b.note}</p>
                     </div>
                     <div className="text-right shrink-0 ml-3">
-                      <p className="text-[11px] text-gray-300 leading-tight mb-0.5 tracking-tight"><s>₡{b.oldPrice}</s></p>
+                      <p className="text-[11px] text-gray-500 leading-tight mb-0.5 tracking-tight"><s>₡{b.oldPrice}</s></p>
                       <p className="font-heading font-bold leading-none tracking-tight" style={{ color: ACCENT }}>
                         <span className="text-[15px] align-top mr-0.5">₡</span><span className="text-[28px]">{b.price}</span>
                       </p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2 mb-4">
-                    <span className="text-xs font-extrabold px-2 py-0.5 rounded-full" style={{ backgroundColor: "#FF6B35", color: "#FFFFFF" }}>{b.save}</span>
+                    <span className="text-xs font-extrabold px-2 py-0.5 rounded-full" style={{ backgroundColor: "#FF4500", color: "#fff" }}>{b.save}</span>
                     <span className="text-xs text-gray-400 flex items-center gap-1"><Truck size={11} /> Envío gratis</span>
                   </div>
                   <button
                     onClick={(e) => { e.stopPropagation(); openCheckout(b); }}
                     className="w-full py-3.5 rounded-2xl text-white font-bold text-sm tracking-wider transition-all active:scale-95"
-                    style={{ backgroundColor: b.best ? ACCENT : INK }}
+                    style={{ backgroundColor: ACCENT }}
                   >
                     ORDENAR AHORA
                   </button>
