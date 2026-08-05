@@ -13,33 +13,33 @@ interface OrderItem { product_name: string; quantity: number; price_per_item: nu
 interface Addr { name: string; phone: string; state: string; city: string; distrito: string; address: string; reference: string; }
 
 function GuardThankYouContent() {
-  const [orderData] = useState<{
+  const [orderData, setOrderData] = useState<{
     orderId: string;
     total: number;
     addr: Addr | null;
     items: OrderItem[];
-  } | null>(() => {
-    if (typeof window === "undefined") return null;
+  } | null>(null);
+
+  useEffect(() => {
     try {
       const raw = sessionStorage.getItem("guard_order");
       if (raw) {
         const parsed = JSON.parse(raw);
-        return {
+        setOrderData({
           orderId: String(parsed.orderId ?? "-"),
           total: parseFloat(parsed.total ?? "0"),
           addr: parsed.addr ?? null,
           items: parsed.items ?? [],
-        };
+        });
       }
     } catch {}
-    return null;
-  });
+  }, []);
 
   const orderId = orderData?.orderId ?? "-";
   const total = orderData?.total ?? 0;
   const addr = orderData?.addr;
   const items = orderData?.items ?? [];
-  const isExpress = items.some((i) => i.product_name.includes("Envío Express"));
+  const isExpress = items.some((i: OrderItem) => i.product_name.includes("Envío Express"));
 
   const [connectionWarning, setConnectionWarning] = useState(false);
   const [retrying, setRetrying] = useState(false);
@@ -136,7 +136,7 @@ function GuardThankYouContent() {
               <p className="font-semibold text-sm" style={{ color: NIGHT }}>Tu pedido</p>
             </div>
             <div className="divide-y divide-gray-100">
-              {items.map((item, i) => (
+              {items.map((item: OrderItem, i: number) => (
                 <div key={i} className="px-5 py-3 flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium" style={{ color: NIGHT }}>{item.product_name}</p>
