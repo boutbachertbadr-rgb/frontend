@@ -138,11 +138,11 @@ export default function GuardPage() {
       `}</style>
 
       {/* ── TOP TIMER BAR ── */}
-      <div className="fixed top-0 left-0 right-0 z-50 px-4 py-3 text-center" style={{ background: "linear-gradient(90deg, #F5B301 0%, #FFD43B 50%, #F5B301 100%)" }}>
-        <p className="text-sm font-extrabold tracking-wide flex items-center justify-center gap-2 flex-wrap" style={{ color: "#1A1200" }}>
-          <span className="pulse inline-flex items-center gap-1"><Timer size={15} /> LA OFERTA TERMINA EN <span className="tabular-nums" style={{ color: "#D32F2F" }}>{timer}</span></span>
+      <div className="fixed top-0 left-0 right-0 z-50 px-4 py-3 text-center" style={{ background: "#111111", borderBottom: "2px solid #FF6B35" }}>
+        <p className="text-sm font-extrabold tracking-wide flex items-center justify-center gap-2 flex-wrap" style={{ color: "#F5F2EC" }}>
+          <span className="pulse inline-flex items-center gap-1"><Timer size={15} /> LA OFERTA TERMINA EN <span className="tabular-nums" style={{ color: "#FF6B35" }}>{timer}</span></span>
           <span className="hidden sm:inline opacity-40">|</span>
-          <span className="hidden sm:inline"><s className="opacity-50 font-heading tracking-tight">Antes <span className="text-[11px] align-top">₡</span>22665</s> · <span style={{ color: "#B71C1C" }} className="font-heading tracking-tight">Hoy <span className="text-[11px] align-top">₡</span>17700</span></span>
+          <span className="hidden sm:inline"><s className="opacity-50 font-heading tracking-tight">Antes <span className="text-[11px] align-top">₡</span>22665</s> · <span style={{ color: "#FF6B35" }} className="font-heading tracking-tight">Hoy <span className="text-[11px] align-top">₡</span>17700</span></span>
         </p>
       </div>
 
@@ -196,7 +196,7 @@ export default function GuardPage() {
           <div className="lp-animate lp-delay-3 mt-6 mx-auto max-w-xs rounded-2xl overflow-hidden" style={{ backgroundColor: CARD, border: "1px solid #2A2E35" }}>
             <button onClick={() => setReviewsOpen(!reviewsOpen)} className="w-full flex items-center justify-center gap-2 px-5 py-3.5">
               <span className="flex gap-0.5">
-                {[...Array(5)].map((_, i) => (<Star key={i} size={13} fill="#FFD43B" style={{ color: "#FFD43B" }} />))}
+                {[...Array(5)].map((_, i) => (<Star key={i} size={13} fill="#FF6B35" style={{ color: "#FF6B35" }} />))}
               </span>
               <span className="text-xs font-bold text-white">1,247 Reseñas</span>
               {reviewsOpen ? <ChevronUp size={14} className="text-gray-400" /> : <ChevronDown size={14} className="text-gray-400" />}
@@ -204,7 +204,7 @@ export default function GuardPage() {
             {reviewsOpen && (
               <div className="px-5 pb-5 pt-4" style={{ borderTop: "1px solid #2A2E35" }}>
                 <div className="flex items-center justify-center gap-2 mb-4">
-                  <Star size={22} fill="#FFD43B" style={{ color: "#FFD43B" }} />
+                  <Star size={22} fill="#FF6B35" style={{ color: "#FF6B35" }} />
                   <span className="font-heading text-3xl font-bold text-white">4.8</span>
                 </div>
                 {[
@@ -217,7 +217,7 @@ export default function GuardPage() {
                   <div key={stars} className="flex items-center gap-2 mb-1.5">
                     <div className="flex gap-0.5 w-16 shrink-0">
                       {[...Array(5)].map((_, i) => (
-                        <Star key={i} size={10} fill={i < stars ? "#FFD43B" : "transparent"} style={{ color: i < stars ? "#FFD43B" : "#3A3E45" }} />
+                        <Star key={i} size={10} fill={i < stars ? "#FF6B35" : "transparent"} style={{ color: i < stars ? "#FF6B35" : "#3A3E45" }} />
                       ))}
                     </div>
                     <div className="flex-1 h-1.5 rounded-full" style={{ backgroundColor: "#2A2E35" }}>
@@ -394,9 +394,9 @@ export default function GuardPage() {
           <p className="lp-animate lp-delay-1 text-center text-gray-500 text-sm mb-3">Pago al recibir · Envío gratis · Garantía 30 días</p>
 
           <div className="lp-animate lp-delay-1 mb-10 flex justify-center">
-            <div className="pulse inline-flex items-center gap-2 px-6 py-3.5 rounded-full font-extrabold text-base" style={{ background: "linear-gradient(90deg, #F5B301, #FFD43B)", color: "#1A1200", boxShadow: "0 4px 20px rgba(245,179,1,0.45)" }}>
+            <div className="pulse inline-flex items-center gap-2 px-6 py-3.5 rounded-full font-extrabold text-base" style={{ background: "#111111", color: "#F5F2EC", border: "2px solid #FF6B35", boxShadow: "0 4px 20px rgba(255,107,53,0.35)" }}>
               <Timer size={18} />
-              <span>La oferta termina en <span className="tabular-nums text-lg" style={{ color: "#D32F2F" }}>{timer}</span></span>
+              <span>La oferta termina en <span className="tabular-nums text-lg" style={{ color: "#FF6B35" }}>{timer}</span></span>
             </div>
           </div>
 
@@ -426,7 +426,7 @@ export default function GuardPage() {
                     </div>
                   </div>
                   <div className="flex items-center gap-2 mb-4">
-                    <span className="text-xs font-extrabold px-2 py-0.5 rounded-full" style={{ backgroundColor: "#FFD43B", color: "#1A1200" }}>{b.save}</span>
+                    <span className="text-xs font-extrabold px-2 py-0.5 rounded-full" style={{ backgroundColor: "#FF6B35", color: "#FFFFFF" }}>{b.save}</span>
                     <span className="text-xs text-gray-400 flex items-center gap-1"><Truck size={11} /> Envío gratis</span>
                   </div>
                   <button
@@ -452,7 +452,7 @@ export default function GuardPage() {
         <div className="max-w-lg mx-auto">
           <h2 className="lp-animate text-3xl font-bold text-center mb-2" style={{ color: INK }}>Clientes que ya probaron Vazlina Guard</h2>
           <div className="lp-animate lp-delay-1 flex justify-center items-center gap-1 mb-8">
-            {[...Array(5)].map((_, i) => <Star key={i} size={16} fill="#F5B301" style={{ color: "#F5B301" }} />)}
+            {[...Array(5)].map((_, i) => <Star key={i} size={16} fill="#FF6B35" style={{ color: "#FF6B35" }} />)}
             <span className="ml-2 text-sm text-gray-600">Reseñas verificadas</span>
           </div>
 
@@ -597,8 +597,8 @@ export default function GuardPage() {
           <p className="lp-animate lp-delay-1 text-gray-400 mb-2 text-sm leading-relaxed">
             Esta noche, tu cargador volverá a quedarse enchufado 8 horas.<br />La pregunta es: ¿con protección o sin ella?
           </p>
-          <p className="lp-animate lp-delay-1 text-base font-extrabold mb-8" style={{ color: "#FFD43B" }}>
-            ⏳ Oferta termina en <span className="tabular-nums text-lg">{timer}</span>
+          <p className="lp-animate lp-delay-1 text-base font-extrabold mb-8" style={{ color: "#FF6B35" }}>
+            ⏳ Oferta termina in <span className="tabular-nums text-lg">{timer}</span>
           </p>
           <a
             href="#oferta"
