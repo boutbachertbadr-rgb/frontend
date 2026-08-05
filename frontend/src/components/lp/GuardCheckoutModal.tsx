@@ -13,10 +13,10 @@ export interface LPVariant {
   items: { product_name: string; quantity: number; price_per_item: number }[];
 }
 
-const ACCENT = "#111111";
-const DARK = "#14161A";
-const LIGHT = "#FCFAF8";
-const SOFT = "#EEF1F4";
+const ACCENT = "#FF4500";
+const DARK = "#0A0A0A";
+const LIGHT = "#FFFFFF";
+const SOFT = "#F7F7F7";
 
 export default function GuardCheckoutModal({
   isOpen,
@@ -120,7 +120,7 @@ export default function GuardCheckoutModal({
           style={{ backgroundColor: DARK }}
         >
           <div>
-            <p className="text-xs font-semibold tracking-widest" style={{ color: "#C9CDD3" }}>TU PEDIDO</p>
+            <p className="text-xs font-semibold tracking-widest" style={{ color: "rgba(255,255,255,0.5)" }}>TU PEDIDO</p>
             <p className="text-white font-semibold text-sm mt-0.5 max-w-[200px] truncate">{variant.name}</p>
           </div>
           <div className="flex items-center gap-4">
@@ -140,12 +140,12 @@ export default function GuardCheckoutModal({
           <form onSubmit={handleNativeSubmit} className="space-y-3">
             <div>
               <label className="block text-xs font-semibold text-gray-700 mb-1">Nombre completo</label>
-              <input name="name" type="text" placeholder="Ana García" className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-neutral-400 bg-white ${formErrors.name ? "border-red-500" : "border-gray-200"}`} />
+              <input name="name" type="text" placeholder="Ana García" className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#FF4500] bg-white ${formErrors.name ? "border-red-500" : "border-gray-200"}`} />
               {formErrors.name && <p className="text-red-600 text-xs mt-1">{formErrors.name}</p>}
             </div>
             <div>
               <label className="block text-xs font-semibold text-gray-700 mb-1">Teléfono</label>
-              <input name="phone" type="tel" placeholder="8888-0000" className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-neutral-400 bg-white ${formErrors.phone ? "border-red-500" : "border-gray-200"}`} />
+              <input name="phone" type="tel" placeholder="8888-0000" className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#FF4500] bg-white ${formErrors.phone ? "border-red-500" : "border-gray-200"}`} />
               {formErrors.phone && <p className="text-red-600 text-xs mt-1">{formErrors.phone}</p>}
             </div>
 
@@ -166,21 +166,21 @@ export default function GuardCheckoutModal({
 
             <div>
               <label className="block text-xs font-semibold text-gray-700 mb-1">Cantón</label>
-              <input name="city" type="text" placeholder="Escazú" className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-neutral-400 bg-white ${formErrors.city ? "border-red-500" : "border-gray-200"}`} />
+              <input name="city" type="text" placeholder="Escazú" className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#FF4500] bg-white ${formErrors.city ? "border-red-500" : "border-gray-200"}`} />
               {formErrors.city && <p className="text-red-600 text-xs mt-1">{formErrors.city}</p>}
             </div>
             <div>
               <label className="block text-xs font-semibold text-gray-700 mb-1">Distrito</label>
-              <input name="distrito" type="text" placeholder="San Rafael" className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-neutral-400 bg-white" />
+              <input name="distrito" type="text" placeholder="San Rafael" className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#FF4500] bg-white" />
             </div>
             <div>
               <label className="block text-xs font-semibold text-gray-700 mb-1">Dirección exacta</label>
-              <input name="address" type="text" placeholder="Calle 5, Casa #12" className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-neutral-400 bg-white ${formErrors.address ? "border-red-500" : "border-gray-200"}`} />
+              <input name="address" type="text" placeholder="Calle 5, Casa #12" className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#FF4500] bg-white ${formErrors.address ? "border-red-500" : "border-gray-200"}`} />
               {formErrors.address && <p className="text-red-600 text-xs mt-1">{formErrors.address}</p>}
             </div>
             <div>
               <label className="block text-xs font-semibold text-gray-700 mb-1">Punto de referencia</label>
-              <input name="reference" type="text" placeholder="Frente al supermercado" className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-neutral-400 bg-white" />
+              <input name="reference" type="text" placeholder="Frente al supermercado" className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#FF4500] bg-white" />
             </div>
 
             <div className="pt-1">
@@ -189,7 +189,7 @@ export default function GuardCheckoutModal({
                 <button
                   type="button"
                   onClick={() => setExpress(false)}
-                  className={`w-full flex items-center justify-between rounded-xl border-2 px-4 py-3 text-left transition-all bg-white ${!express ? "border-neutral-900" : "border-gray-200"}`}
+                  className={`w-full flex items-center justify-between rounded-xl border-2 px-4 py-3 text-left transition-all bg-white ${!express ? "border-[#FF4500]" : "border-gray-200"}`}
                 >
                   <div>
                     <p className="text-sm font-semibold text-gray-800 flex items-center gap-1.5"><Truck size={14} className="text-gray-500" /> Envío Estándar</p>
@@ -199,7 +199,7 @@ export default function GuardCheckoutModal({
                 <button
                   type="button"
                   onClick={() => setExpress(true)}
-                  className={`w-full flex items-center justify-between rounded-xl border-2 px-4 py-3 text-left transition-all bg-white ${express ? "border-neutral-900" : "border-gray-200"}`}
+                  className={`w-full flex items-center justify-between rounded-xl border-2 px-4 py-3 text-left transition-all bg-white ${express ? "border-[#FF4500]" : "border-gray-200"}`}
                 >
                   <div>
                     <p className="text-sm font-semibold text-gray-800 flex items-center gap-1.5"><Zap size={14} style={{ color: "#F5B301" }} /> Envío Express</p>

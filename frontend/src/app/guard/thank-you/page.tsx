@@ -5,10 +5,10 @@ import { CheckCircle, Truck, Phone, RefreshCw, ShieldCheck } from "lucide-react"
 import { createOrder, getOrderById } from "@/lib/api";
 import { trackPurchase } from "@/lib/pixels";
 
-const ACCENT = "#111111";
-const ACCENT_D = "#C9CDD3";
-const NIGHT = "#14161A";
-const IVORY = "#F5F2EC";
+const ACCENT = "#FF4500";
+const ACCENT_D = "#FF4500";
+const NIGHT = "#0A0A0A";
+const IVORY = "#F7F7F7";
 
 interface OrderItem { product_name: string; quantity: number; price_per_item: number; }
 interface Addr { name: string; phone: string; state: string; city: string; distrito: string; address: string; reference: string; }
@@ -159,9 +159,9 @@ function GuardThankYouContent() {
         </div>
 
         {/* Success hero */}
-        <div className="rounded-3xl p-6 text-center mb-5" style={{ backgroundColor: "#1E2128" }}>
-          <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: "rgba(245,179,1,0.15)" }}>
-            <CheckCircle size={32} style={{ color: "#F5B301" }} />
+        <div className="rounded-3xl p-6 text-center mb-5" style={{ backgroundColor: "#111111" }}>
+          <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: "rgba(255,69,0,0.15)" }}>
+            <CheckCircle size={32} style={{ color: "#FF4500" }} />
           </div>
           <h1 className="text-2xl font-bold text-white mb-1">¡Pedido Confirmado!</h1>
           <p className="text-gray-400 text-sm mb-4">Pedido <span className="text-white font-semibold">#{orderId}</span></p>
@@ -172,7 +172,7 @@ function GuardThankYouContent() {
           </div>
 
           <p className="text-gray-500 text-xs mt-4 flex items-center justify-center gap-1.5">
-            <ShieldCheck size={12} style={{ color: "#F5B301" }} /> Nuestro equipo te contactará lo antes posible
+            <ShieldCheck size={12} style={{ color: "#FF4500" }} /> Nuestro equipo te contactará lo antes posible
           </p>
         </div>
 
@@ -200,7 +200,7 @@ function GuardThankYouContent() {
 
         {/* Order summary */}
         {items.length > 0 && (
-          <div className="rounded-3xl overflow-hidden mb-5" style={{ backgroundColor: "#1E2128" }}>
+          <div className="rounded-3xl overflow-hidden mb-5" style={{ backgroundColor: "#111111" }}>
             <div className="px-5 py-4 border-b" style={{ borderColor: "rgba(255,255,255,0.08)" }}>
               <p className="font-semibold text-sm text-white">Tu pedido</p>
             </div>
@@ -209,22 +209,22 @@ function GuardThankYouContent() {
                 <div key={i} className="px-5 py-4 flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium text-white">{item.product_name}</p>
-                    <p className="text-xs" style={{ color: ACCENT_D }}>x{item.quantity}</p>
+                    <p className="text-xs" style={{ color: "#aaa" }}>x{item.quantity}</p>
                   </div>
-                  <p className="text-sm font-semibold" style={{ color: "#F5B301" }}>₡{item.price_per_item * item.quantity}</p>
+                  <p className="text-sm font-semibold" style={{ color: "#FF4500" }}>₡{item.price_per_item * item.quantity}</p>
                 </div>
               ))}
             </div>
-            <div className="px-5 py-4 flex items-center justify-between" style={{ backgroundColor: "rgba(245,179,1,0.08)" }}>
+            <div className="px-5 py-4 flex items-center justify-between" style={{ backgroundColor: "rgba(255,69,0,0.08)" }}>
               <p className="font-bold text-sm text-white">Total</p>
-              <p className="font-bold text-base font-heading" style={{ color: "#F5B301" }}>₡{total} CRC</p>
+              <p className="font-bold text-base font-heading" style={{ color: "#FF4500" }}>₡{total} CRC</p>
             </div>
           </div>
         )}
 
         {/* Delivery address */}
         {addr && (
-          <div className="rounded-3xl p-5 mb-5" style={{ backgroundColor: "#1E2128" }}>
+          <div className="rounded-3xl p-5 mb-5" style={{ backgroundColor: "#111111" }}>
             <p className="font-semibold text-sm mb-4 text-white">Dirección de entrega</p>
             <div className="text-xs space-y-4" style={{ color: ACCENT_D }}>
               <div>
@@ -279,8 +279,8 @@ function GuardThankYouContent() {
 
         {/* Trust badges */}
         <div className="flex items-center justify-center gap-5 flex-wrap text-xs mb-5" style={{ color: ACCENT_D }}>
-          <span className="flex items-center gap-1.5"><ShieldCheck size={13} style={{ color: "#F5B301" }} /> Garantía 30 días</span>
-          <span className="flex items-center gap-1.5"><CheckCircle size={13} style={{ color: "#F5B301" }} /> Calidad certificada</span>
+          <span className="flex items-center gap-1.5"><ShieldCheck size={13} style={{ color: "#FF4500" }} /> Garantía 30 días</span>
+          <span className="flex items-center gap-1.5"><CheckCircle size={13} style={{ color: "#FF4500" }} /> Calidad certificada</span>
           <span className="flex items-center gap-1.5">💳 Pago al recibir</span>
         </div>
 
@@ -288,7 +288,7 @@ function GuardThankYouContent() {
           <a
             href="/guard"
             className="inline-flex items-center justify-center px-8 py-3 rounded-2xl text-sm font-bold tracking-widest transition-all active:scale-95 hover:opacity-90"
-            style={{ backgroundColor: "#FFFFFF", color: "#111111" }}
+            style={{ backgroundColor: "#FF4500", color: "#fff" }}
           >
             VOLVER AL INICIO
           </a>
@@ -302,7 +302,7 @@ function GuardThankYouContent() {
 
 export default function GuardThankYouPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: IVORY }}><p className="text-gray-400">Cargando...</p></div>}>
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: "#0A0A0A" }}><p className="text-gray-400">Cargando...</p></div>}>
       <GuardThankYouContent />
     </Suspense>
   );
