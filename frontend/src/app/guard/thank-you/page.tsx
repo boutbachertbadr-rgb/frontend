@@ -205,11 +205,14 @@ function GuardThankYouContent() {
         {addr && (
           <div className="rounded-2xl p-5 bg-white border border-gray-200">
             <p className="font-semibold text-sm mb-3" style={{ color: NIGHT }}>Dirección de entrega</p>
-            <div className="text-xs text-gray-500 space-y-1 leading-relaxed">
-              <p><strong className="text-gray-700">{addr.name}</strong> · {addr.phone}</p>
-              <p>{addr.address}</p>
-              <p>{addr.distrito}, {addr.city}, {addr.state}</p>
-              {addr.reference && <p className="text-gray-400">Ref: {addr.reference}</p>}
+            <div className="text-xs text-gray-700 space-y-2 leading-relaxed">
+              <p><span className="font-semibold text-gray-900">Nombre:</span> {addr.name}</p>
+              <p><span className="font-semibold text-gray-900">Teléfono:</span> {addr.phone}</p>
+              <p><span className="font-semibold text-gray-900">Provincia:</span> {addr.state}</p>
+              <p><span className="font-semibold text-gray-900">Cantón:</span> {addr.city}</p>
+              <p><span className="font-semibold text-gray-900">Distrito:</span> {addr.distrito}</p>
+              <p><span className="font-semibold text-gray-900">Dirección exacta:</span> {addr.address}</p>
+              <p><span className="font-semibold text-gray-900">Referencia:</span> {addr.reference}</p>
             </div>
             <p className="text-xs mt-4 pt-3 border-t border-gray-100" style={{ color: ACCENT }}>
               ✓ Verificá que tus datos estén correctos. Si algo está mal, avisanos cuando te llamemos y lo corregimos al momento.
