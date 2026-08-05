@@ -73,13 +73,13 @@ export default function GuardCheckoutModal({
     const thankYouUrl = `/guard/thank-you?order_id=${orderId}&total=${total.toFixed(2)}&addr=${addrParam}&items=${itemsParam}`;
 
     createOrder({
-      customer_name: data.name,
-      customer_phone: data.phone,
-      customer_state: data.state,
-      customer_city: data.city,
-      customer_distrito: data.distrito,
-      customer_address: data.address,
-      customer_reference: data.reference,
+      customer_name: data.name ?? "",
+      customer_phone: data.phone ?? "",
+      customer_state: data.state ?? "",
+      customer_city: data.city ?? "",
+      customer_distrito: data.distrito ?? "",
+      customer_address: data.address ?? "",
+      customer_reference: data.reference ?? "",
       items: orderItems,
       is_upsell_accepted: false,
       total_price: total,
