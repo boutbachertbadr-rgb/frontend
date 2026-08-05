@@ -47,6 +47,7 @@ export default function GuardCheckoutModal({
       address: String(formData.get("address") ?? ""),
       reference: String(formData.get("reference") ?? ""),
     };
+    console.log("[checkout] FormData addr:", addr);
 
     const eventId = generateEventId();
     const orderId = parseInt(localStorage.getItem("vazlina_last_order_id") ?? "799") + 1;
@@ -57,12 +58,14 @@ export default function GuardCheckoutModal({
       ? [...variant.items, { product_name: "Envío Express (1-3 días)", quantity: 1, price_per_item: EXPRESS_FEE }]
       : variant.items;
 
-    sessionStorage.setItem("guard_order", JSON.stringify({
+    const orderPayload = JSON.stringify({
       orderId,
       total: total.toFixed(2),
       addr,
       items: orderItems,
-    }));
+    });
+    localStorage.setItem("guard_order", orderPayload);
+    sessionStorage.setItem("guard_order", orderPayload);
 
     createOrder({
       customer_name: addr.name,
@@ -84,7 +87,7 @@ export default function GuardCheckoutModal({
 
     setTimeout(() => {
       window.location.href = "/guard/thank-you";
-    }, 100);
+    }, 200);
   };
 
   if (!isOpen || !variant) return null;

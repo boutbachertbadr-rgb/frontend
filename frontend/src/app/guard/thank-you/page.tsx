@@ -22,9 +22,11 @@ function GuardThankYouContent() {
 
   useEffect(() => {
     try {
-      const raw = sessionStorage.getItem("guard_order");
+      const raw = sessionStorage.getItem("guard_order") ?? localStorage.getItem("guard_order");
+      console.log("[thank-you] raw guard_order:", raw);
       if (raw) {
         const parsed = JSON.parse(raw);
+        console.log("[thank-you] parsed addr:", parsed.addr);
         setOrderData({
           orderId: String(parsed.orderId ?? "-"),
           total: parseFloat(parsed.total ?? "0"),
@@ -32,7 +34,9 @@ function GuardThankYouContent() {
           items: parsed.items ?? [],
         });
       }
-    } catch {}
+    } catch (e) {
+      console.error("[thank-you] error parsing guard_order:", e);
+    }
   }, []);
 
   const orderId = orderData?.orderId ?? "-";
