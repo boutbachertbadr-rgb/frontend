@@ -247,19 +247,21 @@ export default function GuardPage() {
       </section>
 
       {/* ── PROBLEMA / PELIGRO ── */}
-      <section className="py-20 px-5" style={{ backgroundColor: NIGHT, borderTop: "1px solid #2A2E35" }}>
-        <div className="max-w-lg mx-auto">
+      <section className="py-20" style={{ backgroundColor: NIGHT, borderTop: "1px solid #2A2E35" }}>
+        <div className="max-w-lg mx-auto px-5">
           <h2 className="lp-animate text-3xl font-bold text-white text-center mb-3" style={{ fontFamily: "Georgia, serif" }}>
             Dos riesgos silenciosos.<br /><span style={{ color: ACCENT_D }}>Un mismo culpable: tu cargador.</span>
           </h2>
           <p className="lp-animate lp-delay-1 text-center text-gray-400 text-sm leading-relaxed mb-10">
             Cada noche, tu cargador queda enchufado 8 horas seguidas. Eso tiene dos consecuencias que casi nadie ve venir — hasta que es tarde.
           </p>
+        </div>
 
-          <div className="lp-animate lp-delay-1 rounded-3xl overflow-hidden mb-10 shadow-2xl" style={{ border: "1px solid #2A2E35" }}>
-            <Img src="/lp-guard/peligro.jpg" label="peligro.jpg — anuncio oscuro 'Corta la energía antes de que ocurran desastres'" className="w-full" />
-          </div>
+        <div className="lp-animate lp-delay-1 overflow-hidden mb-10 shadow-2xl w-full">
+          <Img src="/lp-guard/peligro.jpg" label="peligro.jpg — anuncio oscuro 'Corta la energía antes de que ocurran desastres'" className="w-full block" />
+        </div>
 
+        <div className="max-w-lg mx-auto px-5">
           <div className="space-y-4">
             {[
               { Icon: Flame, title: "Sobrecalentamiento nocturno", sub: "Un cargador caliente durante 8 horas es la causa #1 de incendios eléctricos en el hogar. Y ocurre mientras todos duermen — incluidos tus hijos.", delay: "" },
@@ -282,8 +284,8 @@ export default function GuardPage() {
       </section>
 
       {/* ── SOLUCIÓN ── */}
-      <section className="py-20 px-5" style={{ backgroundColor: IVORY }}>
-        <div className="max-w-lg mx-auto text-center">
+      <section className="py-20" style={{ backgroundColor: IVORY }}>
+        <div className="max-w-lg mx-auto px-5 text-center">
           <div className="lp-animate inline-block px-4 py-1 rounded-full text-xs font-bold tracking-widest mb-4 text-white" style={{ backgroundColor: ACCENT }}>LA SOLUCIÓN</div>
           <h2 className="lp-animate text-3xl font-bold mb-3" style={{ color: INK }}>
             Un solo dispositivo. <span style={{ color: ACCENT }}>Dos protecciones.</span>
@@ -291,16 +293,18 @@ export default function GuardPage() {
           <p className="lp-animate lp-delay-1 text-gray-500 text-sm leading-relaxed mb-10">
             Monitorea el flujo eléctrico en tiempo real: <strong>corta la energía antes de un desastre</strong> y <strong>detiene la carga al 100%</strong> para que tu batería dure años más.
           </p>
+        </div>
 
-          <div className="lp-animate lp-delay-1 grid grid-cols-2 gap-4 mb-10">
-            <div className="rounded-2xl overflow-hidden shadow-lg">
-              <Img src="/lp-guard/product.jpg" label="product.jpg — producto sobre tela beige" className="w-full" />
-            </div>
-            <div className="rounded-2xl overflow-hidden shadow-lg">
-              <Img src="/lp-guard/demo.jpg" label="demo.jpg — producto real en mano" className="w-full" />
-            </div>
+        <div className="lp-animate lp-delay-1 grid grid-cols-2 mb-10 w-full">
+          <div className="overflow-hidden shadow-lg">
+            <Img src="/lp-guard/product.jpg" label="product.jpg — producto sobre tela beige" className="w-full block" />
           </div>
+          <div className="overflow-hidden shadow-lg">
+            <Img src="/lp-guard/demo.jpg" label="demo.jpg — producto real en mano" className="w-full block" />
+          </div>
+        </div>
 
+        <div className="max-w-lg mx-auto px-5 text-center">
           <div className="space-y-4 text-left">
             {[
               { n: "1", title: "Conectalo en segundos", sub: "Directo al puerto USB-C de tu teléfono — o entre la cabeza del cargador y el cable (ideal para iPhone con Lightning). Plug & play, sin apps.", delay: "" },
@@ -370,14 +374,17 @@ export default function GuardPage() {
       </section>
 
       {/* ── CARACTERÍSTICAS ── */}
-      <section className="py-20 px-5" style={{ backgroundColor: NIGHT }}>
-        <div className="max-w-lg mx-auto">
+      <section className="py-20" style={{ backgroundColor: NIGHT }}>
+        <div className="max-w-lg mx-auto px-5">
           <h2 className="lp-animate text-3xl font-bold text-white text-center mb-2">La seguridad que no podés ver,</h2>
           <h2 className="lp-animate lp-delay-1 text-3xl font-bold text-center mb-12" style={{ color: ACCENT_D }}>la tranquilidad que sí podés sentir.</h2>
+        </div>
 
-          <div className="lp-animate lp-delay-1 rounded-3xl overflow-hidden mb-10 shadow-2xl" style={{ border: "1px solid #2A2E35" }}>
-            <Img src="/lp-guard/familia.jpg" label="familia.jpg — anuncio 'Protege a tus hijos'" className="w-full" />
-          </div>
+        <div className="lp-animate lp-delay-1 overflow-hidden mb-10 shadow-2xl w-full">
+          <Img src="/lp-guard/familia.jpg" label="familia.jpg — anuncio 'Protege a tus hijos'" className="w-full block" />
+        </div>
+
+        <div className="max-w-lg mx-auto px-5">
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             {[
