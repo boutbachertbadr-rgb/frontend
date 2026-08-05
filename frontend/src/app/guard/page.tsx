@@ -156,13 +156,13 @@ export default function GuardPage() {
           pointerEvents: showSticky ? "auto" : "none",
         }}
       >
-        <button
-          onClick={() => openCheckout(bundle)}
-          className="w-full sm:max-w-sm sm:mx-auto sm:block py-4 rounded-2xl font-bold text-sm tracking-widest active:scale-95 transition-all shadow-xl cta-attention"
+        <a
+          href="#oferta"
+          className="w-full sm:max-w-sm sm:mx-auto sm:block text-center py-4 rounded-2xl font-bold text-sm tracking-widest active:scale-95 transition-all shadow-xl cta-attention"
           style={{ backgroundColor: "#FFFFFF", color: "#111111" }}
         >
-          ORDENAR {bundle.shortName.toUpperCase()} — <span className="font-heading tracking-tight"><span className="text-[10px] align-top">₡</span>{bundle.price}</span>
-        </button>
+          ORDENAR AHORA
+        </a>
       </div>
 
       {/* ── HERO ── */}
