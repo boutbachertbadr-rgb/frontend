@@ -138,11 +138,11 @@ export default function GuardPage() {
       `}</style>
 
       {/* ── TOP TIMER BAR ── */}
-      <div className="fixed top-0 left-0 right-0 z-50 px-4 py-3 text-center" style={{ background: "#111111", borderBottom: "2px solid #FF6B35" }}>
-        <p className="text-sm font-extrabold tracking-wide flex items-center justify-center gap-2 flex-wrap" style={{ color: "#F5F2EC" }}>
+      <div className="fixed top-0 left-0 right-0 z-50 px-3 sm:px-4 py-3 text-center" style={{ background: "#111111", borderBottom: "2px solid #FF6B35" }}>
+        <p className="text-xs sm:text-sm font-extrabold tracking-wide flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2" style={{ color: "#F5F2EC" }}>
           <span className="pulse inline-flex items-center gap-1"><Timer size={15} /> LA OFERTA TERMINA EN <span className="tabular-nums" style={{ color: "#FF6B35" }}>{timer}</span></span>
           <span className="hidden sm:inline opacity-40">|</span>
-          <span className="hidden sm:inline"><s className="opacity-50 font-heading tracking-tight">Antes <span className="text-[11px] align-top">₡</span>22665</s> · <span style={{ color: "#FF6B35" }} className="font-heading tracking-tight">Hoy <span className="text-[11px] align-top">₡</span>17700</span></span>
+          <span className="inline"><s className="opacity-50 font-heading tracking-tight">Antes <span className="text-[11px] align-top">₡</span>22665</s> · <span style={{ color: "#FF6B35" }} className="font-heading tracking-tight">Hoy <span className="text-[11px] align-top">₡</span>17700</span></span>
         </p>
       </div>
 

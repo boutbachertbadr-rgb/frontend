@@ -137,8 +137,8 @@ function GuardThankYouContent() {
 
         {/* Brand header */}
         <div className="flex items-center justify-center gap-3 mb-6">
-          <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: "#F5B301" }}>
-            <span className="font-heading font-bold text-base leading-none" style={{ color: NIGHT }}>V</span>
+          <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: "#FFFFFF" }}>
+            <span className="font-heading font-bold text-base leading-none" style={{ color: "#111111" }}>V</span>
           </div>
           <div className="flex flex-col items-start leading-none">
             <span className="font-heading font-bold text-xl tracking-tight text-white">VAZLINA</span>
@@ -266,10 +266,20 @@ function GuardThankYouContent() {
         </div>
 
         {/* Trust badges */}
-        <div className="flex items-center justify-center gap-5 flex-wrap text-xs mb-6" style={{ color: ACCENT_D }}>
+        <div className="flex items-center justify-center gap-5 flex-wrap text-xs mb-5" style={{ color: ACCENT_D }}>
           <span className="flex items-center gap-1.5"><ShieldCheck size={13} style={{ color: "#F5B301" }} /> Garantía 30 días</span>
           <span className="flex items-center gap-1.5"><CheckCircle size={13} style={{ color: "#F5B301" }} /> Calidad certificada</span>
           <span className="flex items-center gap-1.5">💳 Pago al recibir</span>
+        </div>
+
+        <div className="flex justify-center mb-6">
+          <a
+            href="/guard"
+            className="inline-flex items-center justify-center px-8 py-3 rounded-2xl text-sm font-bold tracking-widest transition-all active:scale-95 hover:opacity-90"
+            style={{ backgroundColor: "#FFFFFF", color: "#111111" }}
+          >
+            VOLVER AL INICIO
+          </a>
         </div>
 
         <p className="text-center text-xs" style={{ color: ACCENT_D }}>Gracias por proteger lo que más importa 🤍</p>
