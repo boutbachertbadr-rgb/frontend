@@ -91,8 +91,8 @@ export default function GuardCheckoutModal({
     });
 
     reset();
-    onClose();
     router.push(thankYouUrl);
+    onClose();
   };
 
   if (!isOpen || !variant) return null;
