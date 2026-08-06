@@ -28,7 +28,7 @@ export interface OrderResponse {
 
 export async function createOrder(payload: CreateOrderPayload): Promise<OrderResponse> {
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 3000);
+  const timeoutId = setTimeout(() => controller.abort(), 10000);
 
   try {
     const res = await fetch(`${API_URL}/orders/`, {
@@ -46,20 +46,8 @@ export async function createOrder(payload: CreateOrderPayload): Promise<OrderRes
     }
 
     return res.json();
-  } catch {
+  } catch (err) {
     clearTimeout(timeoutId);
-    // Fallback: backend not running - store locally and return mock response
-    const orderId = Math.floor(Math.random() * 6700) + 800;
-    const mockResponse: OrderResponse = {
-      order_id: orderId,
-      status: "pending",
-      total_price: payload.total_price,
-    };
-
-    const existing = JSON.parse(localStorage.getItem("vazlina_orders") ?? "[]");
-    existing.push({ ...payload, order_id: orderId, created_at: new Date().toISOString() });
-    localStorage.setItem("vazlina_orders", JSON.stringify(existing));
-
-    return mockResponse;
+    throw err;
   }
 }
