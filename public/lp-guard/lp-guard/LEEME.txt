@@ -1,0 +1,10 @@
+GUARDÁ ACÁ LAS IMÁGENES DE LA LANDING PAGE CON ESTOS NOMBRES EXACTOS:
+
+1. hero.jpg     → El collage lifestyle (mujer trabajando + pareja/hombre durmiendo)
+2. peligro.jpg  → El anuncio oscuro "CORTA LA ENERGÍA ANTES DE QUE OCURRAN DESASTRES"
+3. product.jpg  → El producto plateado sobre tela beige (con el círculo zoom)
+4. familia.jpg  → El anuncio claro "PROTEGE A TUS HIJOS"
+5. demo.gif     → El GIF del producto real en la mano
+
+Todas se muestran en formato 1:1 (cuadradas).
+Mientras no estén, la página muestra placeholders grises con el nombre del archivo.
