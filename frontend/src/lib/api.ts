@@ -27,27 +27,37 @@ export interface OrderResponse {
 }
 
 export async function createOrder(payload: CreateOrderPayload): Promise<OrderResponse> {
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 10000);
+  const MAX_RETRIES = 3;
 
-  try {
-    const res = await fetch(`${API_URL}/orders/`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-      signal: controller.signal,
-    });
+  for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
 
-    clearTimeout(timeoutId);
+    try {
+      const res = await fetch(`${API_URL}/orders/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+        signal: controller.signal,
+      });
 
-    if (!res.ok) {
-      const error = await res.json().catch(() => ({ detail: "Error al crear la orden." }));
-      throw new Error(error.detail ?? "Error al crear la orden.");
+      clearTimeout(timeoutId);
+
+      if (!res.ok) {
+        const error = await res.json().catch(() => ({ detail: "Error al crear la orden." }));
+        throw new Error(error.detail ?? "Error al crear la orden.");
+      }
+
+      return res.json();
+    } catch (err) {
+      clearTimeout(timeoutId);
+      if (attempt < MAX_RETRIES) {
+        await new Promise(r => setTimeout(r, 1000 * attempt));
+        continue;
+      }
+      throw err;
     }
-
-    return res.json();
-  } catch (err) {
-    clearTimeout(timeoutId);
-    throw err;
   }
+
+  throw new Error("Error al crear la orden.");
 }
