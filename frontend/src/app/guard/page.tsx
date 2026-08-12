@@ -31,8 +31,8 @@ interface Bundle {
 
 const BUNDLES: Bundle[] = [
   { id: "1x", name: "1x Vazlina Guard - Proteccion Individual", shortName: "1x Vazlina Guard", price: 17700, oldPrice: 22500, save: "21% OFF", note: "Para 1 cargador en casa" },
-  { id: "2x", name: "2x Vazlina Guard - Pack Familia", shortName: "2x Vazlina Guard - Pack Familia", price: 29900, oldPrice: 45000, save: "33% OFF", note: "El mas popular - dormitorio + sala", best: true },
-  { id: "3x", name: "3x Vazlina Guard - Proteccion Total", shortName: "3x Vazlina Guard", price: 39900, oldPrice: 67500, save: "41% OFF", note: "Protege cada enchufe del hogar" },
+  { id: "2x", name: "2x Vazlina Guard - Pack Familia", shortName: "2x Vazlina Guard", price: 29900, oldPrice: 45000, save: "33% OFF", note: "El mas popular - dormitorio + sala" },
+  { id: "3x", name: "3x Vazlina Guard - Proteccion Total", shortName: "3x Vazlina Guard", price: 39900, oldPrice: 67500, save: "41% OFF", note: "Protege cada enchufe del hogar", best: true },
 ];
 
 const FAQS = [
