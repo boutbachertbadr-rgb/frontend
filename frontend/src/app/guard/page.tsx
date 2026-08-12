@@ -451,7 +451,7 @@ export default function GuardPage() {
             {[
               {
                 avatar: "https://i.pravatar.cc/60?img=47",
-                num: "+506 84\u25CF\u25CF\u25CF\u25CF\u25CF\u25CF9",
+                numA: "+506 84", numB: "9",
                 status: "en linea",
                 msgs: [
                   { text: "No les escribi hasta que pasaron 2 dias para probarlo bien y asegurarme de que funcione de verdad", mine: false, time: "8:43 pm" },
@@ -461,7 +461,7 @@ export default function GuardPage() {
               },
               {
                 avatar: "https://i.pravatar.cc/60?img=11",
-                num: "+506 71\u25CF\u25CF\u25CF\u25CF\u25CF\u25CF2",
+                numA: "+506 71", numB: "2",
                 status: "ayer, voz 9:30 pm",
                 msgs: [
                   { text: "Sinceramente, somos dos con mi esposa y siempre dejamos el telefono en el cargador y nos olvidamos, eso me causaba bastante", mine: false, time: "8:58 pm" },
@@ -471,7 +471,7 @@ export default function GuardPage() {
               },
               {
                 avatar: "https://i.pravatar.cc/60?img=57",
-                num: "+506 63\u25CF\u25CF\u25CF\u25CF\u25CF\u25CF4",
+                numA: "+506 63", numB: "4",
                 status: "en linea",
                 msgs: [
                   { text: "Sinceramente el producto hace que el telefono aguante mas bateria. Antes mi celular duraba medio dia y ahora llega tranquilo a la noche!", mine: false, time: "6:58 am" },
@@ -484,7 +484,11 @@ export default function GuardPage() {
                 <div className="px-4 py-3 flex items-center gap-3" style={{ backgroundColor: "#075E54" }}>
                   <img src={chat.avatar} alt="" className="w-9 h-9 rounded-full object-cover shrink-0" />
                   <div>
-                    <p className="text-white text-sm font-semibold">{chat.num}</p>
+                    <p className="text-white text-sm font-semibold flex items-center gap-0.5">
+                      <span>{chat.numA}</span>
+                      <span className="inline-block rounded mx-0.5 align-middle" style={{ width: "46px", height: "13px", backgroundColor: "rgba(0,0,0,0.55)", backdropFilter: "blur(4px)" }} />
+                      <span>{chat.numB}</span>
+                    </p>
                     <p className="text-white/60 text-xs">{chat.status}</p>
                   </div>
                 </div>
