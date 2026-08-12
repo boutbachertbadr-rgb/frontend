@@ -450,38 +450,42 @@ export default function GuardPage() {
           <div className="lp-animate space-y-5">
             {[
               {
-                init: "M", num: "+506 88\u25CF\u25CF\u25CF\u25CF\u25CF\u25CF2",
+                avatar: "https://i.pravatar.cc/60?img=47",
+                num: "+506 84\u25CF\u25CF\u25CF\u25CF\u25CF\u25CF9",
+                status: "en linea",
                 msgs: [
-                  { text: "Mi esposo cargaba el celular toda la noche y el telefono amanecia caliente. Desde que pusimos el Guard ya no pasa eso.", mine: false, time: "8:40 pm" },
-                  { text: "Ademas la bateria mejoro, antes al mediodia ya estaba al 40%", mine: false, time: "8:41 pm" },
-                  { text: "Que bueno! Eso es exactamente para lo que esta disenado", mine: true, time: "8:42 pm" },
+                  { text: "No les escribi hasta que pasaron 2 dias para probarlo bien y asegurarme de que funcione de verdad", mine: false, time: "8:43 pm" },
+                  { text: "Y sinceramente... es una belleza. Siento tranquilidad de verdad. Gracias por la atencion tan profesional", mine: false, time: "8:44 pm" },
+                  { text: "\u00a1Gracias a vos por confiar! Nos alegra mucho que estes tranquilo", mine: true, time: "8:45 pm" },
                 ],
               },
               {
-                init: "C", num: "+506 72\u25CF\u25CF\u25CF\u25CF\u25CF\u25CF7",
+                avatar: "https://i.pravatar.cc/60?img=11",
+                num: "+506 71\u25CF\u25CF\u25CF\u25CF\u25CF\u25CF2",
+                status: "ayer, voz 9:30 pm",
                 msgs: [
-                  { text: "Tengo iPhone 13 y me explicaron como conectarlo entre el cargador y el cable. Sencillisimo", mine: false, time: "3:15 pm" },
-                  { text: "Mi bateria ya no baja al 30% antes de las 6pm como antes", mine: false, time: "3:16 pm" },
-                  { text: "Perfecto, eso es lo que queriamos escuchar!", mine: true, time: "3:17 pm" },
+                  { text: "Sinceramente, somos dos con mi esposa y siempre dejamos el telefono en el cargador y nos olvidamos, eso me causaba bastante", mine: false, time: "8:58 pm" },
+                  { text: "Ahora con el Guard lo conecto directo cuando quieren cargar y listo. Problema resuelto", mine: false, time: "8:59 pm" },
+                  { text: "\u00a1Exacto! Para eso lo disenamos. Cargar tranquilo es todo", mine: true, time: "9:00 pm" },
                 ],
               },
               {
-                init: "R", num: "+506 63\u25CF\u25CF\u25CF\u25CF\u25CF\u25CF4",
+                avatar: "https://i.pravatar.cc/60?img=57",
+                num: "+506 63\u25CF\u25CF\u25CF\u25CF\u25CF\u25CF4",
+                status: "en linea",
                 msgs: [
-                  { text: "Soy papa de tres hijos adolescentes que cargan bajo la almohada. Me preocupaba mucho el tema del fuego", mine: false, time: "9:20 pm" },
-                  { text: "Compre 3 y los coloque en cada cuarto. Dormimos mucho mas tranquilos ahora", mine: false, time: "9:21 pm" },
-                  { text: "Eso nos alegra muchisimo, familia protegida!", mine: true, time: "9:22 pm" },
+                  { text: "Sinceramente el producto hace que el telefono aguante mas bateria. Antes mi celular duraba medio dia y ahora llega tranquilo a la noche!", mine: false, time: "6:58 am" },
+                  { text: "Creo que antes la bateria se gastaba rapido por la sobrecarga de la noche. Ahora con Guard eso no pasa", mine: false, time: "6:59 am" },
+                  { text: "\u00a1Justo eso! Guard corta la carga al 100% y protege la bateria. Gracias por compartir!", mine: true, time: "7:00 am" },
                 ],
               },
             ].map((chat, ci) => (
               <div key={ci} className="lp-animate rounded-2xl overflow-hidden shadow-md">
                 <div className="px-4 py-3 flex items-center gap-3" style={{ backgroundColor: "#075E54" }}>
-                  <div className="w-9 h-9 rounded-full flex items-center justify-center shrink-0 font-bold text-white text-sm" style={{ backgroundColor: "#128C7E" }}>
-                    {chat.init}
-                  </div>
+                  <img src={chat.avatar} alt="" className="w-9 h-9 rounded-full object-cover shrink-0" />
                   <div>
                     <p className="text-white text-sm font-semibold">{chat.num}</p>
-                    <p className="text-white/60 text-xs">en linea</p>
+                    <p className="text-white/60 text-xs">{chat.status}</p>
                   </div>
                 </div>
                 <div className="p-4 space-y-2" style={{ backgroundColor: WA_BG }}>
