@@ -387,13 +387,13 @@ export default function GuardPage() {
               <Img src="/lp-guard/usbc.jpg" label="Guard conectado al puerto USB-C del telefono. Product photography, fondo blanco limpio." className="w-full" />
             </div>
 
-            <div className="lp-animate lp-delay-1 rounded-2xl overflow-hidden" style={{ border: `2px solid ${ORANGE}`, backgroundColor: WHITE }}>
+            <div className="lp-animate lp-delay-1 rounded-2xl overflow-hidden" style={{ border: `1px solid ${BORDER}`, backgroundColor: WHITE }}>
               <div className="px-5 pt-4 pb-3">
                 <div className="flex gap-3 items-start mb-2">
                   <div className="shrink-0 w-9 h-9 rounded-full flex items-center justify-center font-bold text-white text-sm" style={{ backgroundColor: ORANGE }}>2</div>
                   <div>
                     <h3 className="font-bold text-sm" style={{ color: INK }}>iPhone con cable Lightning (iPhone 14, 13, 12...)</h3>
-                    <p className="text-xs font-semibold" style={{ color: ORANGE }}>Solucion especial — misma proteccion</p>
+                    <p className="text-xs font-semibold" style={{ color: MUTED }}>Solucion especial — misma proteccion</p>
                   </div>
                 </div>
                 <p className="text-xs leading-relaxed ml-12" style={{ color: MUTED }}>
