@@ -21,13 +21,13 @@ const BORDER = "#D1D5DB";
 const ORANGE_DOT = "#E65C00";
 const SILVER_DOT = "#A0A0A0";
 
-interface ColorOption {
+export interface ColorOption {
   id: string;
   label: string;
   dots: string[];
 }
 
-const COLOR_OPTIONS: Record<number, ColorOption[]> = {
+export const COLOR_OPTIONS: Record<number, ColorOption[]> = {
   1: [
     { id: "orange", label: "Naranja Metalico", dots: [ORANGE_DOT] },
     { id: "silver", label: "Plata Premium", dots: [SILVER_DOT] },
@@ -49,10 +49,12 @@ export default function GuardCheckoutModal({
   isOpen,
   onClose,
   variant,
+  preSelectedColor,
 }: {
   isOpen: boolean;
   onClose: () => void;
   variant: LPVariant | null;
+  preSelectedColor?: ColorOption;
 }) {
   const [step, setStep] = useState<1 | 2>(1);
   const [colorChoice, setColorChoice] = useState<ColorOption | null>(null);
@@ -68,13 +70,18 @@ export default function GuardCheckoutModal({
 
   useEffect(() => {
     if (isOpen) {
-      setStep(1);
-      setColorChoice(null);
+      if (preSelectedColor) {
+        setStep(2);
+        setColorChoice(preSelectedColor);
+      } else {
+        setStep(1);
+        setColorChoice(null);
+      }
       setExpress(false);
       setFormErrors({});
       setSubmitError("");
     }
-  }, [isOpen]);
+  }, [isOpen, preSelectedColor]);
 
   const handleNativeSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

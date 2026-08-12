@@ -2,7 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Flame, Zap, BatteryCharging, ShieldCheck, Star, ChevronDown, ChevronUp, Truck, Timer, Smartphone } from "lucide-react";
-import GuardCheckoutModal, { LPVariant } from "@/components/lp/GuardCheckoutModal";
+import GuardCheckoutModal, { LPVariant, ColorOption, COLOR_OPTIONS } from "@/components/lp/GuardCheckoutModal";
+
+const SILVER_DOT = "#A0A0A0";
 
 const ORANGE = "#E65C00";
 const BG = "#F4F4F6";
@@ -88,6 +90,11 @@ export default function GuardPage() {
   const [bundle, setBundle] = useState<Bundle>(BUNDLES[0]);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [selectedVariant, setSelectedVariant] = useState<LPVariant | null>(null);
+  const [selectedColors, setSelectedColors] = useState<Record<string, ColorOption>>({
+    "1x": { id: "orange", label: "Naranja Metalico", dots: [ORANGE] },
+    "2x": { id: "mix", label: "1 Naranja + 1 Plata", dots: [ORANGE, SILVER_DOT] },
+    "3x": { id: "2o1s", label: "2 Naranja + 1 Plata", dots: [ORANGE, ORANGE, SILVER_DOT] },
+  });
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [showSticky, setShowSticky] = useState(false);
   const [reviewsOpen, setReviewsOpen] = useState(false);
@@ -528,9 +535,40 @@ export default function GuardPage() {
                       <p className="font-bold text-2xl leading-none" style={{ color: ORANGE }}>&#8353;{b.price.toLocaleString()}</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 mb-4">
+                  <div className="flex items-center gap-2 mb-3">
                     <span className="text-xs font-bold px-2.5 py-0.5 rounded-full text-white" style={{ backgroundColor: ORANGE }}>{b.save}</span>
                     <span className="text-xs flex items-center gap-1" style={{ color: MUTED }}><Truck size={11} /> Envio gratis</span>
+                  </div>
+                  <div className="mb-4">
+                    <p className="text-[10px] font-semibold uppercase tracking-wider mb-2" style={{ color: MUTED }}>Color:</p>
+                    <div className="flex gap-2 flex-wrap">
+                      {(COLOR_OPTIONS[b.id === "1x" ? 1 : b.id === "2x" ? 2 : 3] ?? []).map((opt) => (
+                        <button
+                          key={opt.id}
+                          type="button"
+                          onClick={(e) => { e.stopPropagation(); setSelectedColors(prev => ({ ...prev, [b.id]: opt })); }}
+                          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border-2 transition-all text-xs font-medium"
+                          style={{
+                            borderColor: selectedColors[b.id]?.id === opt.id ? ORANGE : BORDER,
+                            backgroundColor: selectedColors[b.id]?.id === opt.id ? "rgba(230,92,0,0.06)" : WHITE,
+                            color: INK,
+                          }}
+                        >
+                          <div className="flex gap-0.5">
+                            {opt.dots.map((c, i) => (
+                              <span key={i} className="inline-block w-3.5 h-3.5 rounded-full border border-gray-200"
+                                style={{
+                                  background: c === ORANGE
+                                    ? `radial-gradient(circle at 35% 35%, #FF8C40, ${ORANGE} 70%)`
+                                    : `radial-gradient(circle at 35% 35%, #E8E8E8, #888 70%)`,
+                                }}
+                              />
+                            ))}
+                          </div>
+                          {opt.label}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                   <button
                     onClick={(e) => { e.stopPropagation(); openCheckout(b); }}
@@ -606,7 +644,7 @@ export default function GuardPage() {
         </div>
       </section>
 
-      <GuardCheckoutModal isOpen={checkoutOpen} onClose={() => setCheckoutOpen(false)} variant={selectedVariant} />
+      <GuardCheckoutModal isOpen={checkoutOpen} onClose={() => setCheckoutOpen(false)} variant={selectedVariant} preSelectedColor={bundle ? selectedColors[bundle.id] : undefined} />
     </div>
   );
 }
