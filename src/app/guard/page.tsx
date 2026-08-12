@@ -190,7 +190,7 @@ export default function GuardPage() {
           <div className="lp-animate flex justify-center mb-4">
             <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold" style={{ backgroundColor: "#EFF6FF", border: "1px solid #BFDBFE", color: "#1D4ED8" }}>
               <span className="led w-2 h-2 rounded-full inline-block" style={{ backgroundColor: BLUE, boxShadow: `0 0 6px ${BLUE}` }} />
-              Smart AI Physical Isolation Adapter
+              Adaptador de Aislamiento Fisico con IA
             </span>
           </div>
 
@@ -206,7 +206,7 @@ export default function GuardPage() {
         </div>
 
         {/* HERO IMAGE — full bleed edge to edge */}
-        <div className="lp-animate lp-delay-1 w-full overflow-hidden shadow-md mb-7">
+        <div className="lp-animate w-full overflow-hidden shadow-md mb-7" style={{ maxWidth: "100vw" }}>
           <Img src="/lp-guard/hero.jpg" label="Vazlina Guard — producto naranja metalico sobre superficie premium, fondo oscuro elegante" className="w-full" />
         </div>
 
@@ -407,7 +407,7 @@ export default function GuardPage() {
             </div>
 
             <div className="lp-animate lp-delay-2 flex gap-4 items-start p-5 rounded-2xl" style={{ backgroundColor: BG, border: `1px solid ${BORDER}` }}>
-              <div className="shrink-0 w-9 h-9 rounded-full flex items-center justify-center font-bold text-white text-sm" style={{ backgroundColor: INK }}>3</div>
+              <div className="shrink-0 w-9 h-9 rounded-full flex items-center justify-center font-bold text-white text-sm" style={{ backgroundColor: ORANGE }}>3</div>
               <div>
                 <h3 className="font-bold text-sm mb-1" style={{ color: INK }}>Tablets y Laptops — tambien protegidos</h3>
                 <p className="text-xs leading-relaxed" style={{ color: MUTED }}>Guard protege cualquier dispositivo USB-C: iPad, MacBook, laptop Windows. Un Guard por cargador.</p>
