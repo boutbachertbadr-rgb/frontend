@@ -404,7 +404,7 @@ export default function GuardPage() {
               { Icon: Zap, title: "Corte Automático", sub: "Detecta fallas eléctricas y corta la energía en milisegundos.", delay: "" },
               { Icon: Flame, title: "Prevención de Incendios", sub: "Reduce el riesgo de incendios causados por sobrecargas o fallas eléctricas.", delay: "lp-delay-1" },
               { Icon: BatteryCharging, title: "Protección de Batería", sub: "Detiene la carga al 100%. Tu batería dura años más, sin degradación nocturna.", delay: "lp-delay-2" },
-              { Icon: Phone, title: "Compatible con TODO", sub: "iPhone de cualquier modelo (incluso con Lightning), Android, tablets y laptops. Un Guard para cada cargador de la casa.", delay: "lp-delay-3" },
+              { Icon: Smartphone, title: "Compatible con TODO", sub: "iPhone de cualquier modelo (incluso con Lightning), Android, tablets y laptops. Un Guard para cada cargador de la casa.", delay: "lp-delay-3" },
             ].map(({ Icon, title, sub, delay }) => (
               <div key={title} className={`lp-animate ${delay} rounded-2xl p-5`} style={{ backgroundColor: CARD, border: "1px solid #2A2E35" }}>
                 <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style={{ backgroundColor: "rgba(255,255,255,0.06)" }}>
@@ -588,9 +588,9 @@ export default function GuardPage() {
             Probá Vazlina Guard durante 30 días. Si no sentís la tranquilidad que prometemos — por la razón que sea — te devolvemos <strong className="text-white">cada colón</strong>. Sin preguntas, sin formularios, sin riesgo.
           </p>
           <div className="lp-animate lp-delay-2 flex justify-center gap-6 text-xs text-gray-400">
-            <span className="flex items-center gap-1.5"><Check size={13} style={{ color: ACCENT_D }} /> Pago al recibir</span>
-            <span className="flex items-center gap-1.5"><Check size={13} style={{ color: ACCENT_D }} /> Envío gratis</span>
-            <span className="flex items-center gap-1.5"><Check size={13} style={{ color: ACCENT_D }} /> Devolución total</span>
+            <span className="flex items-center gap-1.5"><ShieldCheck size={13} style={{ color: ACCENT_D }} /> Pago al recibir</span>
+            <span className="flex items-center gap-1.5"><ShieldCheck size={13} style={{ color: ACCENT_D }} /> Envío gratis</span>
+            <span className="flex items-center gap-1.5"><ShieldCheck size={13} style={{ color: ACCENT_D }} /> Devolución total</span>
           </div>
         </div>
       </section>
