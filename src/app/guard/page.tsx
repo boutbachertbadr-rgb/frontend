@@ -184,10 +184,10 @@ export default function GuardPage() {
       </div>
 
       {/* ══════════════════ HERO ══════════════════ */}
-      <section className="pt-24 pb-14 px-5" style={{ backgroundColor: WHITE }}>
-        <div className="max-w-lg mx-auto">
+      <section className="pt-24 pb-14" style={{ backgroundColor: WHITE }}>
+        <div className="max-w-lg mx-auto px-5">
 
-          <div className="lp-animate flex justify-center mb-5">
+          <div className="lp-animate flex justify-center mb-4">
             <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold" style={{ backgroundColor: "#EFF6FF", border: "1px solid #BFDBFE", color: "#1D4ED8" }}>
               <span className="led w-2 h-2 rounded-full inline-block" style={{ backgroundColor: BLUE, boxShadow: `0 0 6px ${BLUE}` }} />
               Smart AI Physical Isolation Adapter
@@ -203,6 +203,14 @@ export default function GuardPage() {
               <span className="text-[10px] font-semibold tracking-widest uppercase" style={{ color: ORANGE }}>Guard&#8482;</span>
             </div>
           </div>
+        </div>
+
+        {/* HERO IMAGE — full bleed edge to edge */}
+        <div className="lp-animate lp-delay-1 w-full overflow-hidden shadow-md mb-7">
+          <Img src="/lp-guard/hero.jpg" label="Vazlina Guard — producto naranja metalico sobre superficie premium, fondo oscuro elegante" className="w-full" />
+        </div>
+
+        <div className="max-w-lg mx-auto px-5">
 
           <h1 className="lp-animate lp-delay-1 text-3xl sm:text-4xl font-bold text-center leading-tight mb-4" style={{ color: INK, letterSpacing: "-0.5px" }}>
             Protege a tu familia del{" "}
@@ -248,10 +256,6 @@ export default function GuardPage() {
                 ))}
               </div>
             )}
-          </div>
-
-          <div className="lp-animate lp-delay-2 rounded-3xl overflow-hidden mb-7 shadow-md" style={{ border: `1px solid ${BORDER}` }}>
-            <Img src="/lp-guard/hero.jpg" label="Vazlina Guard — producto naranja metalico sobre superficie premium, fondo oscuro elegante" className="w-full" />
           </div>
 
           <a href="#oferta" className="lp-animate lp-delay-3 cta-btn block text-center py-4 rounded-2xl font-bold text-sm tracking-widest text-white active:scale-95 transition-transform" style={{ backgroundColor: ORANGE }}>
@@ -318,10 +322,6 @@ export default function GuardPage() {
             Por eso a los 2 anos tu telefono &ldquo;ya no dura nada&rdquo; —{" "}
             <strong style={{ color: INK }}>no es el telefono, es tu cargador.</strong>
           </p>
-        </div>
-
-        <div className="lp-animate lp-delay-1 w-full mb-10 overflow-hidden">
-          <Img src="/lp-guard/bateria.jpg" label="Mano con telefono en 0% y bateria rota — billetes quemados desenfocados atras. Concepto perdida financiera." className="w-full" />
         </div>
 
         <div className="max-w-lg mx-auto space-y-4">
