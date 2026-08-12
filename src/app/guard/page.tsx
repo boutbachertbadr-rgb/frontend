@@ -153,13 +153,13 @@ export default function GuardPage() {
       `}</style>
 
       {/* TOP URGENCY BAR */}
-      <div className="fixed top-0 left-0 right-0 z-50 py-2.5 px-3 text-center" style={{ backgroundColor: ORANGE }}>
-        <p className="text-white text-xs sm:text-sm font-bold flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-3">
-          <span className="pulse inline-flex items-center gap-1.5">
-            <Timer size={13} /> OFERTA TERMINA EN
-            <span className="tabular-nums font-mono bg-black/20 px-2 py-0.5 rounded">{timer}</span>
+      <div className="fixed top-0 left-0 right-0 z-50 py-2 px-3 text-center" style={{ backgroundColor: ORANGE }}>
+        <p className="text-white text-xs font-bold flex flex-row items-center justify-center gap-2 flex-wrap leading-none">
+          <span className="pulse inline-flex items-center gap-1">
+            <Timer size={11} /> TERMINA EN
+            <span className="tabular-nums font-mono bg-black/20 px-1.5 py-0.5 rounded text-xs">{timer}</span>
           </span>
-          <span className="hidden sm:inline opacity-40">|</span>
+          <span className="opacity-40">|</span>
           <span><s className="opacity-60">&#8353;22,500</s> &#8250; <strong>&#8353;17,700 HOY</strong></span>
         </p>
       </div>
@@ -278,7 +278,7 @@ export default function GuardPage() {
             <span style={{ color: "#EF4444" }}>mientras todos duermen.</span>
           </h2>
           <p className="lp-animate lp-delay-1 text-center text-sm leading-relaxed mb-10" style={{ color: "#9CA3AF" }}>
-            Un cargador enchufado 8 horas seguidas no es normal — es peligroso. El sobrecalentamiento es la causa #1 de incendios electricos en el hogar.
+            Un cargador enchufado 8 horas seguidas no es normal. Es peligroso. El sobrecalentamiento es la causa #1 de incendios electricos en el hogar.
           </p>
         </div>
 
@@ -288,7 +288,7 @@ export default function GuardPage() {
 
         <div className="max-w-lg mx-auto space-y-4">
           {[
-            { Icon: Flame, color: "#EF4444", title: "Sobrecalentamiento nocturno", body: "Un cargador enchufado toda la noche alcanza hasta 60 grados — suficiente para encender la tela de tu almohada o colchon mientras duermes." },
+            { Icon: Flame, color: "#EF4444", title: "Sobrecalentamiento nocturno", body: "Un cargador enchufado toda la noche alcanza hasta 60 grados. Suficiente para encender la tela de tu almohada o colchon mientras duermes." },
             { Icon: Zap, color: "#F59E0B", title: "Cortocircuito en milisegundos", body: "Una falla electrica toma 0.001 segundos. El fuego se propaga en minutos. Tu familia no tiene tiempo de reaccionar dormida." },
             { Icon: Smartphone, color: "#EF4444", title: "Tus hijos cargan bajo la almohada", body: "Los adolescentes dejan el telefono cargando dentro de la cama. Vos podes protegerlos con un solo adaptador." },
           ].map(({ Icon, color, title, body }) => (
@@ -319,8 +319,8 @@ export default function GuardPage() {
           </h2>
           <p className="lp-animate lp-delay-1 text-center text-sm leading-relaxed mb-10" style={{ color: MUTED }}>
             Cargar el telefono toda la noche destruye la bateria poco a poco.
-            Por eso a los 2 anos tu telefono &ldquo;ya no dura nada&rdquo; —{" "}
-            <strong style={{ color: INK }}>no es el telefono, es tu cargador.</strong>
+            Por eso a los 2 anos tu telefono &ldquo;ya no dura nada&rdquo;.{" "}
+            <strong style={{ color: INK }}>No es el telefono, es tu cargador.</strong>
           </p>
         </div>
 
@@ -379,7 +379,7 @@ export default function GuardPage() {
               <div className="shrink-0 w-9 h-9 rounded-full flex items-center justify-center font-bold text-white text-sm" style={{ backgroundColor: ORANGE }}>1</div>
               <div>
                 <h3 className="font-bold text-sm mb-1" style={{ color: INK }}>Android e iPhone 15+ (USB-C)</h3>
-                <p className="text-xs leading-relaxed" style={{ color: MUTED }}>Conectas Guard directo al puerto USB-C del telefono, despues enchufas el cable. Plug and play — listo en 5 segundos.</p>
+                <p className="text-xs leading-relaxed" style={{ color: MUTED }}>Conectas Guard directo al puerto USB-C del telefono, despues enchufas el cable. Plug and play, listo en 5 segundos.</p>
               </div>
             </div>
 
@@ -393,11 +393,11 @@ export default function GuardPage() {
                   <div className="shrink-0 w-9 h-9 rounded-full flex items-center justify-center font-bold text-white text-sm" style={{ backgroundColor: ORANGE }}>2</div>
                   <div>
                     <h3 className="font-bold text-sm" style={{ color: INK }}>iPhone con cable Lightning (iPhone 14, 13, 12...)</h3>
-                    <p className="text-xs font-semibold" style={{ color: MUTED }}>Solucion especial — misma proteccion</p>
+                    <p className="text-xs font-semibold" style={{ color: MUTED }}>Solucion especial. Misma proteccion.</p>
                   </div>
                 </div>
                 <p className="text-xs leading-relaxed ml-12" style={{ color: MUTED }}>
-                  Enchufa Guard directo en el <strong style={{ color: INK }}>bloque del cargador Apple</strong> (el cubo). Despues conecta el <strong style={{ color: INK }}>cable Lightning al Guard</strong>. El extremo Lightning va a tu iPhone — misma proteccion automatica, sin configuracion.
+                  Enchufa Guard directo en el <strong style={{ color: INK }}>bloque del cargador Apple</strong> (el cubo). Despues conecta el <strong style={{ color: INK }}>cable Lightning al Guard</strong>. El extremo Lightning va a tu iPhone. Misma proteccion automatica, sin configuracion.
                 </p>
               </div>
             </div>
@@ -409,7 +409,7 @@ export default function GuardPage() {
             <div className="lp-animate lp-delay-2 flex gap-4 items-start p-5 rounded-2xl" style={{ backgroundColor: BG, border: `1px solid ${BORDER}` }}>
               <div className="shrink-0 w-9 h-9 rounded-full flex items-center justify-center font-bold text-white text-sm" style={{ backgroundColor: ORANGE }}>3</div>
               <div>
-                <h3 className="font-bold text-sm mb-1" style={{ color: INK }}>Tablets y Laptops — tambien protegidos</h3>
+                <h3 className="font-bold text-sm mb-1" style={{ color: INK }}>Tablets y Laptops: tambien protegidos</h3>
                 <p className="text-xs leading-relaxed" style={{ color: MUTED }}>Guard protege cualquier dispositivo USB-C: iPad, MacBook, laptop Windows. Un Guard por cargador.</p>
               </div>
             </div>
@@ -422,7 +422,7 @@ export default function GuardPage() {
           <div className="lp-animate rounded-2xl p-5 flex gap-3 items-start" style={{ backgroundColor: "#EFF6FF", border: "1.5px solid #BFDBFE" }}>
             <span className="led shrink-0 w-3 h-3 rounded-full mt-0.5" style={{ backgroundColor: BLUE, boxShadow: `0 0 8px ${BLUE}`, display: "inline-block" }} />
             <p className="text-sm leading-relaxed" style={{ color: "#1E3A8A" }}>
-              <strong>El chip AI monitorea el voltaje en tiempo real.</strong> Al detectar el 100% o una anomalia electrica, corta fisicamente la corriente — sin apps, sin configuracion. Siempre activo.
+              <strong>El chip AI monitorea el voltaje en tiempo real.</strong> Al detectar el 100% o una anomalia electrica, corta fisicamente la corriente, sin apps, sin configuracion. Siempre activo.
             </p>
           </div>
         </div>
