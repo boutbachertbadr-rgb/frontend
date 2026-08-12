@@ -31,7 +31,7 @@ interface Bundle {
 
 const BUNDLES: Bundle[] = [
   { id: "1x", name: "1x Vazlina Guard - Proteccion Individual", shortName: "1x Vazlina Guard", price: 17700, oldPrice: 22500, save: "21% OFF", note: "Para 1 cargador en casa" },
-  { id: "2x", name: "2x Vazlina Guard - Pack Familia", shortName: "2x Vazlina Guard", price: 29900, oldPrice: 45000, save: "33% OFF", note: "El mas popular - dormitorio + sala", best: true },
+  { id: "2x", name: "2x Vazlina Guard - Pack Familia", shortName: "2x Vazlina Guard - Pack Familia", price: 29900, oldPrice: 45000, save: "33% OFF", note: "El mas popular - dormitorio + sala", best: true },
   { id: "3x", name: "3x Vazlina Guard - Proteccion Total", shortName: "3x Vazlina Guard", price: 39900, oldPrice: 67500, save: "41% OFF", note: "Protege cada enchufe del hogar" },
 ];
 
@@ -148,7 +148,7 @@ export default function GuardPage() {
         .lp-delay-2 { transition-delay: 0.2s; }
         .lp-delay-3 { transition-delay: 0.3s; }
         .bundle-card { border: 2px solid #D1D5DB; border-radius: 20px; overflow: hidden; transition: border-color 0.2s, box-shadow 0.2s; background: #FFFFFF; cursor: pointer; }
-        .bundle-card.active { border-color: #E65C00; box-shadow: 0 0 0 4px rgba(230,92,0,0.12); }
+        .bundle-card.active { border-color: #1A1A1A; box-shadow: 0 0 0 4px rgba(26,26,26,0.10); }
         @keyframes pulse-glow { 0%,100%{opacity:1;}50%{opacity:0.65;} }
         .pulse { animation: pulse-glow 2s ease-in-out infinite; }
         @keyframes shimmer { 0%{transform:translateX(-100%);}100%{transform:translateX(200%);} }
