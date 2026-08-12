@@ -482,7 +482,10 @@ export default function GuardPage() {
             ].map((chat, ci) => (
               <div key={ci} className="lp-animate rounded-2xl overflow-hidden shadow-md">
                 <div className="px-4 py-3 flex items-center gap-3" style={{ backgroundColor: "#075E54" }}>
-                  <img src={chat.avatar} alt="" className="w-9 h-9 rounded-full object-cover shrink-0" />
+                  <div className="relative w-9 h-9 shrink-0">
+                    <img src={chat.avatar} alt="" className="w-9 h-9 rounded-full object-cover" style={{ filter: "blur(5px)", transform: "scale(1.1)" }} />
+                    <div className="absolute inset-0 rounded-full" style={{ backgroundColor: "rgba(0,0,0,0.35)" }} />
+                  </div>
                   <div>
                     <p className="text-white text-sm font-semibold flex items-center gap-0.5">
                       <span>{chat.numA}</span>
