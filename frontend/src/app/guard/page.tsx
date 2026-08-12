@@ -1,17 +1,27 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Flame, Zap, BatteryCharging, ShieldCheck, Star, ChevronDown, ChevronUp, Check, Truck, Phone, Timer, Smartphone } from "lucide-react";
+import { Flame, Zap, BatteryCharging, ShieldCheck, Star, ChevronDown, ChevronUp, Truck, Timer, Smartphone, AlertTriangle, DollarSign } from "lucide-react";
 import GuardCheckoutModal, { LPVariant } from "@/components/lp/GuardCheckoutModal";
 
-const ACCENT = "#FF4500";
-const ACCENT_D = "#FF4500";
-const NIGHT = "#0A0A0A";
-const CARD = "#111111";
-const IVORY = "#F7F7F7";
-const SILVER = "#FF4500";
-const INK = "#0A0A0A";
+// ── Color palette: derived from product images (Silver/Orange/Black) ──
+const ORANGE = "#E65C00";
+const BG = "#F4F4F6";
+const WHITE = "#FFFFFF";
+const BORDER = "#D1D5DB";
+const INK = "#1A1A1A";
+const MUTED = "#6B7280";
+const BLUE = "#00E5FF";
+const NIGHT = "#0C0C0C";
+const NIGHT_CARD = "#161616";
+const NIGHT_BORDER = "#2A2E35";
 const WA_BG = "#ECE5DD";
+// Legacy aliases (old JSX refs — will be removed after full section rewrite)
+const ACCENT = ORANGE;
+const ACCENT_D = ORANGE;
+const CARD = NIGHT_CARD;
+const SILVER = ORANGE;
+const IVORY = BG;
 const WA_ACCENT = "#DCF8C6";
 
 interface Bundle {
@@ -26,18 +36,18 @@ interface Bundle {
 }
 
 const BUNDLES: Bundle[] = [
-  { id: "1x", name: "1x Vazlina Guard", shortName: "1x Guard", price: 17700, oldPrice: 22665, save: "Ahorrás ₡4965", note: "Protege tu dispositivo principal" },
-  { id: "2x", name: "2x Vazlina Guard", shortName: "2x Guard", price: 30750, oldPrice: 45329, save: "Ahorrás ₡14579", note: "Uno para ti, otro para tu pareja" },
-  { id: "3x", name: "3x Vazlina Guard — Pack Familia", shortName: "3x Pack Familia", price: 40375, oldPrice: 67994, save: "Ahorrás ₡27619", note: "Protege toda la casa", best: true },
+  { id: "1x", name: "1× Vazlina Guard — Protección Individual", shortName: "1× Vazlina Guard", price: 17700, oldPrice: 22500, save: "21% OFF", note: "Para 1 cargador en casa" },
+  { id: "2x", name: "2× Vazlina Guard — Pack Familia", shortName: "2× Vazlina Guard", price: 29900, oldPrice: 45000, save: "33% OFF", note: "El más popular — dormitorio + sala", best: true },
+  { id: "3x", name: "3× Vazlina Guard — Protección Total", shortName: "3× Vazlina Guard", price: 39900, oldPrice: 67500, save: "41% OFF", note: "Protege cada enchufe del hogar" },
 ];
 
 const FAQS = [
-  { q: "¿Funciona con mi teléfono y mi cargador?", a: "Sí, con TODOS — incluso iPhone anteriores al 15. Si tu teléfono tiene puerto USB-C (Android y iPhone 15+), lo conectás directo. Si tu iPhone usa cable Lightning (14 o anterior), colocás Guard entre la cabeza del cargador y el cable — la protección es idéntica. También funciona con tablets y laptops." },
-  { q: "¿Cómo corta la energía?", a: "Su chip interno monitorea el flujo eléctrico en tiempo real. Si detecta sobrecalentamiento, sobrecarga o cortocircuito, corta la energía en milisegundos — antes de que ocurra cualquier daño." },
-  { q: "¿Tengo que configurarlo o instalar algo?", a: "No. Es plug & play: lo conectás entre tu cargador y tu cable, y listo. Empieza a proteger desde el primer segundo, sin apps ni configuración." },
-  { q: "¿De verdad protege la batería de mi teléfono?", a: "Sí. Detiene automáticamente la carga al llegar al 100%, evitando la sobrecarga nocturna que degrada tu batería. Así tu teléfono mantiene su autonomía por años, no meses." },
-  { q: "¿Cómo es el pago y el envío?", a: "Pagás únicamente cuando recibís el producto en tus manos (pago contra entrega). El envío es gratis a todo Costa Rica y tarda de 2 a 5 días hábiles." },
-  { q: "¿Y si no me convence?", a: "Tenés 30 días de garantía total. Si no te da la tranquilidad que prometemos, te devolvemos cada colón. Sin preguntas." },
+  { q: "¿Funciona con mi iPhone con cable Lightning?", a: "Sí, 100%. En iPhones con Lightning (iPhone 14, 13, 12, X y anteriores), conectás Guard entre el bloque del cargador y el cable Lightning. La protección es exactamente la misma que con USB-C." },
+  { q: "¿También protege tablets y laptops?", a: "Sí. Guard protege cualquier dispositivo que cargue por USB-C: iPads, tablets Android, MacBooks, laptops Windows. Un Guard por cargador." },
+  { q: "¿Cómo corta la energía?", a: "Su chip AI monitorea el voltaje en tiempo real. Al detectar el 100% o una anomalía eléctrica, corta físicamente la corriente en milisegundos — sin apps, sin configuración." },
+  { q: "¿Tengo que configurarlo o instalar algo?", a: "No. Es plug & play total. Lo conectás y empieza a proteger desde el primer segundo. Sin apps, sin Bluetooth, sin nada." },
+  { q: "¿Cómo es el pago y el envío?", a: "Pagás únicamente cuando recibís el producto (pago contra entrega). Envío gratis a todo Costa Rica en 3-7 días hábiles." },
+  { q: "¿Y si no me convence?", a: "Garantía 30 días sin preguntas. Si no te da la tranquilidad prometida, te devolvemos cada colón." },
 ];
 
 function useOfferTimer() {
@@ -74,12 +84,13 @@ function Img({ src, label, className = "" }: { src: string; label: string; class
   const [err, setErr] = useState(false);
   if (err) {
     return (
-      <div className={`flex items-center justify-center text-xs text-gray-400 text-center px-4 ${className}`} style={{ backgroundColor: "#e8e2d8", aspectRatio: "1/1" }}>
-        📸 {label}
+      <div className={`flex flex-col items-center justify-center gap-2 text-xs text-gray-400 text-center px-4 ${className}`} style={{ backgroundColor: "#E5E7EB", minHeight: "220px" }}>
+        <span className="text-3xl">📸</span>
+        <span className="max-w-[220px] leading-relaxed">{label}</span>
       </div>
     );
   }
-  return <img src={src} alt={label} className={className} style={{ aspectRatio: "1/1", objectFit: "cover" }} onError={() => setErr(true)} />;
+  return <img src={src} alt={label} className={className} style={{ objectFit: "cover", display: "block" }} onError={() => setErr(true)} />;
 }
 
 export default function GuardPage() {

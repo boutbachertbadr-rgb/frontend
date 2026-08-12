@@ -1,0 +1,11 @@
+﻿node_modules/
+.next/
+.env
+.env.local
+*.log
+dist/
+build/
+color-concept.html
+color-concept-clean.html
+color-concept-product.html
+compress_images.py
