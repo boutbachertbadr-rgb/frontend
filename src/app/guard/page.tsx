@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Flame, Zap, BatteryCharging, ShieldCheck, Star, ChevronDown, ChevronUp, Truck, Timer, Smartphone, AlertTriangle, DollarSign } from "lucide-react";
+import { Flame, Zap, BatteryCharging, ShieldCheck, Star, ChevronDown, ChevronUp, Truck, Timer, Smartphone } from "lucide-react";
 import GuardCheckoutModal, { LPVariant } from "@/components/lp/GuardCheckoutModal";
 
 // ── Color palette: derived from product images (Silver/Orange/Black) ──
