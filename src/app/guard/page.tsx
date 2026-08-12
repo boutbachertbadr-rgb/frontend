@@ -387,8 +387,8 @@ export default function GuardPage() {
               <Img src="/lp-guard/usbc.jpg" label="Guard conectado al puerto USB-C del telefono. Product photography, fondo blanco limpio." className="w-full" />
             </div>
 
-            <div className="lp-animate lp-delay-1 rounded-2xl overflow-hidden" style={{ border: `1px solid ${BORDER}`, backgroundColor: BG }}>
-              <div className="px-5 pt-4 pb-3">
+            <div className="lp-animate lp-delay-1 rounded-2xl" style={{ border: `1px solid ${BORDER}`, backgroundColor: BG }}>
+              <div className="px-5 py-4">
                 <div className="flex gap-3 items-start mb-2">
                   <div className="shrink-0 w-9 h-9 rounded-full flex items-center justify-center font-bold text-white text-sm" style={{ backgroundColor: ORANGE }}>2</div>
                   <div>
@@ -397,10 +397,13 @@ export default function GuardPage() {
                   </div>
                 </div>
                 <p className="text-xs leading-relaxed ml-12" style={{ color: MUTED }}>
-                  Coloca Guard entre el <strong style={{ color: INK }}>bloque del cargador</strong> (el cubo que va al enchufe) y el <strong style={{ color: INK }}>cable Lightning</strong>. La proteccion es exactamente la misma.
+                  Enchufa Guard directo en el <strong style={{ color: INK }}>bloque del cargador Apple</strong> (el cubo). Despues conecta el <strong style={{ color: INK }}>cable Lightning al Guard</strong>. El extremo Lightning va a tu iPhone — misma proteccion automatica, sin configuracion.
                 </p>
               </div>
-              <Img src="/lp-guard/lightning.jpg" label="Guard entre el bloque cargador Apple y el cable Lightning. Muy claro y didactico. Fondo blanco." className="w-full" />
+            </div>
+
+            <div className="lp-animate lp-delay-2 rounded-2xl overflow-hidden shadow-md">
+              <Img src="/lp-guard/lightning.jpg" label="Guard enchufado en bloque cargador Apple con cable Lightning conectado al iPhone." className="w-full" />
             </div>
 
             <div className="lp-animate lp-delay-2 flex gap-4 items-start p-5 rounded-2xl" style={{ backgroundColor: BG, border: `1px solid ${BORDER}` }}>
