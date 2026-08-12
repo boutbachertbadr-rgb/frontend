@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { Flame, Zap, BatteryCharging, ShieldCheck, Star, ChevronDown, ChevronUp, Truck, Timer, Smartphone } from "lucide-react";
 import GuardCheckoutModal, { LPVariant } from "@/components/lp/GuardCheckoutModal";
 
-// ── Color palette: derived from product images (Silver/Orange/Black) ──
 const ORANGE = "#E65C00";
 const BG = "#F4F4F6";
 const WHITE = "#FFFFFF";
@@ -16,13 +15,6 @@ const NIGHT = "#0C0C0C";
 const NIGHT_CARD = "#161616";
 const NIGHT_BORDER = "#2A2E35";
 const WA_BG = "#ECE5DD";
-// Legacy aliases (old JSX refs — will be removed after full section rewrite)
-const ACCENT = ORANGE;
-const ACCENT_D = ORANGE;
-const CARD = NIGHT_CARD;
-const SILVER = ORANGE;
-const IVORY = BG;
-const WA_ACCENT = "#DCF8C6";
 
 interface Bundle {
   id: string;
@@ -36,36 +28,34 @@ interface Bundle {
 }
 
 const BUNDLES: Bundle[] = [
-  { id: "1x", name: "1× Vazlina Guard — Protección Individual", shortName: "1× Vazlina Guard", price: 17700, oldPrice: 22500, save: "21% OFF", note: "Para 1 cargador en casa" },
-  { id: "2x", name: "2× Vazlina Guard — Pack Familia", shortName: "2× Vazlina Guard", price: 29900, oldPrice: 45000, save: "33% OFF", note: "El más popular — dormitorio + sala", best: true },
-  { id: "3x", name: "3× Vazlina Guard — Protección Total", shortName: "3× Vazlina Guard", price: 39900, oldPrice: 67500, save: "41% OFF", note: "Protege cada enchufe del hogar" },
+  { id: "1x", name: "1x Vazlina Guard - Proteccion Individual", shortName: "1x Vazlina Guard", price: 17700, oldPrice: 22500, save: "21% OFF", note: "Para 1 cargador en casa" },
+  { id: "2x", name: "2x Vazlina Guard - Pack Familia", shortName: "2x Vazlina Guard", price: 29900, oldPrice: 45000, save: "33% OFF", note: "El mas popular - dormitorio + sala", best: true },
+  { id: "3x", name: "3x Vazlina Guard - Proteccion Total", shortName: "3x Vazlina Guard", price: 39900, oldPrice: 67500, save: "41% OFF", note: "Protege cada enchufe del hogar" },
 ];
 
 const FAQS = [
-  { q: "¿Funciona con mi iPhone con cable Lightning?", a: "Sí, 100%. En iPhones con Lightning (iPhone 14, 13, 12, X y anteriores), conectás Guard entre el bloque del cargador y el cable Lightning. La protección es exactamente la misma que con USB-C." },
-  { q: "¿También protege tablets y laptops?", a: "Sí. Guard protege cualquier dispositivo que cargue por USB-C: iPads, tablets Android, MacBooks, laptops Windows. Un Guard por cargador." },
-  { q: "¿Cómo corta la energía?", a: "Su chip AI monitorea el voltaje en tiempo real. Al detectar el 100% o una anomalía eléctrica, corta físicamente la corriente en milisegundos — sin apps, sin configuración." },
-  { q: "¿Tengo que configurarlo o instalar algo?", a: "No. Es plug & play total. Lo conectás y empieza a proteger desde el primer segundo. Sin apps, sin Bluetooth, sin nada." },
-  { q: "¿Cómo es el pago y el envío?", a: "Pagás únicamente cuando recibís el producto (pago contra entrega). Envío gratis a todo Costa Rica en 3-7 días hábiles." },
-  { q: "¿Y si no me convence?", a: "Garantía 30 días sin preguntas. Si no te da la tranquilidad prometida, te devolvemos cada colón." },
+  { q: "Funciona con mi iPhone con cable Lightning?", a: "Si, 100%. En iPhones con Lightning (iPhone 14, 13, 12, X y anteriores), conectas Guard entre el bloque del cargador y el cable Lightning. La proteccion es exactamente la misma que con USB-C." },
+  { q: "Tambien protege tablets y laptops?", a: "Si. Guard protege cualquier dispositivo que cargue por USB-C: iPads, tablets Android, MacBooks, laptops Windows. Un Guard por cargador." },
+  { q: "Como corta la energia?", a: "Su chip AI monitorea el voltaje en tiempo real. Al detectar el 100% o una anomalia electrica, corta fisicamente la corriente en milisegundos sin apps ni configuracion." },
+  { q: "Tengo que configurarlo o instalar algo?", a: "No. Es plug and play total. Lo conectas y empieza a proteger desde el primer segundo. Sin apps, sin Bluetooth, sin nada." },
+  { q: "Como es el pago y el envio?", a: "Pagas unicamente cuando recibes el producto (pago contra entrega). Envio gratis a todo Costa Rica en 3-7 dias habiles." },
+  { q: "Y si no me convence?", a: "Garantia 30 dias sin preguntas. Si no te da la tranquilidad prometida, te devolvemos cada colon." },
 ];
 
 function useOfferTimer() {
   const [left, setLeft] = useState("--:--:--");
   useEffect(() => {
-    const MIN_H = 3;
-    const MAX_H = 14;
-    const randomDuration = () => (MIN_H + Math.floor(Math.random() * (MAX_H - MIN_H + 1))) * 60 * 60 * 1000;
-    let end = Number(localStorage.getItem("guard_offer_end_v2") ?? 0);
+    const randomDuration = () => (3 + Math.floor(Math.random() * 12)) * 3600000;
+    let end = Number(localStorage.getItem("guard_offer_end_v3") ?? 0);
     if (!end || end <= Date.now()) {
       end = Date.now() + randomDuration();
-      localStorage.setItem("guard_offer_end_v2", String(end));
+      localStorage.setItem("guard_offer_end_v3", String(end));
     }
     const tick = () => {
       let diff = end - Date.now();
       if (diff <= 0) {
         end = Date.now() + randomDuration();
-        localStorage.setItem("guard_offer_end_v2", String(end));
+        localStorage.setItem("guard_offer_end_v3", String(end));
         diff = end - Date.now();
       }
       const h = Math.floor(diff / 3600000);
@@ -86,7 +76,7 @@ function Img({ src, label, className = "" }: { src: string; label: string; class
     return (
       <div className={`flex flex-col items-center justify-center gap-2 text-xs text-gray-400 text-center px-4 ${className}`} style={{ backgroundColor: "#E5E7EB", minHeight: "220px" }}>
         <span className="text-3xl">📸</span>
-        <span className="max-w-[220px] leading-relaxed">{label}</span>
+        <span className="max-w-xs leading-relaxed">{label}</span>
       </div>
     );
   }
@@ -100,32 +90,34 @@ export default function GuardPage() {
   const [selectedVariant, setSelectedVariant] = useState<LPVariant | null>(null);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [showSticky, setShowSticky] = useState(false);
+  const [reviewsOpen, setReviewsOpen] = useState(false);
   const offerInView = useRef(false);
   const offerRef = useRef<HTMLElement | null>(null);
-  const [reviewsOpen, setReviewsOpen] = useState(false);
 
   useEffect(() => {
-    const offerObserver = new IntersectionObserver(
+    const obs = new IntersectionObserver(
       ([entry]) => {
         offerInView.current = entry.isIntersecting;
         setShowSticky(window.scrollY > 550 && !entry.isIntersecting);
       },
       { threshold: 0.05 }
     );
-    if (offerRef.current) offerObserver.observe(offerRef.current);
-
+    if (offerRef.current) obs.observe(offerRef.current);
     const onScroll = () => setShowSticky(window.scrollY > 550 && !offerInView.current);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => { offerObserver.disconnect(); window.removeEventListener("scroll", onScroll); };
+    return () => {
+      obs.disconnect();
+      window.removeEventListener("scroll", onScroll);
+    };
   }, []);
 
   useEffect(() => {
     const obs = new IntersectionObserver(
-      (entries) => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add("lp-visible"); }),
+      (entries) => entries.forEach((e) => { if (e.isIntersecting) e.target.classList.add("lp-visible"); }),
       { threshold: 0.08 }
     );
-    document.querySelectorAll(".lp-animate").forEach(el => obs.observe(el));
+    document.querySelectorAll(".lp-animate").forEach((el) => obs.observe(el));
     return () => obs.disconnect();
   }, []);
 
@@ -140,41 +132,43 @@ export default function GuardPage() {
   };
 
   return (
-    <div className="font-body">
+    <div className="font-body" style={{ backgroundColor: BG }}>
       <style>{`
         html { scroll-behavior: smooth; }
-        .lp-animate { opacity: 0; transform: translateY(28px); transition: opacity 0.65s cubic-bezier(.4,0,.2,1), transform 0.65s cubic-bezier(.4,0,.2,1); }
+        .lp-animate { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
         .lp-animate.lp-visible { opacity: 1; transform: translateY(0); }
         .lp-delay-1 { transition-delay: 0.1s; }
         .lp-delay-2 { transition-delay: 0.2s; }
         .lp-delay-3 { transition-delay: 0.3s; }
-        .bundle-card { border: 2px solid #1E1E1E; border-radius: 20px; overflow: hidden; transition: border-color 0.2s, box-shadow 0.2s; background: #111; cursor: pointer; }
-        .bundle-card.active { border-color: #FF4500; box-shadow: 0 0 0 3px rgba(255,69,0,0.2); }
-        @keyframes pulse-red { 0%,100% { opacity: 1; } 50% { opacity: 0.75; } }
-        .pulse { animation: pulse-red 2s ease-in-out infinite; }
-        @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(200%); } }
-        @keyframes cta-breathe {
-          0%, 100% { box-shadow: 0 12px 40px rgba(255,69,0,0.4), 0 0 0 0 rgba(255,69,0,0.3); }
-          50% { box-shadow: 0 16px 56px rgba(255,69,0,0.55), 0 0 0 10px rgba(255,69,0,0); }
-        }
-        .cta-attention { animation: cta-breathe 2.5s ease-in-out infinite; will-change: box-shadow; position: relative; overflow: hidden; }
-        .cta-attention::before { content: ''; position: absolute; top: 0; left: -100%; width: 60%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent); animation: shimmer 2.8s ease-in-out infinite; }
+        .bundle-card { border: 2px solid #D1D5DB; border-radius: 20px; overflow: hidden; transition: border-color 0.2s, box-shadow 0.2s; background: #FFFFFF; cursor: pointer; }
+        .bundle-card.active { border-color: #E65C00; box-shadow: 0 0 0 4px rgba(230,92,0,0.12); }
+        @keyframes pulse-glow { 0%,100%{opacity:1;}50%{opacity:0.65;} }
+        .pulse { animation: pulse-glow 2s ease-in-out infinite; }
+        @keyframes shimmer { 0%{transform:translateX(-100%);}100%{transform:translateX(200%);} }
+        @keyframes cta-glow { 0%,100%{box-shadow:0 8px 25px rgba(230,92,0,0.35);}50%{box-shadow:0 14px 40px rgba(230,92,0,0.55);} }
+        .cta-btn { animation: cta-glow 2.5s ease-in-out infinite; position: relative; overflow: hidden; }
+        .cta-btn::before { content:''; position:absolute; top:0; left:-100%; width:60%; height:100%; background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent); animation:shimmer 2.8s ease-in-out infinite; }
+        @keyframes led-blink { 0%,100%{opacity:1;}50%{opacity:0.3;} }
+        .led { animation: led-blink 2s ease-in-out infinite; }
       `}</style>
 
-      {/* ── TOP TIMER BAR ── */}
-      <div className="fixed top-0 left-0 right-0 z-50 px-3 sm:px-4 py-3 text-center" style={{ background: "#FF4500" }}>
-        <p className="text-xs sm:text-sm font-extrabold tracking-wide flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2" style={{ color: "#fff" }}>
-          <span className="pulse inline-flex items-center gap-1"><Timer size={15} /> LA OFERTA TERMINA EN <span className="tabular-nums" style={{ background: "rgba(0,0,0,0.2)", padding: "1px 8px", borderRadius: "4px" }}>{timer}</span></span>
+      {/* TOP URGENCY BAR */}
+      <div className="fixed top-0 left-0 right-0 z-50 py-2.5 px-3 text-center" style={{ backgroundColor: ORANGE }}>
+        <p className="text-white text-xs sm:text-sm font-bold flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-3">
+          <span className="pulse inline-flex items-center gap-1.5">
+            <Timer size={13} /> OFERTA TERMINA EN
+            <span className="tabular-nums font-mono bg-black/20 px-2 py-0.5 rounded">{timer}</span>
+          </span>
           <span className="hidden sm:inline opacity-40">|</span>
-          <span className="inline"><s className="opacity-60 font-heading tracking-tight">Antes <span className="text-[11px] align-top">₡</span>22665</s> · <span className="font-heading tracking-tight">Hoy <span className="text-[11px] align-top">₡</span>17700</span></span>
+          <span><s className="opacity-60">&#8353;22,500</s> &#8250; <strong>&#8353;17,700 HOY</strong></span>
         </p>
       </div>
 
-      {/* ── STICKY BOTTOM CTA ── */}
+      {/* STICKY BOTTOM CTA */}
       <div
-        className="fixed bottom-0 left-0 right-0 z-40 px-4 pb-4 pt-3 transition-all duration-300"
+        className="fixed bottom-0 left-0 right-0 z-40 px-4 pb-5 pt-3 transition-all duration-300"
         style={{
-          background: "linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%)",
+          background: "linear-gradient(to top, rgba(255,255,255,0.98) 60%, transparent 100%)",
           transform: showSticky ? "translateY(0)" : "translateY(120%)",
           opacity: showSticky ? 1 : 0,
           pointerEvents: showSticky ? "auto" : "none",
@@ -182,288 +176,363 @@ export default function GuardPage() {
       >
         <a
           href="#oferta"
-          className="w-full sm:max-w-sm sm:mx-auto block text-center py-4 rounded-2xl font-bold text-sm tracking-widest active:scale-95 transition-all shadow-xl cta-attention"
-          style={{ backgroundColor: "#FF4500", color: "#fff" }}
+          className="cta-btn w-full sm:max-w-sm sm:mx-auto flex items-center justify-center py-4 rounded-2xl font-bold text-sm tracking-widest text-white active:scale-95 transition-transform"
+          style={{ backgroundColor: ORANGE }}
         >
-          ORDENAR AHORA
+          ORDENAR AHORA — &#8353;17,700
         </a>
       </div>
 
-      {/* ── HERO ── */}
-      <section className="relative flex flex-col items-center pt-24 pb-16 text-center overflow-hidden" style={{ backgroundColor: NIGHT }}>
-        <div className="absolute inset-0 opacity-25 pointer-events-none" style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(201,205,211,0.15) 0%, transparent 55%)" }} />
-        <div className="relative z-10 max-w-lg mx-auto w-full px-5">
-          <div className="lp-animate flex items-center justify-center gap-2.5 mb-8">
-            <div className="w-9 h-9 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: "#FFFFFF" }}>
-              <span className="font-heading font-bold text-base leading-none" style={{ color: "#111111" }}>V</span>
+      {/* ══════════════════ HERO ══════════════════ */}
+      <section className="pt-24 pb-14 px-5" style={{ backgroundColor: WHITE }}>
+        <div className="max-w-lg mx-auto">
+
+          <div className="lp-animate flex justify-center mb-5">
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold" style={{ backgroundColor: "#EFF6FF", border: "1px solid #BFDBFE", color: "#1D4ED8" }}>
+              <span className="led w-2 h-2 rounded-full inline-block" style={{ backgroundColor: BLUE, boxShadow: `0 0 6px ${BLUE}` }} />
+              Smart AI Physical Isolation Adapter
+            </span>
+          </div>
+
+          <div className="lp-animate flex justify-center items-center gap-2.5 mb-5">
+            <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: ORANGE }}>
+              <span className="font-bold text-white text-sm">V</span>
             </div>
-            <div className="flex flex-col items-start leading-none">
-              <span className="font-heading font-bold text-lg text-white tracking-tight">VAZLINA</span>
-              <span className="text-[10px] font-medium mt-0.5 tracking-widest uppercase" style={{ color: ACCENT_D }}>Tecnología curada</span>
+            <div className="flex flex-col leading-none">
+              <span className="font-bold text-base tracking-tight" style={{ color: INK }}>VAZLINA</span>
+              <span className="text-[10px] font-semibold tracking-widest uppercase" style={{ color: ORANGE }}>Guard&#8482;</span>
             </div>
           </div>
-          <div className="lp-animate inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold tracking-widest mb-6" style={{ backgroundColor: "rgba(255,69,0,0.07)", color: ACCENT_D, border: "1px solid rgba(255,69,0,0.25)" }}>
-            VAZLINA GUARD™ · PROTECCIÓN INTELIGENTE
-          </div>
-          <h1 className="lp-animate lp-delay-1 text-4xl sm:text-5xl font-bold text-white leading-tight mb-5" style={{ letterSpacing: "-0.5px" }}>
-            Un solo dispositivo protege <span style={{ color: ACCENT_D }}>a tu familia</span> y <span style={{ color: ACCENT_D }}>tu bolsillo</span>.
+
+          <h1 className="lp-animate lp-delay-1 text-3xl sm:text-4xl font-bold text-center leading-tight mb-4" style={{ color: INK, letterSpacing: "-0.5px" }}>
+            Protege a tu familia del{" "}
+            <span style={{ color: ORANGE }}>fuego nocturno</span>{" "}
+            y salva la bateria de tu telefono{" "}
+            <span style={{ color: ORANGE }}>de morir antes de tiempo.</span>
           </h1>
-          <p className="lp-animate lp-delay-2 text-base text-gray-300 leading-relaxed mb-8">
-            Vazlina Guard corta la energía antes de que un cargador sobrecalentado cause un desastre mientras todos duermen — y detiene la sobrecarga que <strong className="text-white">destruye tu batería noche tras noche</strong>, para que no cambies de teléfono antes de tiempo.
+
+          <p className="lp-animate lp-delay-2 text-center text-sm leading-relaxed mb-6" style={{ color: MUTED }}>
+            Vazlina Guard usa <strong style={{ color: INK }}>Inteligencia Artificial</strong> para detectar sobrecargas y cortar fisicamente la energia.
+            Protege tu hogar <strong style={{ color: INK }}>y te ahorra cientos de miles de colones</strong> en baterias y telefonos nuevos.
           </p>
-          <a href="#oferta" className="lp-animate lp-delay-3 cta-attention inline-block px-10 py-4 rounded-2xl font-bold text-sm tracking-widest transition-all active:scale-95 hover:opacity-90" style={{ backgroundColor: "#FF4500", color: "#fff" }}>
-            PROTEGER LO QUE MÁS IMPORTA — <span className="font-heading tracking-tight"><span className="text-[10px] align-top">₡</span>17700</span>
-          </a>
-          <div className="lp-animate lp-delay-3 mt-4 flex items-center justify-center gap-4 flex-wrap text-xs text-gray-400">
-            <span>🚚 Envío gratis</span><span>💳 Pago al recibir</span><span>🛡️ Garantía 30 días</span><span>🏅 Calidad certificada</span>
-          </div>
-          <div className="lp-animate lp-delay-3 mt-6 mx-auto max-w-xs rounded-2xl overflow-hidden" style={{ backgroundColor: CARD, border: "1px solid #2A2E35" }}>
-            <button onClick={() => setReviewsOpen(!reviewsOpen)} className="w-full flex items-center justify-center gap-2 px-5 py-3.5">
-              <span className="flex gap-0.5">
-                {[...Array(5)].map((_, i) => (<Star key={i} size={13} fill="#F5B301" style={{ color: "#F5B301" }} />))}
+
+          <div className="lp-animate lp-delay-2 flex flex-wrap justify-center gap-2 mb-5">
+            {[
+              { e: "🚚", t: "Envio gratis" },
+              { e: "💳", t: "Pago al recibir" },
+              { e: "🛡️", t: "Garantia 30 dias" },
+              { e: "🏅", t: "Calidad certificada" },
+            ].map(({ e, t }) => (
+              <span key={t} className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full" style={{ backgroundColor: BG, border: `1px solid ${BORDER}`, color: INK }}>
+                {e} {t}
               </span>
-              <span className="text-xs font-bold text-white">1,247 Reseñas</span>
+            ))}
+          </div>
+
+          <div className="lp-animate lp-delay-2 mx-auto max-w-xs rounded-2xl overflow-hidden mb-7" style={{ border: `1px solid ${BORDER}` }}>
+            <button onClick={() => setReviewsOpen(!reviewsOpen)} className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-white">
+              <span className="flex gap-0.5">{[...Array(5)].map((_, i) => <Star key={i} size={13} fill="#F59E0B" style={{ color: "#F59E0B" }} />)}</span>
+              <span className="text-xs font-bold" style={{ color: INK }}>1,247 resenas verificadas</span>
               {reviewsOpen ? <ChevronUp size={14} className="text-gray-400" /> : <ChevronDown size={14} className="text-gray-400" />}
             </button>
             {reviewsOpen && (
-              <div className="px-5 pb-5 pt-4" style={{ borderTop: "1px solid #2A2E35" }}>
-                <div className="flex items-center justify-center gap-2 mb-4">
-                  <Star size={22} fill="#F5B301" style={{ color: "#F5B301" }} />
-                  <span className="font-heading text-3xl font-bold text-white">4.8</span>
-                </div>
-                {[
-                  { stars: 5, count: 1060 },
-                  { stars: 4, count: 187 },
-                  { stars: 3, count: 0 },
-                  { stars: 2, count: 0 },
-                  { stars: 1, count: 0 },
-                ].map(({ stars, count }) => (
-                  <div key={stars} className="flex items-center gap-2 mb-1.5">
-                    <div className="flex gap-0.5 w-16 shrink-0">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} size={10} fill={i < stars ? "#F5B301" : "transparent"} style={{ color: i < stars ? "#F5B301" : "#3A3E45" }} />
-                      ))}
+              <div className="px-4 pb-4 pt-3 bg-white" style={{ borderTop: `1px solid ${BORDER}` }}>
+                {[{ s: 5, c: 1060 }, { s: 4, c: 187 }, { s: 3, c: 0 }, { s: 2, c: 0 }, { s: 1, c: 0 }].map(({ s, c }) => (
+                  <div key={s} className="flex items-center gap-2 mb-1.5">
+                    <div className="flex gap-0.5 w-14 shrink-0">{[...Array(5)].map((_, i) => <Star key={i} size={9} fill={i < s ? "#F59E0B" : "transparent"} style={{ color: i < s ? "#F59E0B" : BORDER }} />)}</div>
+                    <div className="flex-1 h-1.5 rounded-full" style={{ backgroundColor: BG }}>
+                      <div className="h-full rounded-full" style={{ width: `${c > 0 ? Math.max((c / 1247) * 100, 3) : 0}%`, backgroundColor: ORANGE }} />
                     </div>
-                    <div className="flex-1 h-1.5 rounded-full" style={{ backgroundColor: "#2A2E35" }}>
-                      <div className="h-full rounded-full" style={{ width: `${count > 0 ? Math.max((count / 1247) * 100, 3) : 0}%`, backgroundColor: SILVER }} />
-                    </div>
-                    <span className="text-[10px] text-gray-400 w-8 text-right tabular-nums">{count.toLocaleString("es-CR")}</span>
+                    <span className="text-[10px] text-gray-400 w-8 text-right tabular-nums">{c.toLocaleString()}</span>
                   </div>
                 ))}
               </div>
             )}
           </div>
-        </div>
-        <div className="lp-animate lp-delay-3 mt-8 overflow-hidden shadow-2xl w-full">
-          <Img src="/lp-guard/hero.jpg" label="hero.jpg — collage lifestyle (mujer trabajando, pareja durmiendo)" className="w-full block" />
+
+          <div className="lp-animate lp-delay-2 rounded-3xl overflow-hidden mb-7 shadow-md" style={{ border: `1px solid ${BORDER}` }}>
+            <Img src="/lp-guard/hero.jpg" label="Vazlina Guard — producto naranja metalico sobre superficie premium, fondo oscuro elegante" className="w-full" />
+          </div>
+
+          <a href="#oferta" className="lp-animate lp-delay-3 cta-btn block text-center py-4 rounded-2xl font-bold text-sm tracking-widest text-white active:scale-95 transition-transform" style={{ backgroundColor: ORANGE }}>
+            PROTEGER MI HOGAR Y MI BATERIA — &#8353;17,700
+          </a>
+          <p className="text-center text-xs mt-3" style={{ color: MUTED }}>Pagas solo cuando recibes el producto</p>
         </div>
       </section>
 
-      {/* ── PROBLEMA / PELIGRO ── */}
-      <section className="py-20" style={{ backgroundColor: NIGHT, borderTop: "1px solid #2A2E35" }}>
-        <div className="max-w-lg mx-auto px-5">
-          <h2 className="lp-animate text-3xl font-bold text-white text-center mb-3" style={{ fontFamily: "Georgia, serif" }}>
-            Dos riesgos silenciosos.<br /><span style={{ color: ACCENT_D }}>Un mismo culpable: tu cargador.</span>
+      {/* ══════════════════ DANGER — FUEGO (dark) ══════════════════ */}
+      <section className="py-20 px-5" style={{ backgroundColor: NIGHT }}>
+        <div className="max-w-lg mx-auto">
+          <div className="lp-animate flex justify-center mb-5">
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold" style={{ backgroundColor: "rgba(239,68,68,0.12)", color: "#EF4444", border: "1px solid rgba(239,68,68,0.3)" }}>
+              <Flame size={12} /> EL PELIGRO QUE NO VES
+            </span>
+          </div>
+          <h2 className="lp-animate text-3xl font-bold text-white text-center mb-3 leading-tight">
+            Esta noche tu telefono cargara{" "}
+            <span style={{ color: "#EF4444" }}>mientras todos duermen.</span>
           </h2>
-          <p className="lp-animate lp-delay-1 text-center text-gray-400 text-sm leading-relaxed mb-10">
-            Cada noche, tu cargador queda enchufado 8 horas seguidas. Eso tiene dos consecuencias que casi nadie ve venir — hasta que es tarde.
+          <p className="lp-animate lp-delay-1 text-center text-sm leading-relaxed mb-10" style={{ color: "#9CA3AF" }}>
+            Un cargador enchufado 8 horas seguidas no es normal — es peligroso. El sobrecalentamiento es la causa #1 de incendios electricos en el hogar.
           </p>
         </div>
 
-        <div className="lp-animate lp-delay-1 overflow-hidden mb-10 shadow-2xl w-full">
-          <Img src="/lp-guard/peligro.jpg" label="peligro.jpg — anuncio oscuro 'Corta la energía antes de que ocurran desastres'" className="w-full block" />
+        <div className="lp-animate lp-delay-1 w-full mb-10 overflow-hidden">
+          <Img src="/lp-guard/peligro.jpg" label="Telefono cargando bajo almohada en cuarto oscuro — glow naranja/rojo de calor en el cable. Dramatico, cinematico." className="w-full" />
         </div>
 
-        <div className="max-w-lg mx-auto px-5">
-          <div className="space-y-4">
-            {[
-              { Icon: Flame, title: "Sobrecalentamiento nocturno", sub: "Un cargador caliente durante 8 horas es la causa #1 de incendios eléctricos en el hogar. Y ocurre mientras todos duermen — incluidos tus hijos.", delay: "" },
-              { Icon: Zap, title: "Cortocircuitos sin aviso", sub: "Una falla eléctrica toma milisegundos. El fuego toma minutos. Tu familia no tiene tiempo de reaccionar.", delay: "lp-delay-1" },
-              { Icon: BatteryCharging, title: "La sobrecarga mata tu batería", sub: "Cargar toda la noche degrada tu batería carga tras carga. Por eso a los 2 años tu teléfono 'ya no dura nada' — y terminás pagando un cambio de batería o un teléfono nuevo.", delay: "lp-delay-2" },
-              { Icon: ShieldCheck, title: "Tus hijos no conocen el peligro", sub: "Los adolescentes dejan el teléfono cargando bajo la almohada toda la noche. Ellos no miden el riesgo — vos sí podés protegerlos.", delay: "lp-delay-3" },
-            ].map(({ Icon, title, sub, delay }) => (
-              <div key={title} className={`lp-animate ${delay} flex gap-4 rounded-2xl p-5`} style={{ backgroundColor: CARD, border: "1px solid #2A2E35" }}>
-                <div className="shrink-0 w-11 h-11 rounded-xl flex items-center justify-center" style={{ backgroundColor: "rgba(255,255,255,0.06)" }}>
-                  <Icon size={20} style={{ color: ACCENT_D }} />
-                </div>
-                <div>
-                  <h3 className="font-bold text-white text-sm mb-1">{title}</h3>
-                  <p className="text-gray-400 text-xs leading-relaxed">{sub}</p>
-                </div>
+        <div className="max-w-lg mx-auto space-y-4">
+          {[
+            { Icon: Flame, color: "#EF4444", title: "Sobrecalentamiento nocturno", body: "Un cargador enchufado toda la noche alcanza hasta 60 grados — suficiente para encender la tela de tu almohada o colchon mientras duermes." },
+            { Icon: Zap, color: "#F59E0B", title: "Cortocircuito en milisegundos", body: "Una falla electrica toma 0.001 segundos. El fuego se propaga en minutos. Tu familia no tiene tiempo de reaccionar dormida." },
+            { Icon: Smartphone, color: "#EF4444", title: "Tus hijos cargan bajo la almohada", body: "Los adolescentes dejan el telefono cargando dentro de la cama. Vos podes protegerlos con un solo adaptador." },
+          ].map(({ Icon, color, title, body }) => (
+            <div key={title} className="lp-animate flex gap-4 rounded-2xl p-5" style={{ backgroundColor: NIGHT_CARD, border: `1px solid ${NIGHT_BORDER}` }}>
+              <div className="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: `${color}18` }}>
+                <Icon size={18} style={{ color }} />
               </div>
-            ))}
-          </div>
+              <div>
+                <h3 className="font-bold text-white text-sm mb-1">{title}</h3>
+                <p className="text-xs leading-relaxed" style={{ color: "#9CA3AF" }}>{body}</p>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* ── SOLUCIÓN ── */}
-      <section className="py-20" style={{ backgroundColor: IVORY }}>
-        <div className="max-w-lg mx-auto px-5 text-center">
-          <div className="lp-animate inline-block px-4 py-1 rounded-full text-xs font-bold tracking-widest mb-4 text-white" style={{ backgroundColor: ACCENT }}>LA SOLUCIÓN</div>
-          <h2 className="lp-animate text-3xl font-bold mb-3" style={{ color: INK }}>
-            Un solo dispositivo. <span style={{ color: ACCENT }}>Dos protecciones.</span>
+      {/* ══════════════════ BATTERY DRAIN — DINERO (light) ══════════════════ */}
+      <section className="py-20 px-5" style={{ backgroundColor: BG }}>
+        <div className="max-w-lg mx-auto">
+          <div className="lp-animate flex justify-center mb-5">
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold" style={{ backgroundColor: "rgba(230,92,0,0.08)", color: ORANGE, border: `1px solid rgba(230,92,0,0.3)` }}>
+              <BatteryCharging size={12} /> EL COSTO OCULTO
+            </span>
+          </div>
+          <h2 className="lp-animate text-3xl font-bold text-center mb-3 leading-tight" style={{ color: INK }}>
+            La sobrecarga nocturna{" "}
+            <span style={{ color: ORANGE }}>te esta costando dinero.</span>
           </h2>
-          <p className="lp-animate lp-delay-1 text-gray-500 text-sm leading-relaxed mb-10">
-            Monitorea el flujo eléctrico en tiempo real: <strong>corta la energía antes de un desastre</strong> y <strong>detiene la carga al 100%</strong> para que tu batería dure años más.
+          <p className="lp-animate lp-delay-1 text-center text-sm leading-relaxed mb-10" style={{ color: MUTED }}>
+            Cargar el telefono toda la noche destruye la bateria poco a poco.
+            Por eso a los 2 anos tu telefono &ldquo;ya no dura nada&rdquo; —{" "}
+            <strong style={{ color: INK }}>no es el telefono, es tu cargador.</strong>
           </p>
         </div>
 
-        <div className="lp-animate lp-delay-1 flex flex-col mb-10 w-full">
-          <div className="overflow-hidden shadow-lg">
-            <Img src="/lp-guard/product.jpg" label="product.jpg — producto sobre tela beige" className="w-full block" />
-          </div>
-          <div className="overflow-hidden shadow-lg">
-            <Img src="/lp-guard/demo.jpg" label="demo.jpg — producto real en mano" className="w-full block" />
-          </div>
+        <div className="lp-animate lp-delay-1 w-full mb-10 overflow-hidden">
+          <Img src="/lp-guard/bateria.jpg" label="Mano con telefono en 0% y bateria rota — billetes quemados desenfocados atras. Concepto perdida financiera." className="w-full" />
         </div>
 
-        <div className="max-w-lg mx-auto px-5 text-center">
-          <div className="space-y-4 text-left">
-            {[
-              { n: "1", title: "Conectalo en segundos", sub: "Directo al puerto USB-C de tu teléfono — o entre la cabeza del cargador y el cable (ideal para iPhone con Lightning). Plug & play, sin apps.", delay: "" },
-              { n: "2", title: "Monitorea el flujo eléctrico en tiempo real", sub: "Su chip interno vigila temperatura, voltaje y corriente durante toda la carga.", delay: "lp-delay-1" },
-              { n: "3", title: "Corta la energía si detecta una anomalía", sub: "Sobrecalentamiento, sobrecarga o cortocircuito: corta en milisegundos. Y al llegar al 100%, detiene la carga.", delay: "lp-delay-2" },
-            ].map(({ n, title, sub, delay }) => (
-              <div key={n} className={`lp-animate ${delay} flex gap-4 items-start rounded-2xl p-5 bg-white border border-gray-200`}>
-                <div className="shrink-0 w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white" style={{ backgroundColor: ACCENT }}>{n}</div>
-                <div>
-                  <h3 className="font-bold text-sm mb-1" style={{ color: INK }}>{title}</h3>
-                  <p className="text-xs text-gray-500 leading-relaxed">{sub}</p>
-                </div>
+        <div className="max-w-lg mx-auto space-y-4">
+          <div className="lp-animate rounded-3xl overflow-hidden" style={{ border: `1px solid ${BORDER}`, backgroundColor: WHITE }}>
+            <div className="px-5 py-4 flex items-center justify-between" style={{ borderBottom: `1px solid ${BORDER}` }}>
+              <div>
+                <p className="font-semibold text-sm" style={{ color: INK }}>Telefono nuevo (bateria muerta)</p>
+                <p className="text-xs text-gray-400">Cada 2-3 anos</p>
               </div>
-            ))}
+              <p className="font-bold text-lg line-through text-gray-400">&#8353;250,000+</p>
+            </div>
+            <div className="px-5 py-4 flex items-center justify-between" style={{ borderBottom: `1px solid ${BORDER}` }}>
+              <div>
+                <p className="font-semibold text-sm" style={{ color: INK }}>Cambio de bateria</p>
+                <p className="text-xs text-gray-400">Cada 1-2 anos</p>
+              </div>
+              <p className="font-bold text-lg line-through text-gray-400">&#8353;25,000+</p>
+            </div>
+            <div className="px-5 py-4 flex items-center justify-between" style={{ backgroundColor: "rgba(230,92,0,0.04)" }}>
+              <div>
+                <p className="font-bold text-sm" style={{ color: ORANGE }}>Vazlina Guard&#8482;</p>
+                <p className="text-xs text-gray-500">Tu bateria dura anos mas. Una sola vez.</p>
+              </div>
+              <p className="font-bold text-xl" style={{ color: ORANGE }}>&#8353;17,700</p>
+            </div>
           </div>
 
-          <div className="lp-animate lp-delay-3 mt-5 rounded-2xl p-5 flex gap-4 items-start text-left" style={{ backgroundColor: "rgba(17,17,17,0.06)", border: "1.5px solid rgba(17,17,17,0.3)" }}>
-            <Smartphone size={22} style={{ color: ACCENT }} className="shrink-0 mt-0.5" />
+          <div className="lp-animate lp-delay-1 rounded-2xl p-5 flex gap-3 items-start" style={{ backgroundColor: "rgba(230,92,0,0.06)", border: "1.5px solid rgba(230,92,0,0.25)" }}>
+            <BatteryCharging size={20} style={{ color: ORANGE }} className="shrink-0 mt-0.5" />
             <p className="text-sm leading-relaxed" style={{ color: INK }}>
-              <strong>Funciona con TODOS los teléfonos — incluso iPhone anteriores al 15.</strong> Si tu iPhone usa cable Lightning (iPhone 14, 13, 12, X...), colocás Guard entre la cabeza del cargador y el cable: la protección es exactamente la misma. iPhone 15 en adelante y Android: conexión directa al puerto USB-C. Tablets y laptops también quedan protegidas.
+              <strong>Guard se paga solo en el primer mes.</strong> Un solo cambio de bateria evitado cubre el costo del adaptador. Cada noche sin proteccion, tu bateria pierde vida util.
             </p>
           </div>
         </div>
       </section>
 
-      {/* ── ANGLE 2: AHORRO / BATERÍA ── */}
-      <section className="py-20 px-5 bg-white">
+      {/* ══════════════════ HOW IT WORKS + COMPATIBILITY ══════════════════ */}
+      <section className="py-20 px-5" style={{ backgroundColor: WHITE }}>
         <div className="max-w-lg mx-auto">
-          <h2 className="lp-animate text-3xl font-bold text-center mb-3" style={{ color: INK }}>
-            Y no solo protege tu casa.<br /><span style={{ color: ACCENT }}>Protege tu bolsillo.</span>
+          <div className="lp-animate flex justify-center mb-5">
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold text-white" style={{ backgroundColor: ORANGE }}>
+              <Zap size={12} /> COMO FUNCIONA
+            </span>
+          </div>
+          <h2 className="lp-animate text-3xl font-bold text-center mb-3 leading-tight" style={{ color: INK }}>
+            Compatible con{" "}
+            <span style={{ color: ORANGE }}>TODOS los dispositivos.</span>
           </h2>
-          <p className="lp-animate lp-delay-1 text-center text-gray-500 text-sm leading-relaxed mb-10">
-            La sobrecarga nocturna destruye tu batería poco a poco. Por eso a los 2 años tu teléfono "ya no dura nada". <strong>No es el teléfono — es tu cargador.</strong> Guard detiene la carga al 100% automáticamente.
+          <p className="lp-animate lp-delay-1 text-center text-sm leading-relaxed mb-10" style={{ color: MUTED }}>
+            Android, iPhone Lightning, iPhone 15+, tablets y laptops. Un Guard protege todo.
           </p>
 
-          <div className="lp-animate lp-delay-1 rounded-3xl overflow-hidden border border-gray-200 mb-6">
-            <div className="px-5 py-4 flex items-center justify-between border-b border-gray-100">
+          <div className="space-y-5 mb-8">
+            <div className="lp-animate flex gap-4 items-start p-5 rounded-2xl" style={{ backgroundColor: BG, border: `1px solid ${BORDER}` }}>
+              <div className="shrink-0 w-9 h-9 rounded-full flex items-center justify-center font-bold text-white text-sm" style={{ backgroundColor: ORANGE }}>1</div>
               <div>
-                <p className="font-semibold text-sm" style={{ color: INK }}>Teléfono nuevo</p>
-                <p className="text-xs text-gray-400">Cuando la batería "muere" para siempre</p>
+                <h3 className="font-bold text-sm mb-1" style={{ color: INK }}>Android e iPhone 15+ (USB-C)</h3>
+                <p className="text-xs leading-relaxed" style={{ color: MUTED }}>Conectas Guard directo al puerto USB-C del telefono, despues enchufas el cable. Plug and play — listo en 5 segundos.</p>
               </div>
-              <p className="font-heading font-bold text-lg text-gray-400 tracking-tight"><s><span className="text-xs align-top">₡</span>200000+</s></p>
             </div>
-            <div className="px-5 py-4 flex items-center justify-between border-b border-gray-100">
-              <div>
-                <p className="font-semibold text-sm" style={{ color: INK }}>Cambio de batería</p>
-                <p className="text-xs text-gray-400">Cada 1-2 años, si tenés suerte</p>
-              </div>
-              <p className="font-heading font-bold text-lg text-gray-400 tracking-tight"><s><span className="text-xs align-top">₡</span>25000+</s></p>
+
+            <div className="lp-animate lp-delay-1 rounded-2xl overflow-hidden shadow-md">
+              <Img src="/lp-guard/usbc.jpg" label="Guard conectado al puerto USB-C del telefono. Product photography, fondo blanco limpio." className="w-full" />
             </div>
-            <div className="px-5 py-4 flex items-center justify-between" style={{ backgroundColor: "rgba(17,17,17,0.05)" }}>
-              <div>
-                <p className="font-bold text-sm" style={{ color: ACCENT }}>Vazlina Guard™</p>
-                <p className="text-xs text-gray-500">Tu batería dura años más. Pagás una sola vez.</p>
+
+            <div className="lp-animate lp-delay-1 rounded-2xl overflow-hidden" style={{ border: `2px solid ${ORANGE}`, backgroundColor: WHITE }}>
+              <div className="px-5 pt-4 pb-3">
+                <div className="flex gap-3 items-start mb-2">
+                  <div className="shrink-0 w-9 h-9 rounded-full flex items-center justify-center font-bold text-white text-sm" style={{ backgroundColor: ORANGE }}>2</div>
+                  <div>
+                    <h3 className="font-bold text-sm" style={{ color: INK }}>iPhone con cable Lightning (iPhone 14, 13, 12...)</h3>
+                    <p className="text-xs font-semibold" style={{ color: ORANGE }}>Solucion especial — misma proteccion</p>
+                  </div>
+                </div>
+                <p className="text-xs leading-relaxed ml-12" style={{ color: MUTED }}>
+                  Coloca Guard entre el <strong style={{ color: INK }}>bloque del cargador</strong> (el cubo que va al enchufe) y el <strong style={{ color: INK }}>cable Lightning</strong>. La proteccion es exactamente la misma.
+                </p>
               </div>
-              <p className="font-heading font-bold text-xl tracking-tight" style={{ color: ACCENT }}><span className="text-xs align-top mr-0.5">₡</span><span className="text-2xl">17700</span></p>
+              <Img src="/lp-guard/lightning.jpg" label="Guard entre el bloque cargador Apple y el cable Lightning. Muy claro y didactico. Fondo blanco." className="w-full" />
+            </div>
+
+            <div className="lp-animate lp-delay-2 flex gap-4 items-start p-5 rounded-2xl" style={{ backgroundColor: BG, border: `1px solid ${BORDER}` }}>
+              <div className="shrink-0 w-9 h-9 rounded-full flex items-center justify-center font-bold text-white text-sm" style={{ backgroundColor: INK }}>3</div>
+              <div>
+                <h3 className="font-bold text-sm mb-1" style={{ color: INK }}>Tablets y Laptops — tambien protegidos</h3>
+                <p className="text-xs leading-relaxed" style={{ color: MUTED }}>Guard protege cualquier dispositivo USB-C: iPad, MacBook, laptop Windows. Un Guard por cargador.</p>
+              </div>
+            </div>
+
+            <div className="lp-animate lp-delay-2 rounded-2xl overflow-hidden shadow-md">
+              <Img src="/lp-guard/tablets.jpg" label="Laptop y tablet cargando en escritorio moderno. Guard visible en el cable. Luz natural, lifestyle premium." className="w-full" />
             </div>
           </div>
 
-          <div className="lp-animate lp-delay-2 rounded-2xl p-5 flex gap-4 items-start" style={{ backgroundColor: IVORY }}>
-            <BatteryCharging size={24} style={{ color: ACCENT }} className="shrink-0 mt-0.5" />
-            <p className="text-sm leading-relaxed" style={{ color: INK }}>
-              <strong>Cada noche que cargás sin protección, tu batería pierde vida útil.</strong> Guard paga por sí mismo evitando un solo cambio de batería — y te salva de comprar un teléfono nuevo antes de tiempo.
+          <div className="lp-animate rounded-2xl p-5 flex gap-3 items-start" style={{ backgroundColor: "#EFF6FF", border: "1.5px solid #BFDBFE" }}>
+            <span className="led shrink-0 w-3 h-3 rounded-full mt-0.5" style={{ backgroundColor: BLUE, boxShadow: `0 0 8px ${BLUE}`, display: "inline-block" }} />
+            <p className="text-sm leading-relaxed" style={{ color: "#1E3A8A" }}>
+              <strong>El chip AI monitorea el voltaje en tiempo real.</strong> Al detectar el 100% o una anomalia electrica, corta fisicamente la corriente — sin apps, sin configuracion. Siempre activo.
             </p>
           </div>
         </div>
       </section>
 
-      {/* ── CARACTERÍSTICAS ── */}
-      <section className="py-20" style={{ backgroundColor: NIGHT }}>
-        <div className="max-w-lg mx-auto px-5">
-          <h2 className="lp-animate text-3xl font-bold text-white text-center mb-2">La seguridad que no podés ver,</h2>
-          <h2 className="lp-animate lp-delay-1 text-3xl font-bold text-center mb-12" style={{ color: ACCENT_D }}>la tranquilidad que sí podés sentir.</h2>
-        </div>
+      {/* ══════════════════ WHATSAPP REVIEWS ══════════════════ */}
+      <section className="py-20 px-5" style={{ backgroundColor: BG }}>
+        <div className="max-w-lg mx-auto">
+          <h2 className="lp-animate text-3xl font-bold text-center mb-2" style={{ color: INK }}>
+            Clientes que ya duermen{" "}
+            <span style={{ color: ORANGE }}>tranquilos cada noche.</span>
+          </h2>
+          <div className="lp-animate lp-delay-1 flex justify-center items-center gap-1 mb-10">
+            {[...Array(5)].map((_, i) => <Star key={i} size={15} fill="#F59E0B" style={{ color: "#F59E0B" }} />)}
+            <span className="ml-1.5 text-sm font-semibold" style={{ color: MUTED }}>Resenas verificadas</span>
+          </div>
 
-        <div className="lp-animate lp-delay-1 overflow-hidden mb-10 shadow-2xl w-full">
-          <Img src="/lp-guard/familia.jpg" label="familia.jpg — anuncio 'Protege a tus hijos'" className="w-full block" />
-        </div>
-
-        <div className="max-w-lg mx-auto px-5">
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div className="lp-animate space-y-5">
             {[
-              { Icon: Zap, title: "Corte Automático", sub: "Detecta fallas eléctricas y corta la energía en milisegundos.", delay: "" },
-              { Icon: Flame, title: "Prevención de Incendios", sub: "Reduce el riesgo de incendios causados por sobrecargas o fallas eléctricas.", delay: "lp-delay-1" },
-              { Icon: BatteryCharging, title: "Protección de Batería", sub: "Detiene la carga al 100%. Tu batería dura años más, sin degradación nocturna.", delay: "lp-delay-2" },
-              { Icon: Smartphone, title: "Compatible con TODO", sub: "iPhone de cualquier modelo (incluso con Lightning), Android, tablets y laptops. Un Guard para cada cargador de la casa.", delay: "lp-delay-3" },
-            ].map(({ Icon, title, sub, delay }) => (
-              <div key={title} className={`lp-animate ${delay} rounded-2xl p-5`} style={{ backgroundColor: CARD, border: "1px solid #2A2E35" }}>
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style={{ backgroundColor: "rgba(255,255,255,0.06)" }}>
-                  <Icon size={18} style={{ color: ACCENT_D }} />
+              {
+                init: "M", num: "+506 88\u25CF\u25CF\u25CF\u25CF\u25CF\u25CF2",
+                msgs: [
+                  { text: "Mi esposo cargaba el celular toda la noche y el telefono amanecia caliente. Desde que pusimos el Guard ya no pasa eso.", mine: false, time: "8:40 pm" },
+                  { text: "Ademas la bateria mejoro, antes al mediodia ya estaba al 40%", mine: false, time: "8:41 pm" },
+                  { text: "Que bueno! Eso es exactamente para lo que esta disenado", mine: true, time: "8:42 pm" },
+                ],
+              },
+              {
+                init: "C", num: "+506 72\u25CF\u25CF\u25CF\u25CF\u25CF\u25CF7",
+                msgs: [
+                  { text: "Tengo iPhone 13 y me explicaron como conectarlo entre el cargador y el cable. Sencillisimo", mine: false, time: "3:15 pm" },
+                  { text: "Mi bateria ya no baja al 30% antes de las 6pm como antes", mine: false, time: "3:16 pm" },
+                  { text: "Perfecto, eso es lo que queriamos escuchar!", mine: true, time: "3:17 pm" },
+                ],
+              },
+              {
+                init: "R", num: "+506 63\u25CF\u25CF\u25CF\u25CF\u25CF\u25CF4",
+                msgs: [
+                  { text: "Soy papa de tres hijos adolescentes que cargan bajo la almohada. Me preocupaba mucho el tema del fuego", mine: false, time: "9:20 pm" },
+                  { text: "Compre 3 y los coloque en cada cuarto. Dormimos mucho mas tranquilos ahora", mine: false, time: "9:21 pm" },
+                  { text: "Eso nos alegra muchisimo, familia protegida!", mine: true, time: "9:22 pm" },
+                ],
+              },
+            ].map((chat, ci) => (
+              <div key={ci} className="lp-animate rounded-2xl overflow-hidden shadow-md">
+                <div className="px-4 py-3 flex items-center gap-3" style={{ backgroundColor: "#075E54" }}>
+                  <div className="w-9 h-9 rounded-full flex items-center justify-center shrink-0 font-bold text-white text-sm" style={{ backgroundColor: "#128C7E" }}>
+                    {chat.init}
+                  </div>
+                  <div>
+                    <p className="text-white text-sm font-semibold">{chat.num}</p>
+                    <p className="text-white/60 text-xs">en linea</p>
+                  </div>
                 </div>
-                <h3 className="font-bold text-white text-sm mb-2">{title}</h3>
-                <p className="text-gray-400 text-xs leading-relaxed">{sub}</p>
+                <div className="p-4 space-y-2" style={{ backgroundColor: WA_BG }}>
+                  {chat.msgs.map((msg, mi) => (
+                    <div key={mi} className={`flex ${msg.mine ? "justify-end" : "justify-start"}`}>
+                      <div className="max-w-[80%] rounded-xl px-3 py-2 shadow-sm" style={{ backgroundColor: msg.mine ? "#DCF8C6" : WHITE }}>
+                        <p className="text-sm text-gray-800 leading-snug">{msg.text}</p>
+                        <p className="text-[10px] text-gray-400 text-right mt-0.5">
+                          {msg.time}
+                          {msg.mine ? <span className="ml-1" style={{ color: "#4FC3F7" }}>&#10003;&#10003;</span> : <span className="ml-1">&#10003;&#10003;</span>}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── OFERTA ── */}
-      <section ref={offerRef} id="oferta" className="py-20 px-4 scroll-mt-16" style={{ backgroundColor: IVORY }}>
+      {/* ══════════════════ OFFER / BUNDLES ══════════════════ */}
+      <section ref={offerRef as React.RefObject<HTMLElement>} id="oferta" className="py-20 px-4 scroll-mt-14" style={{ backgroundColor: WHITE }}>
         <div className="max-w-lg mx-auto">
-          <h2 className="lp-animate text-3xl font-bold text-center mb-2" style={{ color: INK }}>Elegí tu protección</h2>
-          <p className="lp-animate lp-delay-1 text-center text-gray-500 text-sm mb-3">Pago al recibir · Envío gratis · Garantía 30 días</p>
+          <h2 className="lp-animate text-3xl font-bold text-center mb-2" style={{ color: INK }}>Elige tu proteccion</h2>
+          <p className="lp-animate lp-delay-1 text-center text-sm mb-5" style={{ color: MUTED }}>Pago al recibir · Envio gratis · Garantia 30 dias</p>
 
-          <div className="lp-animate lp-delay-1 mb-10 flex justify-center">
-            <div className="pulse inline-flex items-center gap-2 px-6 py-3.5 rounded-full font-extrabold text-base" style={{ background: "#111111", color: "#fff", border: "2px solid #FF4500", boxShadow: "0 4px 20px rgba(255,69,0,0.35)" }}>
-              <Timer size={18} />
-              <span>La oferta termina en <span className="tabular-nums text-lg" style={{ color: "#FF4500" }}>{timer}</span></span>
+          <div className="lp-animate lp-delay-1 flex justify-center mb-8">
+            <div className="pulse inline-flex items-center gap-2 px-5 py-3 rounded-full font-bold text-sm text-white" style={{ backgroundColor: INK, border: `2px solid ${ORANGE}`, boxShadow: `0 4px 20px rgba(230,92,0,0.3)` }}>
+              <Timer size={16} style={{ color: ORANGE }} />
+              <span>Oferta termina en <span className="tabular-nums" style={{ color: ORANGE }}>{timer}</span></span>
             </div>
           </div>
 
-          <div className="lp-animate lp-delay-1 space-y-5">
+          <div className="lp-animate lp-delay-1 space-y-4 mb-8">
             {BUNDLES.map((b) => (
-              <div
-                key={b.id}
-                className={`bundle-card ${bundle.id === b.id ? "active" : ""}`}
-                onClick={() => setBundle(b)}
-              >
+              <div key={b.id} className={`bundle-card ${bundle.id === b.id ? "active" : ""}`} onClick={() => setBundle(b)}>
                 {b.best && (
-                  <div className="text-center py-2 text-xs font-bold tracking-widest text-white" style={{ backgroundColor: ACCENT }}>
-                    🔥 MEJOR OFERTA — EL MÁS ELEGIDO
+                  <div className="text-center py-2 text-xs font-bold tracking-widest text-white" style={{ backgroundColor: ORANGE }}>
+                    MEJOR OFERTA — EL MAS ELEGIDO
                   </div>
                 )}
                 <div className="p-5">
-                  <div className="flex items-start justify-between mb-2">
+                  <div className="flex items-start justify-between mb-3">
                     <div>
-                      <h3 className="font-bold text-base text-white">{b.shortName}</h3>
-                      <p className="text-xs text-gray-500 mt-0.5">{b.note}</p>
+                      <h3 className="font-bold text-base" style={{ color: INK }}>{b.shortName}</h3>
+                      <p className="text-xs mt-0.5" style={{ color: MUTED }}>{b.note}</p>
                     </div>
-                    <div className="text-right shrink-0 ml-3">
-                      <p className="text-[11px] text-gray-500 leading-tight mb-0.5 tracking-tight"><s>₡{b.oldPrice}</s></p>
-                      <p className="font-heading font-bold leading-none tracking-tight" style={{ color: ACCENT }}>
-                        <span className="text-[15px] align-top mr-0.5">₡</span><span className="text-[28px]">{b.price}</span>
-                      </p>
+                    <div className="text-right ml-3 shrink-0">
+                      <p className="text-xs text-gray-400 line-through">&#8353;{b.oldPrice.toLocaleString()}</p>
+                      <p className="font-bold text-2xl leading-none" style={{ color: ORANGE }}>&#8353;{b.price.toLocaleString()}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2 mb-4">
-                    <span className="text-xs font-extrabold px-2 py-0.5 rounded-full" style={{ backgroundColor: "#FF4500", color: "#fff" }}>{b.save}</span>
-                    <span className="text-xs text-gray-400 flex items-center gap-1"><Truck size={11} /> Envío gratis</span>
+                    <span className="text-xs font-bold px-2.5 py-0.5 rounded-full text-white" style={{ backgroundColor: ORANGE }}>{b.save}</span>
+                    <span className="text-xs flex items-center gap-1" style={{ color: MUTED }}><Truck size={11} /> Envio gratis</span>
                   </div>
                   <button
                     onClick={(e) => { e.stopPropagation(); openCheckout(b); }}
-                    className="w-full py-3.5 rounded-2xl text-white font-bold text-sm tracking-wider transition-all active:scale-95"
-                    style={{ backgroundColor: ACCENT }}
+                    className="cta-btn w-full py-3.5 rounded-2xl text-white font-bold text-sm tracking-wider active:scale-95 transition-transform"
+                    style={{ backgroundColor: ORANGE }}
                   >
                     ORDENAR AHORA
                   </button>
@@ -472,145 +541,38 @@ export default function GuardPage() {
             ))}
           </div>
 
-          <p className="lp-animate text-center text-xs text-gray-400 mt-6 leading-relaxed">
-            🔒 Pagás únicamente cuando recibís el producto.<br />Si no te convence, te devolvemos tu dinero.
-          </p>
+          <div className="lp-animate rounded-2xl p-5" style={{ backgroundColor: BG, border: `1px solid ${BORDER}` }}>
+            <div className="flex flex-wrap gap-3 justify-center">
+              {[
+                { Icon: ShieldCheck, text: "Pago 100% seguro al recibir" },
+                { Icon: Truck, text: "Envio gratis a todo CR" },
+                { Icon: BatteryCharging, text: "Garantia 30 dias" },
+                { Icon: Smartphone, text: "Soporte por WhatsApp" },
+              ].map(({ Icon, text }) => (
+                <div key={text} className="flex items-center gap-1.5 text-xs font-medium" style={{ color: INK }}>
+                  <Icon size={13} style={{ color: ORANGE }} /> {text}
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* ── REVIEWS WHATSAPP ── */}
-      <section className="py-20 px-4" style={{ backgroundColor: IVORY }}>
+      {/* ══════════════════ FAQ ══════════════════ */}
+      <section className="py-16 px-5" style={{ backgroundColor: BG }}>
         <div className="max-w-lg mx-auto">
-          <h2 className="lp-animate text-3xl font-bold text-center mb-2" style={{ color: INK }}>Clientes que ya probaron Vazlina Guard</h2>
-          <div className="lp-animate lp-delay-1 flex justify-center items-center gap-1 mb-8">
-            {[...Array(5)].map((_, i) => <Star key={i} size={16} fill="#F5B301" style={{ color: "#F5B301" }} />)}
-            <span className="ml-2 text-sm text-gray-600">Reseñas verificadas</span>
-          </div>
-
-          <div className="lp-animate lp-delay-1 space-y-6">
-            {/* Chat 1 */}
-            <div className="rounded-2xl overflow-hidden shadow-lg">
-              <div className="px-4 py-3 flex items-center gap-3" style={{ backgroundColor: "#075E54" }}>
-                <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 relative" style={{ backgroundColor: "#5B6770" }}>
-                  <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #C0392B 0%, #E67E22 40%, #D4A574 100%)" }} />
-                  <svg className="absolute inset-0 w-full h-full" viewBox="0 0 40 40" preserveAspectRatio="none"><path d="M0,0 Q8,4 5,12 Q3,20 7,28 Q4,35 12,38 Q20,36 28,39 Q35,37 40,33 Q38,25 40,18 Q37,10 40,5 Q35,1 28,3 Q20,0 12,2 Q5,3 0,0 Z" fill="#0a0a0a" /></svg>
-                </div>
-                <div>
-                  <p className="text-white text-sm font-semibold">+506 84<svg className="inline-block align-middle mx-0.5" width="46" height="18" viewBox="0 0 46 18"><path d="M2,6 Q5,3 10,5 L18,4 Q24,2 30,5 L38,4 Q42,6 44,9 L43,13 Q38,15 30,13 L20,14 Q12,16 6,13 Q1,11 2,6 Z" fill="#0a0a0a" /></svg>9</p>
-                  <p className="text-white/60 text-xs">en línea</p>
-                </div>
-              </div>
-              <div className="p-4 space-y-2.5" style={{ backgroundColor: WA_BG }}>
-                <div className="max-w-[85%] rounded-xl rounded-tl-none px-3 py-2 shadow-sm" style={{ backgroundColor: "#fff" }}>
-                  <p className="text-sm text-gray-800 leading-snug">No les escribí hasta que pasaron 2 días para probarlo bien y asegurarme de que funcione de verdad</p>
-                  <p className="text-[10px] text-gray-400 text-right mt-1">8:40 pm <span style={{ color: "#aaa" }}>✓✓</span></p>
-                </div>
-                <div className="max-w-[85%] rounded-xl rounded-tl-none px-3 py-2 shadow-sm" style={{ backgroundColor: "#fff" }}>
-                  <p className="text-sm text-gray-800 leading-snug">Y sinceramente... es una belleza. Siento tranquilidad de verdad. Gracias por la atención tan profesional</p>
-                  <p className="text-[10px] text-gray-400 text-right mt-1">8:42 pm <span style={{ color: "#aaa" }}>✓✓</span></p>
-                </div>
-                <div className="max-w-[85%] ml-auto rounded-xl rounded-tr-none px-3 py-2 shadow-sm" style={{ backgroundColor: WA_ACCENT }}>
-                  <p className="text-sm text-gray-800 leading-snug">¡Gracias a vos por confiar! Nos alegra mucho que estés tranquila</p>
-                  <p className="text-[10px] text-gray-500 text-right mt-1">8:45 pm <span style={{ color: "#53BDEB" }}>✓✓</span></p>
-                </div>
-              </div>
-            </div>
-
-            {/* Chat 2 */}
-            <div className="rounded-2xl overflow-hidden shadow-lg">
-              <div className="px-4 py-3 flex items-center gap-3" style={{ backgroundColor: "#075E54" }}>
-                <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 relative" style={{ backgroundColor: "#5B6770" }}>
-                  <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #2C3E50 0%, #3498DB 40%, #85C1E2 100%)" }} />
-                  <svg className="absolute inset-0 w-full h-full" viewBox="0 0 40 40" preserveAspectRatio="none"><path d="M0,0 Q8,4 5,12 Q3,20 7,28 Q4,35 12,38 Q20,36 28,39 Q35,37 40,33 Q38,25 40,18 Q37,10 40,5 Q35,1 28,3 Q20,0 12,2 Q5,3 0,0 Z" fill="#0a0a0a" /></svg>
-                </div>
-                <div>
-                  <p className="text-white text-sm font-semibold">+506 71<svg className="inline-block align-middle mx-0.5" width="46" height="18" viewBox="0 0 46 18"><path d="M2,6 Q5,3 10,5 L18,4 Q24,2 30,5 L38,4 Q42,6 44,9 L43,13 Q38,15 30,13 L20,14 Q12,16 6,13 Q1,11 2,6 Z" fill="#0a0a0a" /></svg>2</p>
-                  <p className="text-white/60 text-xs">últ. vez 9:30 pm</p>
-                </div>
-              </div>
-              <div className="p-4 space-y-2.5" style={{ backgroundColor: WA_BG }}>
-                <div className="max-w-[85%] rounded-xl rounded-tl-none px-3 py-2 shadow-sm" style={{ backgroundColor: "#fff" }}>
-                  <p className="text-sm text-gray-800 leading-snug">Sinceramente, somos dos con mi esposa y siempre dejamos el teléfono en el cargador y nos olvidamos, eso me estresaba bastante</p>
-                  <p className="text-[10px] text-gray-400 text-right mt-1">9:12 pm <span style={{ color: "#aaa" }}>✓✓</span></p>
-                </div>
-                <div className="max-w-[85%] rounded-xl rounded-tl-none px-3 py-2 shadow-sm" style={{ backgroundColor: "#fff" }}>
-                  <p className="text-sm text-gray-800 leading-snug">Ahora con el Guard los conecto directo cuando quieren cargar y listo. Problema resuelto</p>
-                  <p className="text-[10px] text-gray-400 text-right mt-1">9:14 pm <span style={{ color: "#aaa" }}>✓✓</span></p>
-                </div>
-                <div className="max-w-[85%] ml-auto rounded-xl rounded-tr-none px-3 py-2 shadow-sm" style={{ backgroundColor: WA_ACCENT }}>
-                  <p className="text-sm text-gray-800 leading-snug">¡Exacto! Para eso lo diseñamos. Cargar tranquilo es todo</p>
-                  <p className="text-[10px] text-gray-500 text-right mt-1">9:16 pm <span style={{ color: "#53BDEB" }}>✓✓</span></p>
-                </div>
-              </div>
-            </div>
-
-            {/* Chat 3 */}
-            <div className="rounded-2xl overflow-hidden shadow-lg">
-              <div className="px-4 py-3 flex items-center gap-3" style={{ backgroundColor: "#075E54" }}>
-                <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 relative" style={{ backgroundColor: "#5B6770" }}>
-                  <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #7D3C98 0%, #C39BD3 40%, #F5B7B1 100%)" }} />
-                  <svg className="absolute inset-0 w-full h-full" viewBox="0 0 40 40" preserveAspectRatio="none"><path d="M0,0 Q8,4 5,12 Q3,20 7,28 Q4,35 12,38 Q20,36 28,39 Q35,37 40,33 Q38,25 40,18 Q37,10 40,5 Q35,1 28,3 Q20,0 12,2 Q5,3 0,0 Z" fill="#0a0a0a" /></svg>
-                </div>
-                <div>
-                  <p className="text-white text-sm font-semibold">+506 63<svg className="inline-block align-middle mx-0.5" width="46" height="18" viewBox="0 0 46 18"><path d="M2,6 Q5,3 10,5 L18,4 Q24,2 30,5 L38,4 Q42,6 44,9 L43,13 Q38,15 30,13 L20,14 Q12,16 6,13 Q1,11 2,6 Z" fill="#0a0a0a" /></svg>4</p>
-                  <p className="text-white/60 text-xs">en línea</p>
-                </div>
-              </div>
-              <div className="p-4 space-y-2.5" style={{ backgroundColor: WA_BG }}>
-                <div className="max-w-[85%] rounded-xl rounded-tl-none px-3 py-2 shadow-sm" style={{ backgroundColor: "#fff" }}>
-                  <p className="text-sm text-gray-800 leading-snug">Sinceramente el producto hace que el teléfono aguante más batería. Antes mi celular duraba medio día y ahora llega tranquilo a la noche</p>
-                  <p className="text-[10px] text-gray-400 text-right mt-1">7:01 am <span style={{ color: "#aaa" }}>✓✓</span></p>
-                </div>
-                <div className="max-w-[85%] rounded-xl rounded-tl-none px-3 py-2 shadow-sm" style={{ backgroundColor: "#fff" }}>
-                  <p className="text-sm text-gray-800 leading-snug">Creo que antes la batería se gastaba rápido por la sobrecarga de la noche. Ahora con Guard eso no pasa</p>
-                  <p className="text-[10px] text-gray-400 text-right mt-1">7:03 am <span style={{ color: "#aaa" }}>✓✓</span></p>
-                </div>
-                <div className="max-w-[85%] ml-auto rounded-xl rounded-tr-none px-3 py-2 shadow-sm" style={{ backgroundColor: WA_ACCENT }}>
-                  <p className="text-sm text-gray-800 leading-snug">¡Justo eso! Guard corta la carga al 100% y protege la batería. Gracias por compartir</p>
-                  <p className="text-[10px] text-gray-500 text-right mt-1">7:10 am <span style={{ color: "#53BDEB" }}>✓✓</span></p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <p className="lp-animate lp-delay-2 text-center text-xs text-gray-500 mt-6">Mensajes reales compartidos con permiso de nuestros clientes.</p>
-        </div>
-      </section>
-
-      {/* ── GARANTÍA ── */}
-      <section className="py-20 px-5" style={{ backgroundColor: NIGHT }}>
-        <div className="max-w-lg mx-auto text-center">
-          <div className="lp-animate w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6" style={{ backgroundColor: "rgba(255,255,255,0.06)", border: `1.5px solid ${ACCENT_D}` }}>
-            <ShieldCheck size={30} style={{ color: ACCENT_D }} />
-          </div>
-          <h2 className="lp-animate lp-delay-1 text-3xl font-bold text-white mb-4" style={{ fontFamily: "Georgia, serif" }}>Garantía total de 30 días</h2>
-          <p className="lp-animate lp-delay-2 text-gray-400 text-sm leading-relaxed mb-8 max-w-md mx-auto">
-            Probá Vazlina Guard durante 30 días. Si no sentís la tranquilidad que prometemos — por la razón que sea — te devolvemos <strong className="text-white">cada colón</strong>. Sin preguntas, sin formularios, sin riesgo.
-          </p>
-          <div className="lp-animate lp-delay-2 flex justify-center gap-6 text-xs text-gray-400">
-            <span className="flex items-center gap-1.5"><ShieldCheck size={13} style={{ color: ACCENT_D }} /> Pago al recibir</span>
-            <span className="flex items-center gap-1.5"><ShieldCheck size={13} style={{ color: ACCENT_D }} /> Envío gratis</span>
-            <span className="flex items-center gap-1.5"><ShieldCheck size={13} style={{ color: ACCENT_D }} /> Devolución total</span>
-          </div>
-        </div>
-      </section>
-
-      {/* ── FAQ ── */}
-      <section className="py-20 px-4 bg-white">
-        <div className="max-w-lg mx-auto">
-          <h2 className="lp-animate text-3xl font-bold text-center mb-10" style={{ color: INK }}>Preguntas Frecuentes</h2>
+          <h2 className="lp-animate text-2xl font-bold text-center mb-6" style={{ color: INK }}>Preguntas frecuentes</h2>
           <div className="space-y-3">
-            {FAQS.map((faq, i) => (
-              <div key={i} className="lp-animate rounded-2xl overflow-hidden border border-gray-200" style={{ backgroundColor: IVORY }}>
-                <button
-                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                  className="w-full flex items-center justify-between px-5 py-4 text-left"
-                >
-                  <span className="font-semibold text-sm pr-4" style={{ color: INK }}>{faq.q}</span>
-                  {openFaq === i ? <ChevronUp size={16} style={{ color: ACCENT }} /> : <ChevronDown size={16} className="text-gray-400" />}
+            {FAQS.map(({ q, a }, i) => (
+              <div key={i} className="lp-animate rounded-2xl overflow-hidden" style={{ border: `1px solid ${BORDER}`, backgroundColor: WHITE }}>
+                <button onClick={() => setOpenFaq(openFaq === i ? null : i)} className="w-full flex items-start justify-between gap-3 px-5 py-4 text-left">
+                  <span className="font-semibold text-sm" style={{ color: INK }}>{q}</span>
+                  {openFaq === i ? <ChevronUp size={16} className="text-gray-400 shrink-0 mt-0.5" /> : <ChevronDown size={16} className="text-gray-400 shrink-0 mt-0.5" />}
                 </button>
                 {openFaq === i && (
-                  <div className="px-5 pb-4 text-sm text-gray-600 leading-relaxed">{faq.a}</div>
+                  <div className="px-5 pb-4 pt-3 text-xs leading-relaxed" style={{ color: MUTED, borderTop: `1px solid ${BORDER}` }}>
+                    {a}
+                  </div>
                 )}
               </div>
             ))}
@@ -618,31 +580,28 @@ export default function GuardPage() {
         </div>
       </section>
 
-      {/* ── FINAL CTA ── */}
-      <section className="relative py-24 px-6 text-center overflow-hidden" style={{ backgroundColor: NIGHT }}>
-        <div className="absolute inset-0 opacity-25 pointer-events-none" style={{ background: "radial-gradient(ellipse at 50% 100%, rgba(201,205,211,0.12) 0%, transparent 60%)" }} />
-        <div className="relative z-10 max-w-lg mx-auto">
-          <h2 className="lp-animate text-3xl font-bold text-white mb-4">
-            Tu familia y tu teléfono<br /><span style={{ color: ACCENT_D }} className="font-heading tracking-tight">valen más que <span className="text-lg align-top">₡</span>17700.</span>
+      {/* ══════════════════ FINAL CTA ══════════════════ */}
+      <section className="py-20 px-5 text-center" style={{ backgroundColor: NIGHT }}>
+        <div className="max-w-lg mx-auto">
+          <h2 className="lp-animate text-3xl font-bold text-white mb-3 leading-tight">
+            Esta noche, tu cargador volvera a quedar enchufado.<br />
+            <span style={{ color: ORANGE }}>Con proteccion o sin ella?</span>
           </h2>
-          <p className="lp-animate lp-delay-1 text-gray-400 mb-2 text-sm leading-relaxed">
-            Esta noche, tu cargador volverá a quedarse enchufado 8 horas.<br />La pregunta es: ¿con protección o sin ella?
-          </p>
-          <p className="lp-animate lp-delay-1 text-base font-extrabold mb-8" style={{ color: "#FF4500" }}>
-            ⏳ Oferta termina in <span className="tabular-nums text-lg">{timer}</span>
+          <p className="lp-animate lp-delay-1 text-sm mb-8" style={{ color: "#9CA3AF" }}>
+            1,247 familias ya protegidas. Envio gratis. Pago al recibir. Garantia 30 dias.
           </p>
           <a
             href="#oferta"
-            className="lp-animate lp-delay-2 cta-attention inline-block px-12 py-4 rounded-2xl font-bold text-sm tracking-widest transition-all active:scale-95 hover:opacity-90 shadow-2xl"
-            style={{ backgroundColor: "#FF4500", color: "#fff" }}
+            className="lp-animate lp-delay-2 cta-btn inline-block px-10 py-4 rounded-2xl font-bold text-sm tracking-widest text-white active:scale-95 transition-transform"
+            style={{ backgroundColor: ORANGE }}
           >
-            ELEGIR MI PACK — <span className="font-heading tracking-tight"><span className="text-[10px] align-top">₡</span>17700</span>
+            ELEGIR MI PACK — DESDE &#8353;17,700
           </a>
-          <p className="lp-animate lp-delay-3 text-xs text-gray-500 mt-4">🚚 Envío gratis · 💳 Pago al recibir · 🛡️ Garantía 30 días<br />🏅 Calidad certificada</p>
+          <p className="lp-animate lp-delay-3 text-xs mt-4" style={{ color: "#6B7280" }}>
+            Envio gratis · Pago al recibir · Garantia 30 dias
+          </p>
         </div>
       </section>
-
-      <div className="h-20" style={{ backgroundColor: NIGHT }} />
 
       <GuardCheckoutModal isOpen={checkoutOpen} onClose={() => setCheckoutOpen(false)} variant={selectedVariant} />
     </div>
