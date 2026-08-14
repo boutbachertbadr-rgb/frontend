@@ -562,7 +562,7 @@ export default function GuardPageV3() {
                           className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border-2 transition-all text-xs font-medium"
                           style={{
                             borderColor: selectedColors[b.id]?.id === opt.id ? ORANGE : BORDER,
-                            backgroundColor: selectedColors[b.id]?.id === opt.id ? "rgba(230,92,0,0.06)" : WHITE,
+                            backgroundColor: selectedColors[b.id]?.id === opt.id ? "rgba(192,105,10,0.08)" : WHITE,
                             color: INK,
                           }}
                         >
@@ -570,8 +570,8 @@ export default function GuardPageV3() {
                             {opt.dots.map((c, i) => (
                               <span key={i} className="inline-block w-3.5 h-3.5 rounded-full border border-gray-200"
                                 style={{
-                                  background: c === ORANGE
-                                    ? `radial-gradient(circle at 35% 35%, #FF8C40, ${ORANGE} 70%)`
+                                  background: c === PRODUCT_ORANGE
+                                    ? `radial-gradient(circle at 35% 35%, #FF8C40, ${PRODUCT_ORANGE} 70%)`
                                     : `radial-gradient(circle at 35% 35%, #E8E8E8, #888 70%)`,
                                 }}
                               />
