@@ -5,6 +5,7 @@ import { Flame, Zap, BatteryCharging, ShieldCheck, Star, ChevronDown, ChevronUp,
 import GuardCheckoutModal, { LPVariant, ColorOption, COLOR_OPTIONS } from "@/components/lp/GuardCheckoutModal";
 
 const SILVER_DOT = "#A0A0A0";
+const PRODUCT_ORANGE = "#E65C00";
 
 const ORANGE = "#C0690A";
 const BG = "#FFF8F0";
@@ -91,9 +92,9 @@ export default function GuardPageV3() {
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [selectedVariant, setSelectedVariant] = useState<LPVariant | null>(null);
   const [selectedColors, setSelectedColors] = useState<Record<string, ColorOption>>({
-    "1x": { id: "orange", label: "Naranja Metalico", dots: [ORANGE] },
-    "2x": { id: "mix", label: "1 Naranja + 1 Plata", dots: [ORANGE, SILVER_DOT] },
-    "3x": { id: "2o1s", label: "2 Naranja + 1 Plata", dots: [ORANGE, ORANGE, SILVER_DOT] },
+    "1x": { id: "orange", label: "Naranja Metalico", dots: [PRODUCT_ORANGE] },
+    "2x": { id: "mix", label: "1 Naranja + 1 Plata", dots: [PRODUCT_ORANGE, SILVER_DOT] },
+    "3x": { id: "2o1s", label: "2 Naranja + 1 Plata", dots: [PRODUCT_ORANGE, PRODUCT_ORANGE, SILVER_DOT] },
   });
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [showSticky, setShowSticky] = useState(false);
