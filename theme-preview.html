@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Theme Preview — Vazlina Guard</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #111; }
+
+  .tabs { display: flex; gap: 0; position: sticky; top: 0; z-index: 100; }
+  .tab { flex: 1; padding: 16px; text-align: center; cursor: pointer; font-weight: 700; font-size: 14px; border: none; transition: all .2s; }
+  .tab.t1 { background: #1A1A1A; color: #fff; border-bottom: 3px solid #E65C00; }
+  .tab.t2 { background: #0A1628; color: #fff; border-bottom: 3px solid #00E5FF; }
+  .tab.t3 { background: #fff; color: #1A1A1A; border-bottom: 3px solid #1A1A1A; }
+  .tab.inactive { opacity: .45; }
+
+  .preview { display: none; max-width: 420px; margin: 0 auto; min-height: 100vh; }
+  .preview.active { display: block; }
+
+  /* ═══ THEME 1: DARK ═══ */
+  .t1-bg { background: #0D0D0D; }
+  .t1-bar { background: #E65C00; color: #fff; text-align: center; padding: 10px; font-size: 12px; font-weight: 700; letter-spacing: .05em; }
+  .t1-hero { background: linear-gradient(180deg, #1A1A1A 0%, #0D0D0D 100%); padding: 40px 20px; text-align: center; }
+  .t1-hero .badge { display: inline-block; background: rgba(230,92,0,.15); border: 1px solid rgba(230,92,0,.4); color: #E65C00; font-size: 10px; font-weight: 700; padding: 5px 12px; border-radius: 20px; letter-spacing: .08em; margin-bottom: 18px; }
+  .t1-hero h1 { color: #fff; font-size: 28px; font-weight: 900; line-height: 1.15; margin-bottom: 14px; }
+  .t1-hero h1 span { color: #E65C00; }
+  .t1-hero p { color: #A0A0A0; font-size: 14px; line-height: 1.6; margin-bottom: 24px; }
+  .t1-btn { background: #E65C00; color: #fff; padding: 16px 32px; border-radius: 14px; font-weight: 800; font-size: 16px; border: none; width: 100%; cursor: pointer; }
+  .t1-img { width: 100%; height: 220px; background: linear-gradient(135deg, #1a1a1a, #2d2d2d); display: flex; align-items: center; justify-content: center; color: #E65C00; font-size: 40px; }
+  .t1-card { background: #1A1A1A; border: 1px solid #2a2a2a; border-radius: 16px; padding: 20px; margin: 10px 20px; }
+  .t1-card h3 { color: #fff; font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .t1-card p { color: #777; font-size: 13px; line-height: 1.5; }
+  .t1-card .price { color: #E65C00; font-size: 22px; font-weight: 900; margin-top: 10px; }
+  .t1-card .old { color: #555; text-decoration: line-through; font-size: 13px; }
+  .t1-card.active { border-color: #E65C00; box-shadow: 0 0 0 1px #E65C00; }
+  .t1-section { padding: 40px 20px; }
+  .t1-section h2 { color: #fff; font-size: 22px; font-weight: 800; margin-bottom: 20px; }
+  .t1-review { background: #1A1A1A; border: 1px solid #2a2a2a; border-radius: 14px; padding: 16px; margin-bottom: 12px; }
+  .t1-review p { color: #ccc; font-size: 13px; line-height: 1.6; }
+  .t1-review .name { color: #E65C00; font-size: 11px; font-weight: 700; margin-top: 8px; }
+  .stars { color: #F59E0B; font-size: 12px; }
+
+  /* ═══ THEME 2: BLUE/TRUST ═══ */
+  .t2-bg { background: #060F1E; }
+  .t2-bar { background: linear-gradient(90deg, #0056D2, #0073FF); color: #fff; text-align: center; padding: 10px; font-size: 12px; font-weight: 700; letter-spacing: .05em; }
+  .t2-hero { background: linear-gradient(180deg, #0A1628 0%, #060F1E 100%); padding: 40px 20px; text-align: center; }
+  .t2-hero .badge { display: inline-block; background: rgba(0,229,255,.1); border: 1px solid rgba(0,229,255,.3); color: #00E5FF; font-size: 10px; font-weight: 700; padding: 5px 12px; border-radius: 20px; letter-spacing: .08em; margin-bottom: 18px; }
+  .t2-hero h1 { color: #fff; font-size: 28px; font-weight: 900; line-height: 1.15; margin-bottom: 14px; }
+  .t2-hero h1 span { color: #00E5FF; }
+  .t2-hero p { color: #8BA3C4; font-size: 14px; line-height: 1.6; margin-bottom: 24px; }
+  .t2-btn { background: linear-gradient(135deg, #0056D2, #0073FF); color: #fff; padding: 16px 32px; border-radius: 14px; font-weight: 800; font-size: 16px; border: none; width: 100%; cursor: pointer; box-shadow: 0 8px 24px rgba(0,115,255,.35); }
+  .t2-img { width: 100%; height: 220px; background: linear-gradient(135deg, #0A1628, #0D2040); display: flex; align-items: center; justify-content: center; color: #00E5FF; font-size: 40px; }
+  .t2-card { background: #0D1F3C; border: 1px solid #1A3A6B; border-radius: 16px; padding: 20px; margin: 10px 20px; }
+  .t2-card h3 { color: #fff; font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .t2-card p { color: #6B8BAD; font-size: 13px; line-height: 1.5; }
+  .t2-card .price { color: #00E5FF; font-size: 22px; font-weight: 900; margin-top: 10px; }
+  .t2-card .old { color: #3A5070; text-decoration: line-through; font-size: 13px; }
+  .t2-card.active { border-color: #0073FF; box-shadow: 0 0 0 1px #0073FF; }
+  .t2-section { padding: 40px 20px; }
+  .t2-section h2 { color: #fff; font-size: 22px; font-weight: 800; margin-bottom: 20px; }
+  .t2-review { background: #0D1F3C; border: 1px solid #1A3A6B; border-radius: 14px; padding: 16px; margin-bottom: 12px; }
+  .t2-review p { color: #8BA3C4; font-size: 13px; line-height: 1.6; }
+  .t2-review .name { color: #00E5FF; font-size: 11px; font-weight: 700; margin-top: 8px; }
+  .shield { display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 14px; background: rgba(0,115,255,.15); color: #0073FF; font-size: 22px; margin-bottom: 12px; }
+
+  /* ═══ THEME 3: CLEAN MINIMAL ═══ */
+  .t3-bg { background: #FAFAFA; }
+  .t3-bar { background: #1A1A1A; color: #fff; text-align: center; padding: 10px; font-size: 12px; font-weight: 700; letter-spacing: .05em; }
+  .t3-hero { background: #fff; padding: 40px 20px; text-align: center; border-bottom: 1px solid #F0F0F0; }
+  .t3-hero .badge { display: inline-block; background: #F5F5F5; border: 1px solid #E0E0E0; color: #1A1A1A; font-size: 10px; font-weight: 700; padding: 5px 12px; border-radius: 20px; letter-spacing: .08em; margin-bottom: 18px; }
+  .t3-hero h1 { color: #1A1A1A; font-size: 28px; font-weight: 900; line-height: 1.15; margin-bottom: 14px; }
+  .t3-hero h1 span { color: #E65C00; }
+  .t3-hero p { color: #666; font-size: 14px; line-height: 1.6; margin-bottom: 24px; }
+  .t3-btn { background: #1A1A1A; color: #fff; padding: 16px 32px; border-radius: 14px; font-weight: 800; font-size: 16px; border: none; width: 100%; cursor: pointer; }
+  .t3-img { width: 100%; height: 220px; background: #F5F5F5; display: flex; align-items: center; justify-content: center; color: #E65C00; font-size: 40px; border-radius: 0; }
+  .t3-card { background: #fff; border: 1.5px solid #E8E8E8; border-radius: 16px; padding: 20px; margin: 10px 20px; }
+  .t3-card h3 { color: #1A1A1A; font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .t3-card p { color: #888; font-size: 13px; line-height: 1.5; }
+  .t3-card .price { color: #E65C00; font-size: 22px; font-weight: 900; margin-top: 10px; }
+  .t3-card .old { color: #BBB; text-decoration: line-through; font-size: 13px; }
+  .t3-card.active { border-color: #1A1A1A; box-shadow: 0 0 0 1px #1A1A1A; }
+  .t3-section { padding: 40px 20px; background: #FAFAFA; }
+  .t3-section h2 { color: #1A1A1A; font-size: 22px; font-weight: 800; margin-bottom: 20px; }
+  .t3-review { background: #fff; border: 1px solid #EBEBEB; border-radius: 14px; padding: 16px; margin-bottom: 12px; box-shadow: 0 1px 4px rgba(0,0,0,.04); }
+  .t3-review p { color: #444; font-size: 13px; line-height: 1.6; }
+  .t3-review .name { color: #1A1A1A; font-size: 11px; font-weight: 700; margin-top: 8px; }
+
+  /* ═══ THEME 4: WARM CREAM ═══ */
+  .t4-bg { background: #FFF8F0; }
+  .t4-bar { background: #C0690A; color: #fff; text-align: center; padding: 10px; font-size: 12px; font-weight: 700; letter-spacing: .05em; }
+  .t4-hero { background: linear-gradient(180deg, #FFF3E6 0%, #FFF8F0 100%); padding: 40px 20px; text-align: center; border-bottom: 1px solid #FFE0C0; }
+  .t4-hero .badge { display: inline-block; background: #FFE8D0; border: 1px solid #FFC898; color: #7C3800; font-size: 10px; font-weight: 700; padding: 5px 12px; border-radius: 20px; letter-spacing: .08em; margin-bottom: 18px; }
+  .t4-hero h1 { color: #3D1A00; font-size: 28px; font-weight: 900; line-height: 1.15; margin-bottom: 14px; }
+  .t4-hero h1 span { color: #C0690A; }
+  .t4-hero p { color: #7C5040; font-size: 14px; line-height: 1.6; margin-bottom: 24px; }
+  .t4-btn { background: #C0690A; color: #fff; padding: 16px 32px; border-radius: 14px; font-weight: 800; font-size: 16px; border: none; width: 100%; cursor: pointer; box-shadow: 0 6px 20px rgba(192,105,10,.25); }
+  .t4-img { width: 100%; height: 220px; background: #FFE8D0; display: flex; align-items: center; justify-content: center; color: #C0690A; font-size: 40px; }
+  .t4-card { background: #fff; border: 1.5px solid #FFD5A8; border-radius: 16px; padding: 20px; margin: 10px 20px; }
+  .t4-card h3 { color: #3D1A00; font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .t4-card p { color: #9A6040; font-size: 13px; line-height: 1.5; }
+  .t4-card .price { color: #C0690A; font-size: 22px; font-weight: 900; margin-top: 10px; }
+  .t4-card .old { color: #C8A090; text-decoration: line-through; font-size: 13px; }
+  .t4-card.active { border-color: #C0690A; box-shadow: 0 0 0 1px #C0690A; background: #FFF3E6; }
+  .t4-section { padding: 40px 20px; }
+  .t4-section h2 { color: #3D1A00; font-size: 22px; font-weight: 800; margin-bottom: 20px; }
+  .t4-review { background: #fff; border: 1px solid #FFD5A8; border-radius: 14px; padding: 16px; margin-bottom: 12px; }
+  .t4-review p { color: #5C3020; font-size: 13px; line-height: 1.6; }
+  .t4-review .name { color: #C0690A; font-size: 11px; font-weight: 700; margin-top: 8px; }
+
+  /* ═══ THEME 5: BOLD PURPLE ═══ */
+  .t5-bg { background: #0D0520; }
+  .t5-bar { background: linear-gradient(90deg, #7C3AED, #A855F7); color: #fff; text-align: center; padding: 10px; font-size: 12px; font-weight: 700; letter-spacing: .05em; }
+  .t5-hero { background: linear-gradient(180deg, #1A0A2E 0%, #0D0520 100%); padding: 40px 20px; text-align: center; }
+  .t5-hero .badge { display: inline-block; background: rgba(168,85,247,.15); border: 1px solid rgba(168,85,247,.4); color: #C084FC; font-size: 10px; font-weight: 700; padding: 5px 12px; border-radius: 20px; letter-spacing: .08em; margin-bottom: 18px; }
+  .t5-hero h1 { color: #fff; font-size: 28px; font-weight: 900; line-height: 1.15; margin-bottom: 14px; }
+  .t5-hero h1 span { background: linear-gradient(90deg, #A855F7, #F97316); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .t5-hero p { color: #9B80C4; font-size: 14px; line-height: 1.6; margin-bottom: 24px; }
+  .t5-btn { background: linear-gradient(135deg, #7C3AED, #A855F7); color: #fff; padding: 16px 32px; border-radius: 14px; font-weight: 800; font-size: 16px; border: none; width: 100%; cursor: pointer; box-shadow: 0 8px 24px rgba(124,58,237,.4); }
+  .t5-img { width: 100%; height: 220px; background: linear-gradient(135deg, #1A0A2E, #2D1050); display: flex; align-items: center; justify-content: center; color: #A855F7; font-size: 40px; }
+  .t5-card { background: #1A0A2E; border: 1px solid #3D1A60; border-radius: 16px; padding: 20px; margin: 10px 20px; }
+  .t5-card h3 { color: #fff; font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .t5-card p { color: #7A5CA0; font-size: 13px; line-height: 1.5; }
+  .t5-card .price { color: #C084FC; font-size: 22px; font-weight: 900; margin-top: 10px; }
+  .t5-card .old { color: #4A3060; text-decoration: line-through; font-size: 13px; }
+  .t5-card.active { border-color: #A855F7; box-shadow: 0 0 0 1px #A855F7, 0 0 20px rgba(168,85,247,.2); }
+  .t5-section { padding: 40px 20px; }
+  .t5-section h2 { color: #fff; font-size: 22px; font-weight: 800; margin-bottom: 20px; }
+  .t5-review { background: #1A0A2E; border: 1px solid #3D1A60; border-radius: 14px; padding: 16px; margin-bottom: 12px; }
+  .t5-review p { color: #C084FC; font-size: 13px; line-height: 1.6; }
+  .t5-review .name { color: #A855F7; font-size: 11px; font-weight: 700; margin-top: 8px; }
+</style>
+</head>
+<body>
+
+<div class="tabs" style="flex-wrap:wrap;">
+  <button class="tab t1" onclick="show(1)" style="flex:1;min-width:60px;font-size:11px;padding:12px 4px;">🌑 DARK</button>
+  <button class="tab t2" onclick="show(2)" style="flex:1;min-width:60px;font-size:11px;padding:12px 4px;">🔵 TRUST</button>
+  <button class="tab t3" onclick="show(3)" style="flex:1;min-width:60px;font-size:11px;padding:12px 4px;">⬜ MINIMAL</button>
+  <button class="tab t4" onclick="show(4)" style="flex:1;min-width:60px;font-size:11px;padding:12px 4px;background:#FFF8F0;color:#7C3800;border-bottom:3px solid #C0690A;">🍊 WARM</button>
+  <button class="tab t5" onclick="show(5)" style="flex:1;min-width:60px;font-size:11px;padding:12px 4px;background:#1A0A2E;color:#fff;border-bottom:3px solid #A855F7;">💜 BOLD</button>
+</div>
+
+<!-- THEME 1: DARK -->
+<div class="preview t1-bg active" id="p1">
+  <div class="t1-bar">🔥 OFERTA ESPECIAL — ENVIO GRATIS HOY</div>
+  <div class="t1-hero">
+    <div class="badge">⚡ AI PHYSICAL ISOLATION ADAPTER</div>
+    <div class="t1-img">🔌</div>
+    <h1>Para de quemar<br><span>tu bateria cada noche.</span></h1>
+    <p>Guard corta la corriente automaticamente al llegar al 100%. Sin apps. Sin configuracion. Siempre activo.</p>
+    <button class="t1-btn">ORDENAR AHORA — ₡17,700</button>
+  </div>
+  <div class="t1-section">
+    <h2>Elige tu <span style="color:#E65C00">proteccion</span></h2>
+    <div class="t1-card">
+      <h3>1x Vazlina Guard</h3>
+      <p>Para 1 cargador en casa</p>
+      <div class="old">₡22,500</div>
+      <div class="price">₡17,700 <span style="background:#E65C00;color:#fff;font-size:11px;padding:2px 7px;border-radius:6px;">21% OFF</span></div>
+    </div>
+    <div class="t1-card active">
+      <h3>2x Vazlina Guard</h3>
+      <p>Dormitorio + sala</p>
+      <div class="old">₡45,000</div>
+      <div class="price">₡29,900 <span style="background:#E65C00;color:#fff;font-size:11px;padding:2px 7px;border-radius:6px;">33% OFF</span></div>
+    </div>
+    <div class="t1-card">
+      <h3>3x Vazlina Guard</h3>
+      <p>Protege cada enchufe</p>
+      <div class="old">₡67,500</div>
+      <div class="price">₡39,900 <span style="background:#E65C00;color:#fff;font-size:11px;padding:2px 7px;border-radius:6px;">41% OFF</span></div>
+    </div>
+  </div>
+  <div class="t1-section">
+    <h2>Lo que dicen nuestros <span style="color:#E65C00">clientes</span></h2>
+    <div class="t1-review">
+      <div class="stars">★★★★★</div>
+      <p>"No les escribi hasta que pasaron 2 dias para probarlo bien y asegurarme de que funcione de verdad. Es una belleza."</p>
+      <div class="name">+506 84●●●9 — en linea</div>
+    </div>
+    <div class="t1-review">
+      <div class="stars">★★★★★</div>
+      <p>"Somos dos con mi esposa y siempre dejamos el telefono en el cargador. Ahora con Guard listo. Problema resuelto."</p>
+      <div class="name">+506 71●●●2 — ayer</div>
+    </div>
+  </div>
+</div>
+
+<!-- THEME 2: BLUE/TRUST -->
+<div class="preview t2-bg" id="p2">
+  <div class="t2-bar">🛡️ PROTECCION GARANTIZADA — ENVIO GRATIS</div>
+  <div class="t2-hero">
+    <div class="badge">⚡ AI PHYSICAL ISOLATION ADAPTER</div>
+    <div class="t2-img">🔌</div>
+    <h1>Tu familia duerme<br><span>segura cada noche.</span></h1>
+    <p>Guard corta la corriente automaticamente al llegar al 100%. Sin apps. Sin configuracion. Siempre activo.</p>
+    <button class="t2-btn">🛡️ PROTEGER AHORA — ₡17,700</button>
+  </div>
+  <div class="t2-section">
+    <h2>Elige tu <span style="color:#00E5FF">proteccion</span></h2>
+    <div class="t2-card">
+      <div class="shield">🛡️</div>
+      <h3>1x Vazlina Guard</h3>
+      <p>Para 1 cargador en casa</p>
+      <div class="old">₡22,500</div>
+      <div class="price">₡17,700 <span style="background:#0073FF;color:#fff;font-size:11px;padding:2px 7px;border-radius:6px;">21% OFF</span></div>
+    </div>
+    <div class="t2-card active">
+      <div class="shield">🛡️</div>
+      <h3>2x Vazlina Guard</h3>
+      <p>Dormitorio + sala</p>
+      <div class="old">₡45,000</div>
+      <div class="price">₡29,900 <span style="background:#0073FF;color:#fff;font-size:11px;padding:2px 7px;border-radius:6px;">33% OFF</span></div>
+    </div>
+    <div class="t2-card">
+      <div class="shield">🛡️</div>
+      <h3>3x Vazlina Guard</h3>
+      <p>Protege cada enchufe</p>
+      <div class="old">₡67,500</div>
+      <div class="price">₡39,900 <span style="background:#0073FF;color:#fff;font-size:11px;padding:2px 7px;border-radius:6px;">41% OFF</span></div>
+    </div>
+  </div>
+  <div class="t2-section">
+    <h2>Lo que dicen nuestros <span style="color:#00E5FF">clientes</span></h2>
+    <div class="t2-review">
+      <div class="stars">★★★★★</div>
+      <p>"No les escribi hasta que pasaron 2 dias para probarlo bien y asegurarme de que funcione de verdad. Es una belleza."</p>
+      <div class="name">+506 84●●●9 — en linea</div>
+    </div>
+    <div class="t2-review">
+      <div class="stars">★★★★★</div>
+      <p>"Somos dos con mi esposa y siempre dejamos el telefono en el cargador. Ahora con Guard listo. Problema resuelto."</p>
+      <div class="name">+506 71●●●2 — ayer</div>
+    </div>
+  </div>
+</div>
+
+<!-- THEME 3: CLEAN MINIMAL -->
+<div class="preview t3-bg" id="p3">
+  <div class="t3-bar">Oferta limitada — Envio gratis a todo Costa Rica</div>
+  <div class="t3-hero">
+    <div class="badge">AI PHYSICAL ISOLATION ADAPTER</div>
+    <div class="t3-img">🔌</div>
+    <h1>Para de quemar<br><span>tu bateria.</span></h1>
+    <p>Guard corta la corriente automaticamente al llegar al 100%. Sin apps. Sin configuracion. Siempre activo.</p>
+    <button class="t3-btn">ORDENAR AHORA — ₡17,700</button>
+  </div>
+  <div class="t3-section">
+    <h2 style="padding:0 20px">Elige tu <span style="color:#E65C00">proteccion</span></h2>
+    <div class="t3-card">
+      <h3>1x Vazlina Guard</h3>
+      <p>Para 1 cargador en casa</p>
+      <div class="old">₡22,500</div>
+      <div class="price">₡17,700 <span style="background:#E65C00;color:#fff;font-size:11px;padding:2px 7px;border-radius:6px;">21% OFF</span></div>
+    </div>
+    <div class="t3-card active">
+      <h3>2x Vazlina Guard</h3>
+      <p>Dormitorio + sala</p>
+      <div class="old">₡45,000</div>
+      <div class="price">₡29,900 <span style="background:#E65C00;color:#fff;font-size:11px;padding:2px 7px;border-radius:6px;">33% OFF</span></div>
+    </div>
+    <div class="t3-card">
+      <h3>3x Vazlina Guard</h3>
+      <p>Protege cada enchufe</p>
+      <div class="old">₡67,500</div>
+      <div class="price">₡39,900 <span style="background:#E65C00;color:#fff;font-size:11px;padding:2px 7px;border-radius:6px;">41% OFF</span></div>
+    </div>
+    <div style="height:32px"></div>
+    <div style="padding:0 20px">
+    <h2>Lo que dicen nuestros <span style="color:#E65C00">clientes</span></h2>
+    </div>
+    <div style="padding: 0 20px; margin-top:16px">
+    <div class="t3-review">
+      <div class="stars">★★★★★</div>
+      <p>"No les escribi hasta que pasaron 2 dias para probarlo bien y asegurarme de que funcione de verdad. Es una belleza."</p>
+      <div class="name">+506 84●●●9 — en linea</div>
+    </div>
+    <div class="t3-review">
+      <div class="stars">★★★★★</div>
+      <p>"Somos dos con mi esposa y siempre dejamos el telefono en el cargador. Ahora con Guard listo. Problema resuelto."</p>
+      <div class="name">+506 71●●●2 — ayer</div>
+    </div>
+    </div>
+  </div>
+</div>
+
+<!-- THEME 4: WARM CREAM -->
+<div class="preview t4-bg" id="p4">
+  <div class="t4-bar">🔥 OFERTA HOY — ENVIO GRATIS A TODO CR</div>
+  <div class="t4-hero">
+    <div class="badge">⚡ AI PHYSICAL ISOLATION ADAPTER</div>
+    <div class="t4-img">🔌</div>
+    <h1>Protege tu hogar<br><span>desde esta noche.</span></h1>
+    <p>Guard corta la corriente automaticamente al llegar al 100%. Sin apps. Sin configuracion. Siempre activo.</p>
+    <button class="t4-btn">ORDENAR AHORA — ₡17,700</button>
+  </div>
+  <div class="t4-section">
+    <h2>Elige tu <span style="color:#C0690A">proteccion</span></h2>
+    <div class="t4-card">
+      <h3>1x Vazlina Guard</h3>
+      <p>Para 1 cargador en casa</p>
+      <div class="old">₡22,500</div>
+      <div class="price">₡17,700 <span style="background:#C0690A;color:#fff;font-size:11px;padding:2px 7px;border-radius:6px;">21% OFF</span></div>
+    </div>
+    <div class="t4-card active">
+      <h3>2x Vazlina Guard</h3>
+      <p>Dormitorio + sala</p>
+      <div class="old">₡45,000</div>
+      <div class="price">₡29,900 <span style="background:#C0690A;color:#fff;font-size:11px;padding:2px 7px;border-radius:6px;">33% OFF</span></div>
+    </div>
+    <div class="t4-card">
+      <h3>3x Vazlina Guard</h3>
+      <p>Protege cada enchufe</p>
+      <div class="old">₡67,500</div>
+      <div class="price">₡39,900 <span style="background:#C0690A;color:#fff;font-size:11px;padding:2px 7px;border-radius:6px;">41% OFF</span></div>
+    </div>
+  </div>
+  <div class="t4-section">
+    <h2>Lo que dicen nuestros <span style="color:#C0690A">clientes</span></h2>
+    <div class="t4-review">
+      <div class="stars">★★★★★</div>
+      <p>"No les escribi hasta que pasaron 2 dias para probarlo bien. Es una belleza. Siento tranquilidad de verdad."</p>
+      <div class="name">+506 84●●●9 — en linea</div>
+    </div>
+    <div class="t4-review">
+      <div class="stars">★★★★★</div>
+      <p>"Somos dos con mi esposa y siempre dejamos el telefono en el cargador. Ahora con Guard listo. Problema resuelto."</p>
+      <div class="name">+506 71●●●2 — ayer</div>
+    </div>
+  </div>
+</div>
+
+<!-- THEME 5: BOLD PURPLE -->
+<div class="preview t5-bg" id="p5">
+  <div class="t5-bar">⚡ TECNOLOGIA AI — ENVIO GRATIS GARANTIZADO</div>
+  <div class="t5-hero">
+    <div class="badge">⚡ AI PHYSICAL ISOLATION ADAPTER</div>
+    <div class="t5-img">🔌</div>
+    <h1>El futuro de<br><span>cargar sin riesgo.</span></h1>
+    <p>Guard corta la corriente automaticamente al llegar al 100%. Sin apps. Sin configuracion. Siempre activo.</p>
+    <button class="t5-btn">✨ ORDENAR AHORA — ₡17,700</button>
+  </div>
+  <div class="t5-section">
+    <h2>Elige tu <span style="color:#C084FC">proteccion</span></h2>
+    <div class="t5-card">
+      <h3>1x Vazlina Guard</h3>
+      <p>Para 1 cargador en casa</p>
+      <div class="old">₡22,500</div>
+      <div class="price">₡17,700 <span style="background:#7C3AED;color:#fff;font-size:11px;padding:2px 7px;border-radius:6px;">21% OFF</span></div>
+    </div>
+    <div class="t5-card active">
+      <h3>2x Vazlina Guard</h3>
+      <p>Dormitorio + sala</p>
+      <div class="old">₡45,000</div>
+      <div class="price">₡29,900 <span style="background:#7C3AED;color:#fff;font-size:11px;padding:2px 7px;border-radius:6px;">33% OFF</span></div>
+    </div>
+    <div class="t5-card">
+      <h3>3x Vazlina Guard</h3>
+      <p>Protege cada enchufe</p>
+      <div class="old">₡67,500</div>
+      <div class="price">₡39,900 <span style="background:#7C3AED;color:#fff;font-size:11px;padding:2px 7px;border-radius:6px;">41% OFF</span></div>
+    </div>
+  </div>
+  <div class="t5-section">
+    <h2>Lo que dicen nuestros <span style="color:#C084FC">clientes</span></h2>
+    <div class="t5-review">
+      <div class="stars">★★★★★</div>
+      <p>"No les escribi hasta que pasaron 2 dias para probarlo bien. Es una belleza. Siento tranquilidad de verdad."</p>
+      <div class="name">+506 84●●●9 — en linea</div>
+    </div>
+    <div class="t5-review">
+      <div class="stars">★★★★★</div>
+      <p>"Somos dos con mi esposa y siempre dejamos el telefono en el cargador. Ahora con Guard listo. Problema resuelto."</p>
+      <div class="name">+506 71●●●2 — ayer</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function show(n) {
+    document.querySelectorAll('.preview').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.add('inactive'));
+    document.getElementById('p'+n).classList.add('active');
+    document.querySelectorAll('.tab')[n-1].classList.remove('inactive');
+  }
+</script>
+</body>
+</html>
