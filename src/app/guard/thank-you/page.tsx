@@ -257,7 +257,7 @@ function GuardThankYouContent() {
 
         <div className="flex justify-center mb-6">
           <a
-            href="/guard"
+href={(typeof window !== "undefined" ? localStorage.getItem("guard_source") : null) || "/guard"}
             className="inline-flex items-center justify-center px-8 py-3 rounded-2xl text-sm font-bold tracking-widest transition-all active:scale-95 hover:opacity-90"
             style={{ backgroundColor: "#FF4500", color: "#fff" }}
           >

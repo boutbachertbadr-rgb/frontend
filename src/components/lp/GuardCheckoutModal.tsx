@@ -154,6 +154,7 @@ export default function GuardCheckoutModal({
       sessionStorage.setItem("guard_order", updatedPayload);
       sessionStorage.setItem("order_status", "confirmed");
       sessionStorage.setItem("guard_pixel_purchase", JSON.stringify({ value: total, eventId, phone: addr.phone }));
+      localStorage.setItem("guard_source", window.location.pathname);
       window.location.href = "/guard/thank-you";
     } catch (err) {
       console.error("[checkout] createOrder failed:", err);
