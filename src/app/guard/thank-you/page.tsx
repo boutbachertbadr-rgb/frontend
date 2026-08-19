@@ -77,6 +77,12 @@ function GuardThankYouContent() {
   const [retrying, setRetrying] = useState(false);
   const [retrySuccess, setRetrySuccess] = useState(false);
   const [retryFailed, setRetryFailed] = useState(false);
+  const [sourcePage, setSourcePage] = useState("/guard");
+
+  useEffect(() => {
+    const src = localStorage.getItem("guard_source");
+    if (src) setSourcePage(src);
+  }, []);
 
   const handleRetry = async () => {
     if (!addr || items.length === 0 || retrying) return;
@@ -257,7 +263,7 @@ function GuardThankYouContent() {
 
         <div className="flex justify-center mb-6">
           <a
-href={(typeof window !== "undefined" ? localStorage.getItem("guard_source") : null) || "/guard"}
+href={sourcePage}
             className="inline-flex items-center justify-center px-8 py-3 rounded-2xl text-sm font-bold tracking-widest transition-all active:scale-95 hover:opacity-90"
             style={{ backgroundColor: "#FF4500", color: "#fff" }}
           >
