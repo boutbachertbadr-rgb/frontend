@@ -266,6 +266,27 @@ function GuardThankYouContent() {
           </div>
         </div>
 
+        {/* Social proof */}
+        <div className="flex flex-col items-center gap-2 mb-5">
+          <div className="flex items-center">
+            {[
+              "https://i.pravatar.cc/60?img=47",
+              "https://i.pravatar.cc/60?img=11",
+              "https://i.pravatar.cc/60?img=57",
+              "https://i.pravatar.cc/60?img=32",
+              "https://i.pravatar.cc/60?img=25",
+            ].map((src, i) => (
+              <img key={i} src={src} alt="" className="w-8 h-8 rounded-full object-cover border-2" style={{ marginLeft: i === 0 ? 0 : -10, borderColor: theme.night, zIndex: i }} />
+            ))}
+          </div>
+          <div className="flex gap-0.5">
+            {[...Array(5)].map((_, i) => (
+              <svg key={i} width="14" height="14" viewBox="0 0 24 24" fill="#F59E0B"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            ))}
+          </div>
+          <p className="text-xs font-bold tracking-widest uppercase" style={{ color: theme.accent }}>+1,635 Clientes satisfechos con Vazlina</p>
+        </div>
+
         {/* Trust badges */}
         <div className="flex items-center justify-center gap-5 flex-wrap text-xs mb-5" style={{ color: theme.accent }}>
           <span className="flex items-center gap-1.5"><ShieldCheck size={13} style={{ color: theme.accent }} /> Garantía 30 días</span>
