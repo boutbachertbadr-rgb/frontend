@@ -183,8 +183,8 @@ function GuardThankYouContent() {
         {/* Social proof */}
         <div className="rounded-3xl p-4 mb-4 text-center border shadow-sm" style={{ backgroundColor: theme.card, borderColor: theme.cardBorder }}>
           <div className="flex items-center justify-center mb-2">
-            {[47,11,57,32,25].map((n, i) => (
-              <img key={i} src={`https://i.pravatar.cc/60?img=${n}`} alt="" width={32} height={32} className="w-8 h-8 rounded-full object-cover border-2" style={{ marginLeft: i === 0 ? 0 : -10, borderColor: theme.card }} />
+            {["/images/products/review-ana.jpg","/images/products/review-sofia.jpg","/images/products/review-carlos.jpg","/images/products/review-maria.jpg","/images/products/review-laura.jpg"].map((src, i) => (
+              <img key={i} src={src} alt="" width={40} height={40} className="w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm" style={{ marginLeft: i === 0 ? 0 : -12 }} />
             ))}
           </div>
           <div className="flex gap-0.5 justify-center mb-1">
@@ -192,7 +192,7 @@ function GuardThankYouContent() {
               <svg key={i} width="14" height="14" viewBox="0 0 24 24" fill="#F59E0B"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
             ))}
           </div>
-          <p className="text-xs font-bold tracking-widest uppercase" style={{ color: theme.accent }}>+1,635 Clientes satisfechos con Vazlina</p>
+          <p className="text-sm font-bold" style={{ color: theme.textPrimary }}>+6,534 CLIENTES SATISFECHOS CON VAZLINA</p>
         </div>
 
         {connectionWarning && !retrySuccess && (
