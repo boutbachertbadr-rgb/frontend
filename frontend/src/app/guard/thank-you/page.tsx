@@ -215,7 +215,7 @@ function GuardThankYouContent() {
         <div className="grid grid-cols-2 gap-3 mb-4">
           {[
             { icon: Banknote, label: "Pago al recibir", sub: "₡0 por adelantado" },
-            { icon: Truck, label: "Envío gratis", sub: "A todo Costa Rica" },
+            { icon: Truck, label: isExpress ? "Envío Express" : "Envío gratis", sub: isExpress ? "1-3 días hábiles" : "A todo Costa Rica" },
             { icon: ShieldCheck, label: "Garantía 30 días", sub: "Devolución sin preguntas" },
             { icon: Award, label: "Calidad certificada", sub: "Tecnología probada" },
           ].map(({ icon: Icon, label, sub }) => (
