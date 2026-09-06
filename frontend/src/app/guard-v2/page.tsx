@@ -202,8 +202,8 @@ export default function GuardPageV2() {
           </div>
 
           <div className="lp-animate flex justify-center items-center gap-2.5 mb-5">
-            <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: ORANGE }}>
-              <span className="font-bold text-white text-sm">V</span>
+            <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: "#E65C00" }}>
+              <span className="font-bold text-sm" style={{ color: "#1A1A1A" }}>V</span>
             </div>
             <div className="flex flex-col leading-none">
               <span className="font-bold text-base tracking-tight" style={{ color: INK }}>VAZLINA</span>

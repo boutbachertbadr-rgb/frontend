@@ -17,21 +17,21 @@ const THEMES: Record<string, {
     accent: "#E65C00", accentBg: "rgba(230,92,0,0.10)", accentLight: "#FFF3ED",
     textPrimary: "#1A1A1A", textMuted: "#6B7280",
     totalBg: "#0C0C0C",
-    logoCircle: "#E65C00", logoV: "#FFFFFF", tagline: "#E65C00",
+    logoCircle: "#E65C00", logoV: "#1A1A1A", tagline: "#E65C00",
   },
   "/guard-v2": {
     pageBg: "#FAFAFA", card: "#FFFFFF", cardBorder: "#E5E7EB",
     accent: "#E65C00", accentBg: "rgba(230,92,0,0.10)", accentLight: "#FFF3ED",
     textPrimary: "#1A1A1A", textMuted: "#6B7280",
     totalBg: "#111111",
-    logoCircle: "#111111", logoV: "#FFFFFF", tagline: "#E65C00",
+    logoCircle: "#E65C00", logoV: "#1A1A1A", tagline: "#E65C00",
   },
   "/guard-v3": {
     pageBg: "#FFF8F0", card: "#FFFCF8", cardBorder: "#FFD5A8",
     accent: "#C0690A", accentBg: "rgba(192,105,10,0.12)", accentLight: "#FFF3E0",
     textPrimary: "#3D1A00", textMuted: "#9A6040",
     totalBg: "#2A0E00",
-    logoCircle: "#C0690A", logoV: "#FFFFFF", tagline: "#C0690A",
+    logoCircle: "#E65C00", logoV: "#1A1A1A", tagline: "#C0690A",
   },
 };
 const DEFAULT_THEME = THEMES["/guard"];
