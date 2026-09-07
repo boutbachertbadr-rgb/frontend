@@ -161,15 +161,16 @@ export default function GuardPageV3() {
       `}</style>
 
       {/* TOP URGENCY BAR */}
-      <div className="fixed top-0 left-0 right-0 z-50 py-2 px-3 text-center" style={{ backgroundColor: ORANGE }}>
-        <p className="text-white text-xs font-bold flex flex-row items-center justify-center gap-2 flex-wrap leading-none">
+      <div className="fixed top-0 left-0 right-0 z-50 px-3 py-1.5 text-center" style={{ background: `linear-gradient(135deg, ${NIGHT} 0%, #1a1a1a 100%)` }}>
+        <p className="text-[10px] font-bold tracking-wider uppercase mb-0.5" style={{ color: ORANGE }}>¡Precio especial por tiempo limitado!</p>
+        <div className="flex items-center justify-center gap-2 text-white text-xs font-bold flex-wrap">
           <span className="pulse inline-flex items-center gap-1">
-            <Timer size={11} /> TERMINA EN
-            <span className="tabular-nums font-mono bg-black/20 px-1.5 py-0.5 rounded text-xs">{timer}</span>
+            <Timer size={11} className="text-red-400" /> TERMINA EN
+            <span className="tabular-nums font-mono px-1.5 py-0.5 rounded text-xs" style={{ backgroundColor: ORANGE }}>{timer}</span>
           </span>
-          <span className="opacity-40">|</span>
-          <span><s className="opacity-60">&#8353;22,500</s> &#8250; <strong>&#8353;17,700 HOY</strong></span>
-        </p>
+          <span className="opacity-30">|</span>
+          <span><s className="opacity-50 text-gray-400">&#8353;22,500</s> <span className="mx-0.5">&#8250;</span> <strong className="text-base" style={{ color: ORANGE }}>&#8353;17,700</strong> <span className="text-[10px] opacity-70">HOY</span></span>
+        </div>
       </div>
 
       {/* STICKY BOTTOM CTA */}
