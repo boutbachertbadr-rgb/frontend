@@ -72,7 +72,7 @@ function useOfferTimer() {
   return left;
 }
 
-function Img({ src, label, className = "" }: { src: string; label: string; className?: string }) {
+function Img({ src, label, className = "", priority = false }: { src: string; label: string; className?: string; priority?: boolean }) {
   const [err, setErr] = useState(false);
   if (err) {
     return (
@@ -82,7 +82,7 @@ function Img({ src, label, className = "" }: { src: string; label: string; class
       </div>
     );
   }
-  return <img src={src} alt={label} className={className} style={{ objectFit: "cover", display: "block" }} onError={() => setErr(true)} />;
+  return <img src={src} alt={label} className={className} loading={priority ? "eager" : "lazy"} fetchPriority={priority ? "high" : "auto"} decoding={priority ? "sync" : "async"} style={{ objectFit: "cover", display: "block" }} onError={() => setErr(true)} />;
 }
 
 export default function GuardPageV2() {
@@ -214,7 +214,7 @@ export default function GuardPageV2() {
 
         {/* HERO IMAGE — full bleed edge to edge */}
         <div className="lp-animate w-full overflow-hidden shadow-md mb-7" style={{ maxWidth: "100vw" }}>
-          <Img src="/lp-guard/hero.jpg" label="Vazlina Guard — producto naranja metalico sobre superficie premium, fondo oscuro elegante" className="w-full" />
+          <Img src="/lp-guard/hero.jpg" label="Vazlina Guard — producto naranja metalico sobre superficie premium, fondo oscuro elegante" className="w-full" priority />
         </div>
 
         <div className="max-w-lg mx-auto px-5">

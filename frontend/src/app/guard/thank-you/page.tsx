@@ -147,6 +147,17 @@ function GuardThankYouContent() {
     return () => { clearInterval(interval); clearTimeout(stop); };
   }, []);
 
+  if (!orderData) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center gap-4" style={{ backgroundColor: theme.pageBg }}>
+        <div className="w-11 h-11 rounded-full flex items-center justify-center shadow-lg" style={{ backgroundColor: theme.logoCircle }}>
+          <span className="font-bold text-lg leading-none" style={{ color: theme.logoV }}>V</span>
+        </div>
+        <div className="w-6 h-6 border-2 border-t-transparent rounded-full animate-spin" style={{ borderColor: theme.accent, borderTopColor: "transparent" }} />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen px-4 py-8" style={{ backgroundColor: theme.pageBg }}>
       <div className="w-full max-w-md mx-auto">
