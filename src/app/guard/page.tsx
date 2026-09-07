@@ -600,7 +600,7 @@ export default function GuardPage() {
                 { Icon: ShieldCheck, text: "Pago 100% seguro al recibir" },
                 { Icon: Truck, text: "Envio gratis a todo CR" },
                 { Icon: BatteryCharging, text: "Garantia 30 dias" },
-                { Icon: Smartphone, text: "Soporte por WhatsApp" },
+                { Icon: Star, text: "+1,437 clientes satisfechos" },
               ].map(({ Icon, text }) => (
                 <div key={text} className="flex items-center gap-1.5 text-xs font-medium" style={{ color: INK }}>
                   <Icon size={13} style={{ color: ORANGE }} /> {text}
