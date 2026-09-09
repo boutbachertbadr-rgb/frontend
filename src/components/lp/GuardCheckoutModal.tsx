@@ -5,16 +5,115 @@ import { X, ShieldCheck, Truck, ChevronDown, Zap, ChevronLeft } from "lucide-rea
 import { createOrder } from "@/lib/api";
 import { generateEventId } from "@/lib/pixels";
 
-const PROVINCES = ["San José", "Alajuela", "Cartago", "Heredia", "Guanacaste", "Puntarenas", "Limón"];
+const PROVINCES: { name: string; id: string }[] = [
+  { name: "Alajuela", id: "a2paa1lUekxWZmUwOG9jQ0trUTF5dz09" },
+  { name: "Cartago", id: "UEo1cWQ5Skp4cnBSd0dGNHVmZ1pmdz09" },
+  { name: "Guanacaste", id: "ZDJSSWpzN2JnU1BuMFY5Q3plRXlZZz09" },
+  { name: "Heredia", id: "a0FaYTNUcmlZYzdURGtVbVpKOVRlZz09" },
+  { name: "Limón", id: "bUc5V0doZERGREZiaXZsT2tweTdGdz09" },
+  { name: "Puntarenas", id: "a1RJdWoxdFR1c2czZHZ6Q2FyTGx6dz09" },
+  { name: "San José", id: "cHNid0Z1MGVJK25KeXpWcC9PUzVOQT09" },
+];
 
-const CITIES_BY_PROVINCE: Record<string, string[]> = {
-  "San José": ["San José", "Escazú", "Desamparados", "Puriscal", "Tarrazú", "Aserrí", "Mora", "Goicoechea", "Santa Ana", "Alajuelita", "Coronado", "Acosta", "Tibás", "Moravia", "Montes de Oca", "Turrubares", "Dota", "Curridabat", "Pérez Zeledón", "León Cortés"],
-  "Alajuela": ["Alajuela", "San Ramón", "Grecia", "San Mateo", "Atenas", "Naranjo", "Palmares", "Poás", "Orotina", "San Carlos", "Zarcero", "Sarchí", "Upala", "Los Chiles", "Guatuso", "Río Cuarto"],
-  "Cartago": ["Cartago", "Paraíso", "La Unión", "Jiménez", "Turrialba", "Alvarado", "Oreamuno", "El Guarco"],
-  "Heredia": ["Heredia", "Barva", "Santo Domingo", "Santa Bárbara", "San Rafael", "San Isidro", "Belén", "Flores", "San Pablo", "Sarapiquí"],
-  "Guanacaste": ["Liberia", "Nicoya", "Santa Cruz", "Bagaces", "Carrillo", "Cañas", "Abangares", "Tilarán", "Nandayure", "La Cruz", "Hojancha"],
-  "Puntarenas": ["Puntarenas", "Esparza", "Buenos Aires", "Montes de Oro", "Osa", "Quepos", "Golfito", "Coto Brus", "Parrita", "Corredores", "Garabito"],
-  "Limón": ["Limón", "Pococí", "Siquirres", "Talamanca", "Matina", "Guácimo"],
+const CITIES_BY_PROVINCE: Record<string, { name: string; id: string }[]> = {
+  "a2paa1lUekxWZmUwOG9jQ0trUTF5dz09": [
+    { name: "Alajuela", id: "a2paa1lUekxWZmUwOG9jQ0trUTF5dz09" },
+    { name: "Atenas", id: "bThBbkhLdEh4ay9xd1Y0WEUxTmJyZz09" },
+    { name: "Grecia", id: "WnVJQWI4Tm5xQXVEMkRCRXZTL2R4Zz09" },
+    { name: "Guatuso", id: "eFplY0xUT0R6MzJ5VEtlNzkrbGF3QT09" },
+    { name: "Los Chiles", id: "QURpU0Q0QXBDSlM1YWJDWkZCajVnUT09" },
+    { name: "Naranjo", id: "dVJDZTJrN0hvRC84YXFMSFQva3BlUT09" },
+    { name: "Orotina", id: "WHFkdmFJeWFxYllQK1l0S3UrZTM0QT09" },
+    { name: "Palmares", id: "VVdZeHhtMGtqbHhtSCsxZ2NIdzdzdz09" },
+    { name: "Poás", id: "OFllemNNU0dhY3B2ODdFamxKRUEwUT09" },
+    { name: "Río Cuarto", id: "L3o1Nm9BMHFpSUdIcUwrNzdEOGNXdz09" },
+    { name: "San Carlos", id: "WFNHd29ocldLZFZnODVHUURyYVFiZz09" },
+    { name: "San Mateo", id: "MFdMdE9jVmg0QldnVlkzR0ZDZnNpZz09" },
+    { name: "San Ramón", id: "cEpIR1FzVkIxOVFsNHduYUg2SnhiZz09" },
+    { name: "Sarchí", id: "VDVVNmdqaGMreWVSK1h5QXpMaFZkZz09" },
+    { name: "Upala", id: "aGZXeU4xTlRteFg5L2RvYkJJL0tRQT09" },
+    { name: "Zarcero", id: "VnRMZWFRT0JXOGJJbnlBNXY2RnUrQT09" },
+  ],
+  "UEo1cWQ5Skp4cnBSd0dGNHVmZ1pmdz09": [
+    { name: "Alvarado", id: "UEo1cWQ5Skp4cnBSd0dGNHVmZ1pmdz09" },
+    { name: "Cartago", id: "bVc3K0xsMmFPSlROUjloSzUwMzl3QT09" },
+    { name: "El Guarco", id: "bzd4M2E4NjlQRkNoQlV6akY1R3hnQT09" },
+    { name: "Jiménez", id: "N3loZG9sSndzNGkrK0E2ZGU2M3Q5QT09" },
+    { name: "La Unión", id: "cy9GZXRKeXhXWlFxbS9zbWdVd3FHdz09" },
+    { name: "Oreamuno", id: "TWNlTFFrZy9Tb3dlN1VpOHFucm5QZz09" },
+    { name: "Paraíso", id: "YlNNcSs1UHJ3MGF6KzhpK05jL0dCQT09" },
+    { name: "Turrialba", id: "WHVvM09IczB5bkFabTlvOXVrZk5ndz09" },
+  ],
+  "ZDJSSWpzN2JnU1BuMFY5Q3plRXlZZz09": [
+    { name: "Abangares", id: "ZDJSSWpzN2JnU1BuMFY5Q3plRXlZZz09" },
+    { name: "Bagaces", id: "VndmM1ZsZnN5V0tnRkdsOTJNY0Qvdz09" },
+    { name: "Cañas", id: "VDEzTW5VL2NHNGNUeDN3aEhZanVaQT09" },
+    { name: "Carrillo", id: "L28xaUZMMjhUTVBvRHcxd1p6QVFzdz09" },
+    { name: "Hojancha", id: "MGVUODVqcU5xREc2L3VySDJuWFVBQT09" },
+    { name: "La Cruz", id: "WGt4UFZUYTViczdkakpyUTRpWWJlZz09" },
+    { name: "Liberia", id: "OFR2a240UnQ3V1JjczVjL2trRUhYdz09" },
+    { name: "Nandayure", id: "NEpBT0pIaTVEYjYyU2RNeFJvc2Zsdz09" },
+    { name: "Nicoya", id: "SUk5VWFwT1o3VjlWbGpPdC9TYW1MUT09" },
+    { name: "Santa Cruz", id: "UWZvcSt4dW4wcCtHZkZXTlZNRzUrdz09" },
+    { name: "Tilarán", id: "S0pxZ2xuZ2dnOXJJRWd0ekkvRWZTUT09" },
+  ],
+  "a0FaYTNUcmlZYzdURGtVbVpKOVRlZz09": [
+    { name: "Barva", id: "a0FaYTNUcmlZYzdURGtVbVpKOVRlZz09" },
+    { name: "Belén", id: "T0ZBZUM1QVlwYUpNa2wvNkQ3aUt0QT09" },
+    { name: "Flores", id: "bzFEU2g3VU0wNlpVZGtuZ1N4QXpQZz09" },
+    { name: "Heredia", id: "dklkS1NzTnVLVS94ci92T0JQekZuUT09" },
+    { name: "San Isidro", id: "V0xwU0ZPaUs4TjZEZDUyYTZJV2lBdz09" },
+    { name: "San Pablo", id: "UXkwVXRVZWUraWJGOElPY3c3alRPdz09" },
+    { name: "San Rafael", id: "dzV1bUFXMldLRXVua2JxYjR2WHR0UT09" },
+    { name: "Santa Bárbara", id: "c0Jkc01mQ1Q0SlFSZnR4eTI3Y0psdz09" },
+    { name: "Santo Domingo", id: "K3dSdTA3N0FIS3pVVkYwYkV1SVNjZz09" },
+    { name: "Sarapiquí", id: "VndrTHFwbVRLSFFsQVlOU29GWU02dz09" },
+  ],
+  "bUc5V0doZERGREZiaXZsT2tweTdGdz09": [
+    { name: "Guácimo", id: "bUc5V0doZERGREZiaXZsT2tweTdGdz09" },
+    { name: "Limón", id: "NGFNZGFKcDdnaVFzRWtJSnI2ZW1PQT09" },
+    { name: "Matina", id: "N0wxekJ2c2E3R1Rxanhaa1M0OVBhUT09" },
+    { name: "Pococí", id: "ejY3alNneEN2am5kdlVlR2lObllrZz09" },
+    { name: "Siquirres", id: "OG5ha1F3RmZtZVNZNUs4aWtpYzg5Zz09" },
+    { name: "Talamanca", id: "dzkxcUVNZlZRd2dJc2liVDJlVlVGZz09" },
+  ],
+  "a1RJdWoxdFR1c2czZHZ6Q2FyTGx6dz09": [
+    { name: "Buenos Aires", id: "a1RJdWoxdFR1c2czZHZ6Q2FyTGx6dz09" },
+    { name: "Corredores", id: "cmptcExIQlFBY1dYUzNJMkNuNzQrQT09" },
+    { name: "Coto Brus", id: "aExFb003dnUraE5vQUwrVjRkTGJlQT09" },
+    { name: "Esparza", id: "S2dIOHNOenpucHMvaG96OERrVmgvUT09" },
+    { name: "Garabito", id: "MzR0SUIvd2d3U05HYUVGcUNpVFNZdz09" },
+    { name: "Golfito", id: "dnNtTzFpUG1ZazNPUkQzQnhZYUl2UT09" },
+    { name: "Montes de Oro", id: "ZW9HaWZWN0diMStzVS8ycXYyNmlqQT09" },
+    { name: "Monteverde", id: "TXpDdFlMbGVleUxCUVlhL1pmY0Radz09" },
+    { name: "Osa", id: "OFUybmt2dUQ3Q2NpLzVJZUJERHRndz09" },
+    { name: "Parrita", id: "ekRTVytrZ05vdDF0dUpmcXR6UXpEUT09" },
+    { name: "Puerto Jiménez", id: "bjVOajB1QXZNN0NYYmdoSXgzZ29wZz09" },
+    { name: "Puntarenas", id: "MElpZnE3d2lTRmJFdzYxU0NwL3ovZz09" },
+    { name: "Quepos", id: "aWI0bEN3QkFYQjVoNmRSWWF4dFMyZz09" },
+  ],
+  "cHNid0Z1MGVJK25KeXpWcC9PUzVOQT09": [
+    { name: "Acosta", id: "cHNid0Z1MGVJK25KeXpWcC9PUzVOQT09" },
+    { name: "Alajuelita", id: "WXBsYlY4MGxqSTdyejV4SGZQeEtpdz09" },
+    { name: "Aserrí", id: "K2R2bTBxRWJZUVpzdExSUmdqVUZkUT09" },
+    { name: "Curridabat", id: "REtXOXI5Z1JHaWUzZE5YWndGbEFpQT09" },
+    { name: "Desamparados", id: "VFZYWHBmSFRTQ3Y5VEVXZjZabCtZQT09" },
+    { name: "Dota", id: "RmpkaFF0T3BraDJSRmJUcjdFbzI5QT09" },
+    { name: "Escazú", id: "UEw1L1pLOTBGV3lRcFVucEM5WU0zdz09" },
+    { name: "Goicoechea", id: "R1pOREh2MjRCZVRTOElxVWhubWFxUT09" },
+    { name: "León Cortés Castro", id: "TTRYbUNMK0pjM0FQdVNHaVUxNHBmZz09" },
+    { name: "Montes de Oca", id: "ajJpN3hBWHNwWUdXK2RYbThWNG1jQT09" },
+    { name: "Mora", id: "Q1V1WkxhWjliRVd4RjNHcFdoZUhZdz09" },
+    { name: "Moravia", id: "MUpUQVBRY242Rms3UmF1Rk95SjhKUT09" },
+    { name: "Pérez Zeledón", id: "K1phdTQxL0kyR3d2SjhPZHVrQytKdz09" },
+    { name: "Puriscal", id: "YUdGcVRKeGQzL0tjbUFXUkVxUUl5QT09" },
+    { name: "San José", id: "bHczeHFzcnJFSWlNMnBzMW5TeWFmUT09" },
+    { name: "Santa Ana", id: "Vk5YUWdIRUVHUXZIQ25JYVlOaXNiQT09" },
+    { name: "Tarrazú", id: "WGNoRmJpdUUxZ3hBYzlHN0dwUk5rZz09" },
+    { name: "Tibás", id: "Tzd0RGlOOUZzbFgvV3hQT25pTnJXdz09" },
+    { name: "Turrubares", id: "U0FDVWt3cnVlb2lYZVk2TnJzQjlNZz09" },
+    { name: "Vázquez de Coronado", id: "SnYvVzh2Zy9MVG9EdzNtNWxYS1k1QT09" },
+  ],
 };
 
 export interface LPVariant {
@@ -105,11 +204,17 @@ export default function GuardCheckoutModal({
     const lastName = String(formData.get("last_name") ?? "").trim();
     const rawPhone = String(formData.get("phone") ?? "").replace(/\D/g, "");
     const phone = rawPhone.startsWith("506") ? `+${rawPhone}` : `+506${rawPhone}`;
+    const provinceId = String(formData.get("state") ?? "");
+    const cityId = String(formData.get("city") ?? "");
+    const provinceName = PROVINCES.find(p => p.id === provinceId)?.name ?? "";
+    const cityName = (CITIES_BY_PROVINCE[provinceId] ?? []).find(c => c.id === cityId)?.name ?? "";
     const addr = {
       name: `${firstName} ${lastName}`.trim(),
       phone,
-      state: String(formData.get("state") ?? ""),
-      city: String(formData.get("city") ?? ""),
+      state: provinceName,
+      city: cityName,
+      province_id: provinceId,
+      city_id: cityId,
       distrito: "",
       address: String(formData.get("address") ?? "").slice(0, 60).replace(/[^a-zA-Z0-9áéíóúñÁÉÍÓÚÑüÜ ,./\-#]/g, ""),
       reference: String(formData.get("reference") ?? ""),
@@ -121,8 +226,8 @@ export default function GuardCheckoutModal({
     if (!firstName) errors.first_name = "Ingresá tu nombre";
     if (!lastName) errors.last_name = "Ingresá tu apellido";
     if (rawPhone.length < 8) errors.phone = "Ingresá un teléfono válido (8 dígitos)";
-    if (!addr.state.trim()) errors.state = "Seleccioná tu provincia";
-    if (!addr.city.trim()) errors.city = "Seleccioná tu ciudad";
+    if (!provinceId) errors.state = "Seleccioná tu provincia";
+    if (!cityId) errors.city = "Seleccioná tu ciudad";
     if (!addr.address.trim()) errors.address = "Ingresá tu dirección";
     if (!addr.reference.trim()) errors.reference = "Ingresá un punto de referencia";
     if (Object.keys(errors).length > 0) {
@@ -155,6 +260,9 @@ export default function GuardCheckoutModal({
         customer_distrito: addr.distrito,
         customer_address: addr.address,
         customer_reference: addr.reference,
+        customer_note: addr.note,
+        province_id: addr.province_id,
+        city_id: addr.city_id,
         items: orderItems,
         is_upsell_accepted: false,
         total_price: total,
@@ -344,7 +452,7 @@ export default function GuardCheckoutModal({
                     <div className="relative">
                       <select name="state" onChange={(e) => setSelectedProvince(e.target.value)} className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none appearance-none bg-white ${errClass("state")}`}>
                         <option value="">Seleccionar</option>
-                        {PROVINCES.map(p => <option key={p} value={p}>{p}</option>)}
+                        {PROVINCES.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
                       </select>
                       <ChevronDown size={15} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
                     </div>
@@ -355,7 +463,7 @@ export default function GuardCheckoutModal({
                     <div className="relative">
                       <select name="city" className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none appearance-none bg-white ${errClass("city")}`}>
                         <option value="">Seleccionar</option>
-                        {(CITIES_BY_PROVINCE[selectedProvince] ?? []).map(c => <option key={c} value={c}>{c}</option>)}
+                        {(CITIES_BY_PROVINCE[selectedProvince] ?? []).map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                       </select>
                       <ChevronDown size={15} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
                     </div>
