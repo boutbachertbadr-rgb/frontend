@@ -7,6 +7,16 @@ import { generateEventId } from "@/lib/pixels";
 
 const PROVINCES = ["San José", "Alajuela", "Cartago", "Heredia", "Guanacaste", "Puntarenas", "Limón"];
 
+const CITIES_BY_PROVINCE: Record<string, string[]> = {
+  "San José": ["San José", "Escazú", "Desamparados", "Puriscal", "Tarrazú", "Aserrí", "Mora", "Goicoechea", "Santa Ana", "Alajuelita", "Coronado", "Acosta", "Tibás", "Moravia", "Montes de Oca", "Turrubares", "Dota", "Curridabat", "Pérez Zeledón", "León Cortés"],
+  "Alajuela": ["Alajuela", "San Ramón", "Grecia", "San Mateo", "Atenas", "Naranjo", "Palmares", "Poás", "Orotina", "San Carlos", "Zarcero", "Sarchí", "Upala", "Los Chiles", "Guatuso", "Río Cuarto"],
+  "Cartago": ["Cartago", "Paraíso", "La Unión", "Jiménez", "Turrialba", "Alvarado", "Oreamuno", "El Guarco"],
+  "Heredia": ["Heredia", "Barva", "Santo Domingo", "Santa Bárbara", "San Rafael", "San Isidro", "Belén", "Flores", "San Pablo", "Sarapiquí"],
+  "Guanacaste": ["Liberia", "Nicoya", "Santa Cruz", "Bagaces", "Carrillo", "Cañas", "Abangares", "Tilarán", "Nandayure", "La Cruz", "Hojancha"],
+  "Puntarenas": ["Puntarenas", "Esparza", "Buenos Aires", "Montes de Oro", "Osa", "Quepos", "Golfito", "Coto Brus", "Parrita", "Corredores", "Garabito"],
+  "Limón": ["Limón", "Pococí", "Siquirres", "Talamanca", "Matina", "Guácimo"],
+};
+
 export interface LPVariant {
   name: string;
   price: number;
@@ -62,6 +72,7 @@ export default function GuardCheckoutModal({
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+  const [selectedProvince, setSelectedProvince] = useState("");
   const EXPRESS_FEE = 2000;
   const total = (variant?.price ?? 0) + (express ? EXPRESS_FEE : 0);
 
@@ -90,23 +101,30 @@ export default function GuardCheckoutModal({
     setSubmitError("");
 
     const formData = new FormData(e.currentTarget);
+    const firstName = String(formData.get("first_name") ?? "").trim();
+    const lastName = String(formData.get("last_name") ?? "").trim();
+    const rawPhone = String(formData.get("phone") ?? "").replace(/\D/g, "");
+    const phone = rawPhone.startsWith("506") ? `+${rawPhone}` : `+506${rawPhone}`;
     const addr = {
-      name: String(formData.get("name") ?? ""),
-      phone: String(formData.get("phone") ?? ""),
+      name: `${firstName} ${lastName}`.trim(),
+      phone,
       state: String(formData.get("state") ?? ""),
       city: String(formData.get("city") ?? ""),
-      distrito: String(formData.get("distrito") ?? ""),
-      address: String(formData.get("address") ?? ""),
+      distrito: "",
+      address: String(formData.get("address") ?? "").slice(0, 60).replace(/[^a-zA-Z0-9áéíóúñÁÉÍÓÚÑüÜ ,./\-#]/g, ""),
       reference: String(formData.get("reference") ?? ""),
+      note: String(formData.get("note") ?? ""),
     };
     console.log("[checkout] FormData addr:", addr);
 
     const errors: Record<string, string> = {};
-    if (!addr.name.trim()) errors.name = "Ingresá tu nombre completo";
-    if (!addr.phone.trim()) errors.phone = "Ingresá tu teléfono";
+    if (!firstName) errors.first_name = "Ingresá tu nombre";
+    if (!lastName) errors.last_name = "Ingresá tu apellido";
+    if (rawPhone.length < 8) errors.phone = "Ingresá un teléfono válido (8 dígitos)";
     if (!addr.state.trim()) errors.state = "Seleccioná tu provincia";
-    if (!addr.city.trim()) errors.city = "Ingresá tu cantón";
-    if (!addr.address.trim()) errors.address = "Ingresá tu dirección exacta";
+    if (!addr.city.trim()) errors.city = "Seleccioná tu ciudad";
+    if (!addr.address.trim()) errors.address = "Ingresá tu dirección";
+    if (!addr.reference.trim()) errors.reference = "Ingresá un punto de referencia";
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
       setSubmitting(false);
@@ -300,44 +318,66 @@ export default function GuardCheckoutModal({
               </div>
 
               <form onSubmit={handleNativeSubmit} className="space-y-3">
-                <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">Nombre completo</label>
-                  <input name="name" type="text" placeholder="Ana García" className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 bg-white ${errClass("name")}`} />
-                  {formErrors.name && <p className="text-red-600 text-xs mt-1">{formErrors.name}</p>}
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-700 mb-1">Nombre <span className="text-red-500 text-[10px] font-bold">REQUERIDO</span></label>
+                    <input name="first_name" type="text" placeholder="María" className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 bg-white ${errClass("first_name")}`} />
+                    {formErrors.first_name && <p className="text-red-600 text-xs mt-1">{formErrors.first_name}</p>}
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-700 mb-1">Apellido <span className="text-red-500 text-[10px] font-bold">REQUERIDO</span></label>
+                    <input name="last_name" type="text" placeholder="López" className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 bg-white ${errClass("last_name")}`} />
+                    {formErrors.last_name && <p className="text-red-600 text-xs mt-1">{formErrors.last_name}</p>}
+                  </div>
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">Teléfono</label>
-                  <input name="phone" type="tel" placeholder="8888-0000" className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 bg-white ${errClass("phone")}`} />
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">Teléfono <span className="text-red-500 text-[10px] font-bold">REQUERIDO</span></label>
+                  <div className="flex items-center border rounded-xl bg-white overflow-hidden" style={{ borderColor: formErrors.phone ? "#E65C00" : "#E5E7EB" }}>
+                    <span className="pl-4 pr-2 text-sm text-gray-400 font-medium shrink-0">+506</span>
+                    <input name="phone" type="tel" placeholder="8312 3456" className="w-full px-2 py-3 text-sm focus:outline-none bg-transparent" />
+                  </div>
                   {formErrors.phone && <p className="text-red-600 text-xs mt-1">{formErrors.phone}</p>}
                 </div>
-                <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">Provincia</label>
-                  <div className="relative">
-                    <select name="state" className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none appearance-none bg-white ${errClass("state")}`}>
-                      <option value="">Selecciona tu provincia</option>
-                      {PROVINCES.map(p => <option key={p} value={p}>{p}</option>)}
-                    </select>
-                    <ChevronDown size={15} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-700 mb-1">Provincia <span className="text-red-500 text-[10px] font-bold">REQUERIDO</span></label>
+                    <div className="relative">
+                      <select name="state" onChange={(e) => setSelectedProvince(e.target.value)} className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none appearance-none bg-white ${errClass("state")}`}>
+                        <option value="">Seleccionar</option>
+                        {PROVINCES.map(p => <option key={p} value={p}>{p}</option>)}
+                      </select>
+                      <ChevronDown size={15} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                    </div>
+                    {formErrors.state && <p className="text-red-600 text-xs mt-1">{formErrors.state}</p>}
                   </div>
-                  {formErrors.state && <p className="text-red-600 text-xs mt-1">{formErrors.state}</p>}
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-700 mb-1">Ciudad <span className="text-red-500 text-[10px] font-bold">REQUERIDO</span></label>
+                    <div className="relative">
+                      <select name="city" className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none appearance-none bg-white ${errClass("city")}`}>
+                        <option value="">Seleccionar</option>
+                        {(CITIES_BY_PROVINCE[selectedProvince] ?? []).map(c => <option key={c} value={c}>{c}</option>)}
+                      </select>
+                      <ChevronDown size={15} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                    </div>
+                    {formErrors.city && <p className="text-red-600 text-xs mt-1">{formErrors.city}</p>}
+                  </div>
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">Cantón</label>
-                  <input name="city" type="text" placeholder="Escazú" className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 bg-white ${errClass("city")}`} />
-                  {formErrors.city && <p className="text-red-600 text-xs mt-1">{formErrors.city}</p>}
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">Distrito</label>
-                  <input name="distrito" type="text" placeholder="San Rafael" className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#E65C00] bg-white" />
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">Dirección exacta</label>
-                  <input name="address" type="text" placeholder="Calle 5, Casa #12" className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 bg-white ${errClass("address")}`} />
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">Dirección <span className="text-red-500 text-[10px] font-bold">REQUERIDO</span></label>
+                  <input name="address" type="text" maxLength={60} placeholder="Calle Duarte 45" className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 bg-white ${errClass("address")}`} />
+                  <p className="text-[10px] text-gray-400 mt-0.5">Máx 60 caracteres, solo letras y números.</p>
                   {formErrors.address && <p className="text-red-600 text-xs mt-1">{formErrors.address}</p>}
                 </div>
-                <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">Punto de referencia</label>
-                  <input name="reference" type="text" placeholder="Frente al supermercado" className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#E65C00] bg-white" />
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-700 mb-1">Punto de referencia <span className="text-red-500 text-[10px] font-bold">REQUERIDO</span></label>
+                    <input name="reference" type="text" placeholder="Cerca de la farmacia" className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 bg-white ${errClass("reference")}`} />
+                    {formErrors.reference && <p className="text-red-600 text-xs mt-1">{formErrors.reference}</p>}
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-700 mb-1">Nota <span className="text-gray-400 text-[10px]">OPCIONAL</span></label>
+                    <input name="note" type="text" placeholder="Llamar antes" className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#E65C00] bg-white" />
+                  </div>
                 </div>
                 <div className="pt-1">
                   <label className="block text-xs font-semibold text-gray-700 mb-2">Método de envío</label>
