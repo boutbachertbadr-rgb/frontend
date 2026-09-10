@@ -136,21 +136,6 @@ export interface ColorOption {
   dots: string[];
 }
 
-const SKU_SILVER = "GRISADAPTADORCR";
-const SKU_ORANGE = "ORANGEADAPTADORCR"; // TODO: replace with real orange SKU
-
-const COLOR_TO_PRODUCTS: Record<string, { sku: string; qty: number }[]> = {
-  "orange":  [{ sku: SKU_ORANGE, qty: 1 }],
-  "silver":  [{ sku: SKU_SILVER, qty: 1 }],
-  "mix":     [{ sku: SKU_ORANGE, qty: 1 }, { sku: SKU_SILVER, qty: 1 }],
-  "2orange": [{ sku: SKU_ORANGE, qty: 2 }],
-  "2silver": [{ sku: SKU_SILVER, qty: 2 }],
-  "2o1s":    [{ sku: SKU_ORANGE, qty: 2 }, { sku: SKU_SILVER, qty: 1 }],
-  "1o2s":    [{ sku: SKU_ORANGE, qty: 1 }, { sku: SKU_SILVER, qty: 2 }],
-  "3orange": [{ sku: SKU_ORANGE, qty: 3 }],
-  "3silver": [{ sku: SKU_SILVER, qty: 3 }],
-};
-
 export const COLOR_OPTIONS: Record<number, ColorOption[]> = {
   1: [
     { id: "orange", label: "Naranja Metalico", dots: [ORANGE_DOT] },
@@ -258,21 +243,28 @@ export default function GuardCheckoutModal({
 
     const eventId = generateEventId();
 
-    const colorSuffix = colorChoice ? ` — ${colorChoice.label}` : "";
-    const coloredItems = variant.items.map((item, i) =>
-      i === 0 ? { ...item, product_name: item.product_name + colorSuffix } : item
-    );
+    const SKU_ORANGE = "ORONGEADAPTACR";
+    const SKU_SILVER = "GRISADAPTADORCR";
+
+    const unitPrice = variant.price / qty;
+    const colorId = colorChoice?.id ?? "orange";
+
+    let orangeQty = 0, silverQty = 0;
+    if (colorId === "orange" || colorId === "3orange") { orangeQty = qty; }
+    else if (colorId === "silver" || colorId === "3silver") { silverQty = qty; }
+    else if (colorId === "mix") { orangeQty = 1; silverQty = 1; }
+    else if (colorId === "2orange") { orangeQty = 2; }
+    else if (colorId === "2silver") { silverQty = 2; }
+    else if (colorId === "2o1s") { orangeQty = 2; silverQty = 1; }
+    else if (colorId === "1o2s") { orangeQty = 1; silverQty = 2; }
+
+    const coloredItems: { product_name: string; quantity: number; price_per_item: number; sku: string }[] = [];
+    if (orangeQty > 0) coloredItems.push({ product_name: "Vazlina Guard — Naranja Metalico", quantity: orangeQty, price_per_item: unitPrice, sku: SKU_ORANGE });
+    if (silverQty > 0) coloredItems.push({ product_name: "Vazlina Guard — Plata Premium", quantity: silverQty, price_per_item: unitPrice, sku: SKU_SILVER });
+
     const orderItems = express
       ? [...coloredItems, { product_name: "Envío Express (1-3 días)", quantity: 1, price_per_item: EXPRESS_FEE }]
       : coloredItems;
-
-    const fulfillmentProducts = colorChoice
-      ? (COLOR_TO_PRODUCTS[colorChoice.id] ?? []).map(p => ({
-          sku: p.sku,
-          quantity: p.qty,
-          price: variant.price,
-        }))
-      : [];
 
     try {
       const response = await createOrder({
@@ -287,7 +279,6 @@ export default function GuardCheckoutModal({
         province_id: addr.province_id,
         city_id: addr.city_id,
         items: orderItems,
-        products: fulfillmentProducts,
         is_upsell_accepted: false,
         total_price: total,
         browser_event_id: eventId,

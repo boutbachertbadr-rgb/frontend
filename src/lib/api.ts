@@ -4,6 +4,7 @@ export interface OrderItem {
   product_name: string;
   quantity: number;
   price_per_item: number;
+  sku?: string;
 }
 
 export interface CreateOrderPayload {
@@ -18,7 +19,6 @@ export interface CreateOrderPayload {
   province_id?: string;
   city_id?: string;
   items: OrderItem[];
-  products?: { sku: string; quantity: number; price: number }[];
   is_upsell_accepted: boolean;
   total_price: number;
   browser_event_id: string | null;

@@ -4,6 +4,7 @@ export interface OrderItem {
   product_name: string;
   quantity: number;
   price_per_item: number;
+  sku?: string;
 }
 
 export interface CreateOrderPayload {
