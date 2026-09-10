@@ -4,8 +4,6 @@
 var BACKEND_URL = 'https://api.vazlina.shop';
 var SHEET_WEBHOOK_SECRET = 'vzl_sheet_2024xK9';
 
-// Status column index (1-based) — col 12 = "Status"
-var STATUS_COL = 12;
 // Order ID column index — col 2 = "Order ID"
 var ORDER_ID_COL = 2;
 
@@ -125,19 +123,30 @@ function setupTrigger() {
 // ============================================================
 
 var HEADERS = [
-  'Date',
-  'Order ID',
-  'Customer Name',
-  'Phone',
-  'State',
-  'City',
-  'Address',
-  'Main Product',
-  'Upsell (Yes/No)',
-  'Upsell Product',
-  'Total to Collect',
-  'Status'
+  'Date',           // A  1
+  'Order ID',       // B  2
+  'First Name',     // C  3
+  'Last Name',      // D  4
+  'Phone',          // E  5
+  'Province',       // F  6
+  'Province ID',    // G  7
+  'City',           // H  8
+  'City ID',        // I  9
+  'Address',        // J  10
+  'Products',       // K  11  (SKU · qty · price)
+  'Reference',      // L  12
+  'Note',           // M  13
+  'Color',          // N  14
+  'Shipping',       // O  15
+  'Product Price',  // P  16
+  'Shipping Price', // Q  17
+  'Total',          // R  18
+  'Status',         // S  19
+  'Fufills ID'      // T  20
 ];
+
+// Update column index for Status (now col 19)
+var STATUS_COL = 19;
 
 function doPost(e) {
   try {
@@ -148,59 +157,61 @@ function doPost(e) {
     if (!sheet) {
       sheet = ss.insertSheet('Orders');
       sheet.appendRow(HEADERS);
-      // Style header row
       var headerRange = sheet.getRange(1, 1, 1, HEADERS.length);
       headerRange.setBackground('#1a73e8');
       headerRange.setFontColor('#ffffff');
       headerRange.setFontWeight('bold');
       sheet.setFrozenRows(1);
-      // Column widths
-      sheet.setColumnWidth(1, 130);  // Fecha
-      sheet.setColumnWidth(2, 80);   // Order ID
-      sheet.setColumnWidth(3, 160);  // Nombre
-      sheet.setColumnWidth(4, 130);  // Teléfono
-      sheet.setColumnWidth(5, 100);  // Estado
-      sheet.setColumnWidth(6, 120);  // Ciudad
-      sheet.setColumnWidth(7, 220);  // Dirección
-      sheet.setColumnWidth(8, 200);  // Producto Principal
-      sheet.setColumnWidth(9, 90);   // Upsell
-      sheet.setColumnWidth(10, 180); // Producto Upsell
-      sheet.setColumnWidth(11, 130); // Total
-      sheet.setColumnWidth(12, 130); // Status
+      sheet.setColumnWidth(1, 130);   // Date
+      sheet.setColumnWidth(2, 80);    // Order ID
+      sheet.setColumnWidth(3, 120);   // First Name
+      sheet.setColumnWidth(4, 120);   // Last Name
+      sheet.setColumnWidth(5, 140);   // Phone
+      sheet.setColumnWidth(6, 100);   // Province
+      sheet.setColumnWidth(7, 200);   // Province ID
+      sheet.setColumnWidth(8, 110);   // City
+      sheet.setColumnWidth(9, 200);   // City ID
+      sheet.setColumnWidth(10, 220);  // Address
+      sheet.setColumnWidth(11, 280);  // Products
+      sheet.setColumnWidth(12, 180);  // Reference
+      sheet.setColumnWidth(13, 150);  // Note
+      sheet.setColumnWidth(14, 100);  // Color
+      sheet.setColumnWidth(15, 90);   // Shipping
+      sheet.setColumnWidth(16, 110);  // Product Price
+      sheet.setColumnWidth(17, 110);  // Shipping Price
+      sheet.setColumnWidth(18, 110);  // Total
+      sheet.setColumnWidth(19, 130);  // Status
+      sheet.setColumnWidth(20, 100);  // Fufills ID
     }
 
-    var upsellYesNo = data.upsell || (data.is_upsell_accepted === true ? 'Yes' : (data.is_upsell_accepted === false ? 'No' : 'No'));
-    var upsellProduct = (data.producto_upsell && data.producto_upsell !== 'No') ? data.producto_upsell : '';
-    var mainProduct = data.producto_principal || data.products_ordered || '';
-    var total = data.total_cobrar || (data.total_price ? ('$' + parseFloat(data.total_price).toFixed(2) + ' MXN') : '');
-
     var newRow = [
-      data.fecha        || data.timestamp || new Date().toLocaleString('en-GB'),
+      data.fecha        || new Date().toLocaleString('en-GB'),
       data.order_id     || '',
-      data.nombre       || data.customer_name     || '',
-      data.telefono     || data.customer_phone    || '',
-      data.estado       || data.customer_state    || '',
-      data.ciudad       || data.customer_city     || '',
-      data.direccion    || data.customer_address  || '',
-      mainProduct,
-      upsellYesNo,
-      upsellProduct,
-      total,
-      data.status       || 'Pending confirmation'
+      data.first_name   || '',
+      data.last_name    || '',
+      data.telefono     || '',
+      data.estado       || '',
+      data.province_id  || '',
+      data.ciudad       || '',
+      data.city_id      || '',
+      data.direccion    || '',
+      data.products     || '',
+      data.reference    || '',
+      data.note         || '',
+      data.color        || '',
+      data.envio        || 'Standard',
+      data.precio_producto || '',
+      data.precio_envio    || 'Free',
+      data.total_cobrar    || '',
+      data.status       || 'Pending confirmation',
+      data.fufills_id   || ''
     ];
 
     sheet.appendRow(newRow);
     applyStatusDropdown(sheet, sheet.getLastRow());
 
-    // Color upsell cell green if accepted
-    var lastRow = sheet.getLastRow();
-    if (data.upsell === 'Yes') {
-      sheet.getRange(lastRow, 9).setBackground('#d4edda').setFontColor('#155724');
-      sheet.getRange(lastRow, 10).setBackground('#d4edda').setFontColor('#155724');
-    }
-
     return ContentService
-      .createTextOutput(JSON.stringify({status: 'success', row: lastRow}))
+      .createTextOutput(JSON.stringify({status: 'success', row: sheet.getLastRow()}))
       .setMimeType(ContentService.MimeType.JSON);
 
   } catch (err) {
