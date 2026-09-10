@@ -31,8 +31,8 @@ interface Bundle {
 
 const BUNDLES: Bundle[] = [
   { id: "1x", name: "1x Vazlina Guard - Proteccion Individual", shortName: "1x Vazlina Guard", price: 17700, oldPrice: 22500, save: "21% OFF", note: "Para 1 cargador en casa" },
-  { id: "2x", name: "2x Vazlina Guard - Pack Familia", shortName: "2x Vazlina Guard", price: 29900, oldPrice: 45000, save: "33% OFF", note: "El mas popular - dormitorio + sala" },
-  { id: "3x", name: "3x Vazlina Guard - Proteccion Total", shortName: "3x Vazlina Guard", price: 39900, oldPrice: 67500, save: "41% OFF", note: "Protege cada enchufe del hogar", best: true },
+  { id: "2x", name: "2x Vazlina Guard - Pack Familia", shortName: "2x Vazlina Guard", price: 29900, oldPrice: 45000, save: "33% OFF", note: "El mas popular - dormitorio + sala", best: true },
+  { id: "3x", name: "3x Vazlina Guard - Proteccion Total", shortName: "3x Vazlina Guard", price: 39900, oldPrice: 67500, save: "41% OFF", note: "Protege cada enchufe del hogar" },
 ];
 
 const FAQS = [
@@ -72,7 +72,7 @@ function useOfferTimer() {
   return left;
 }
 
-function Img({ src, label, className = "", priority = false }: { src: string; label: string; className?: string; priority?: boolean }) {
+function Img({ src, label, className = "" }: { src: string; label: string; className?: string }) {
   const [err, setErr] = useState(false);
   if (err) {
     return (
@@ -82,7 +82,7 @@ function Img({ src, label, className = "", priority = false }: { src: string; la
       </div>
     );
   }
-  return <img src={src} alt={label} className={className} loading={priority ? "eager" : "lazy"} fetchPriority={priority ? "high" : "auto"} decoding={priority ? "sync" : "async"} style={{ objectFit: "cover", display: "block" }} onError={() => setErr(true)} />;
+  return <img src={src} alt={label} className={className} style={{ objectFit: "cover", display: "block" }} onError={() => setErr(true)} />;
 }
 
 export default function GuardPage() {
@@ -148,7 +148,7 @@ export default function GuardPage() {
         .lp-delay-2 { transition-delay: 0.2s; }
         .lp-delay-3 { transition-delay: 0.3s; }
         .bundle-card { border: 2px solid #D1D5DB; border-radius: 20px; overflow: hidden; transition: border-color 0.2s, box-shadow 0.2s; background: #FFFFFF; cursor: pointer; }
-        .bundle-card.active { border-color: #1A1A1A; box-shadow: 0 0 0 4px rgba(26,26,26,0.10); }
+        .bundle-card.active { border-color: #E65C00; box-shadow: 0 0 0 4px rgba(230,92,0,0.12); }
         @keyframes pulse-glow { 0%,100%{opacity:1;}50%{opacity:0.65;} }
         .pulse { animation: pulse-glow 2s ease-in-out infinite; }
         @keyframes shimmer { 0%{transform:translateX(-100%);}100%{transform:translateX(200%);} }
@@ -160,16 +160,15 @@ export default function GuardPage() {
       `}</style>
 
       {/* TOP URGENCY BAR */}
-      <div className="fixed top-0 left-0 right-0 z-50 px-3 py-1.5 text-center" style={{ background: `linear-gradient(135deg, ${NIGHT} 0%, #1a1a1a 100%)` }}>
-        <p className="text-[10px] font-bold tracking-wider uppercase mb-0.5" style={{ color: ORANGE }}>¡Precio especial por tiempo limitado!</p>
-        <div className="flex items-center justify-center gap-2 text-white text-xs font-bold flex-wrap">
+      <div className="fixed top-0 left-0 right-0 z-50 py-2 px-3 text-center" style={{ backgroundColor: ORANGE }}>
+        <p className="text-white text-xs font-bold flex flex-row items-center justify-center gap-2 flex-wrap leading-none">
           <span className="pulse inline-flex items-center gap-1">
-            <Timer size={11} className="text-red-400" /> TERMINA EN
-            <span className="tabular-nums font-mono px-1.5 py-0.5 rounded text-xs" style={{ backgroundColor: ORANGE }}>{timer}</span>
+            <Timer size={11} /> TERMINA EN
+            <span className="tabular-nums font-mono bg-black/20 px-1.5 py-0.5 rounded text-xs">{timer}</span>
           </span>
-          <span className="opacity-30">|</span>
-          <span><s className="opacity-50 text-gray-400">&#8353;22,500</s> <span className="mx-0.5">&#8250;</span> <strong className="text-base" style={{ color: ORANGE }}>&#8353;17,700</strong> <span className="text-[10px] opacity-70">HOY</span></span>
-        </div>
+          <span className="opacity-40">|</span>
+          <span><s className="opacity-60">&#8353;22,500</s> &#8250; <strong>&#8353;17,700 HOY</strong></span>
+        </p>
       </div>
 
       {/* STICKY BOTTOM CTA */}
@@ -203,8 +202,8 @@ export default function GuardPage() {
           </div>
 
           <div className="lp-animate flex justify-center items-center gap-2.5 mb-5">
-            <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: "#E65C00" }}>
-              <span className="font-bold text-sm" style={{ color: "#1A1A1A" }}>V</span>
+            <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: ORANGE }}>
+              <span className="font-bold text-white text-sm">V</span>
             </div>
             <div className="flex flex-col leading-none">
               <span className="font-bold text-base tracking-tight" style={{ color: INK }}>VAZLINA</span>
@@ -215,7 +214,7 @@ export default function GuardPage() {
 
         {/* HERO IMAGE — full bleed edge to edge */}
         <div className="lp-animate w-full overflow-hidden shadow-md mb-7" style={{ maxWidth: "100vw" }}>
-          <Img src="/lp-guard/hero.jpg" label="Vazlina Guard — producto naranja metalico sobre superficie premium, fondo oscuro elegante" className="w-full" priority />
+          <Img src="/lp-guard/hero.jpg" label="Vazlina Guard — producto naranja metalico sobre superficie premium, fondo oscuro elegante" className="w-full" />
         </div>
 
         <div className="max-w-lg mx-auto px-5">
@@ -451,49 +450,38 @@ export default function GuardPage() {
           <div className="lp-animate space-y-5">
             {[
               {
-                avatar: "https://i.pravatar.cc/60?img=47",
-                numA: "+506 84", numB: "9",
-                status: "en linea",
+                init: "M", num: "+506 88\u25CF\u25CF\u25CF\u25CF\u25CF\u25CF2",
                 msgs: [
-                  { text: "No les escribi hasta que pasaron 2 dias para probarlo bien y asegurarme de que funcione de verdad", mine: false, time: "8:43 pm" },
-                  { text: "Y sinceramente... es una belleza. Siento tranquilidad de verdad. Gracias por la atencion tan profesional", mine: false, time: "8:44 pm" },
-                  { text: "\u00a1Gracias a vos por confiar! Nos alegra mucho que estes tranquilo", mine: true, time: "8:45 pm" },
+                  { text: "Mi esposo cargaba el celular toda la noche y el telefono amanecia caliente. Desde que pusimos el Guard ya no pasa eso.", mine: false, time: "8:40 pm" },
+                  { text: "Ademas la bateria mejoro, antes al mediodia ya estaba al 40%", mine: false, time: "8:41 pm" },
+                  { text: "Que bueno! Eso es exactamente para lo que esta disenado", mine: true, time: "8:42 pm" },
                 ],
               },
               {
-                avatar: "https://i.pravatar.cc/60?img=11",
-                numA: "+506 71", numB: "2",
-                status: "ayer, voz 9:30 pm",
+                init: "C", num: "+506 72\u25CF\u25CF\u25CF\u25CF\u25CF\u25CF7",
                 msgs: [
-                  { text: "Sinceramente, somos dos con mi esposa y siempre dejamos el telefono en el cargador y nos olvidamos, eso me causaba bastante", mine: false, time: "8:58 pm" },
-                  { text: "Ahora con el Guard lo conecto directo cuando quieren cargar y listo. Problema resuelto", mine: false, time: "8:59 pm" },
-                  { text: "\u00a1Exacto! Para eso lo disenamos. Cargar tranquilo es todo", mine: true, time: "9:00 pm" },
+                  { text: "Tengo iPhone 13 y me explicaron como conectarlo entre el cargador y el cable. Sencillisimo", mine: false, time: "3:15 pm" },
+                  { text: "Mi bateria ya no baja al 30% antes de las 6pm como antes", mine: false, time: "3:16 pm" },
+                  { text: "Perfecto, eso es lo que queriamos escuchar!", mine: true, time: "3:17 pm" },
                 ],
               },
               {
-                avatar: "https://i.pravatar.cc/60?img=57",
-                numA: "+506 63", numB: "4",
-                status: "en linea",
+                init: "R", num: "+506 63\u25CF\u25CF\u25CF\u25CF\u25CF\u25CF4",
                 msgs: [
-                  { text: "Sinceramente el producto hace que el telefono aguante mas bateria. Antes mi celular duraba medio dia y ahora llega tranquilo a la noche!", mine: false, time: "6:58 am" },
-                  { text: "Creo que antes la bateria se gastaba rapido por la sobrecarga de la noche. Ahora con Guard eso no pasa", mine: false, time: "6:59 am" },
-                  { text: "\u00a1Justo eso! Guard corta la carga al 100% y protege la bateria. Gracias por compartir!", mine: true, time: "7:00 am" },
+                  { text: "Soy papa de tres hijos adolescentes que cargan bajo la almohada. Me preocupaba mucho el tema del fuego", mine: false, time: "9:20 pm" },
+                  { text: "Compre 3 y los coloque en cada cuarto. Dormimos mucho mas tranquilos ahora", mine: false, time: "9:21 pm" },
+                  { text: "Eso nos alegra muchisimo, familia protegida!", mine: true, time: "9:22 pm" },
                 ],
               },
             ].map((chat, ci) => (
               <div key={ci} className="lp-animate rounded-2xl overflow-hidden shadow-md">
                 <div className="px-4 py-3 flex items-center gap-3" style={{ backgroundColor: "#075E54" }}>
-                  <div className="relative w-9 h-9 shrink-0">
-                    <img src={chat.avatar} alt="" className="w-9 h-9 rounded-full object-cover" style={{ filter: "blur(5px)", transform: "scale(1.1)" }} />
-                    <div className="absolute inset-0 rounded-full" style={{ backgroundColor: "rgba(0,0,0,0.35)" }} />
+                  <div className="w-9 h-9 rounded-full flex items-center justify-center shrink-0 font-bold text-white text-sm" style={{ backgroundColor: "#128C7E" }}>
+                    {chat.init}
                   </div>
                   <div>
-                    <p className="text-white text-sm font-semibold flex items-center gap-0.5">
-                      <span>{chat.numA}</span>
-                      <span className="inline-block rounded mx-0.5 align-middle" style={{ width: "46px", height: "13px", backgroundColor: "rgba(0,0,0,0.55)", backdropFilter: "blur(4px)" }} />
-                      <span>{chat.numB}</span>
-                    </p>
-                    <p className="text-white/60 text-xs">{chat.status}</p>
+                    <p className="text-white text-sm font-semibold">{chat.num}</p>
+                    <p className="text-white/60 text-xs">en linea</p>
                   </div>
                 </div>
                 <div className="p-4 space-y-2" style={{ backgroundColor: WA_BG }}>
@@ -600,7 +588,7 @@ export default function GuardPage() {
                 { Icon: ShieldCheck, text: "Pago 100% seguro al recibir" },
                 { Icon: Truck, text: "Envio gratis a todo CR" },
                 { Icon: BatteryCharging, text: "Garantia 30 dias" },
-                { Icon: Star, text: "+1,437 clientes satisfechos" },
+                { Icon: Smartphone, text: "Soporte por WhatsApp" },
               ].map(({ Icon, text }) => (
                 <div key={text} className="flex items-center gap-1.5 text-xs font-medium" style={{ color: INK }}>
                   <Icon size={13} style={{ color: ORANGE }} /> {text}

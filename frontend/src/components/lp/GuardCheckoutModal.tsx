@@ -136,21 +136,6 @@ export interface ColorOption {
   dots: string[];
 }
 
-const SKU_SILVER = "GRISADAPTADORCR";
-const SKU_ORANGE = "ORANGEADAPTADORCR"; // TODO: replace with real orange SKU
-
-const COLOR_TO_PRODUCTS: Record<string, { sku: string; qty: number }[]> = {
-  "orange":  [{ sku: SKU_ORANGE, qty: 1 }],
-  "silver":  [{ sku: SKU_SILVER, qty: 1 }],
-  "mix":     [{ sku: SKU_ORANGE, qty: 1 }, { sku: SKU_SILVER, qty: 1 }],
-  "2orange": [{ sku: SKU_ORANGE, qty: 2 }],
-  "2silver": [{ sku: SKU_SILVER, qty: 2 }],
-  "2o1s":    [{ sku: SKU_ORANGE, qty: 2 }, { sku: SKU_SILVER, qty: 1 }],
-  "1o2s":    [{ sku: SKU_ORANGE, qty: 1 }, { sku: SKU_SILVER, qty: 2 }],
-  "3orange": [{ sku: SKU_ORANGE, qty: 3 }],
-  "3silver": [{ sku: SKU_SILVER, qty: 3 }],
-};
-
 export const COLOR_OPTIONS: Record<number, ColorOption[]> = {
   1: [
     { id: "orange", label: "Naranja Metalico", dots: [ORANGE_DOT] },
@@ -266,14 +251,6 @@ export default function GuardCheckoutModal({
       ? [...coloredItems, { product_name: "Envío Express (1-3 días)", quantity: 1, price_per_item: EXPRESS_FEE }]
       : coloredItems;
 
-    const fulfillmentProducts = colorChoice
-      ? (COLOR_TO_PRODUCTS[colorChoice.id] ?? []).map(p => ({
-          sku: p.sku,
-          quantity: p.qty,
-          price: variant.price,
-        }))
-      : [];
-
     try {
       const response = await createOrder({
         customer_name: addr.name,
@@ -287,7 +264,6 @@ export default function GuardCheckoutModal({
         province_id: addr.province_id,
         city_id: addr.city_id,
         items: orderItems,
-        products: fulfillmentProducts,
         is_upsell_accepted: false,
         total_price: total,
         browser_event_id: eventId,
