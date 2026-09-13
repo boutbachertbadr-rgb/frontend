@@ -6,14 +6,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
 import { useCartStore } from "@/store/cart";
-import { MX_PHONE_REGEX } from "@/lib/phone";
+import { CR_PHONE_ERROR, CR_PHONE_REGEX, normalizeCrPhone } from "@/lib/phone";
 import { getAvailableUpsells } from "@/lib/upsell";
 import { generateEventId, trackPurchase } from "@/lib/pixels";
 import { createOrder } from "@/lib/api";
 
 const schema = z.object({
   name: z.string().min(2, "Ingresa tu nombre completo."),
-  phone: z.string().regex(MX_PHONE_REGEX, "Número inválido. Ingresa 8 dígitos (Costa Rica)."),
+  phone: z.string().regex(CR_PHONE_REGEX, CR_PHONE_ERROR),
   state: z.string().min(2, "Ingresa tu provincia."),
   city: z.string().min(2, "Ingresa tu cantón."),
   distrito: z.string().min(2, "Ingresa tu distrito."),
@@ -57,7 +57,7 @@ export default function CheckoutModal() {
       clearCart();
       createOrder({
         customer_name: data.name,
-        customer_phone: data.phone,
+        customer_phone: normalizeCrPhone(data.phone),
         customer_state: data.state,
         customer_city: data.city,
         customer_distrito: data.distrito,
