@@ -263,7 +263,7 @@ export default function GuardCheckoutModal({
     if (silverQty > 0) coloredItems.push({ product_name: "Vazlina Guard — Plata Premium", quantity: silverQty, price_per_item: unitPrice, sku: SKU_SILVER });
 
     const orderItems = express
-      ? [...coloredItems, { product_name: "Envío Express (1-3 días)", quantity: 1, price_per_item: EXPRESS_FEE }]
+      ? [...coloredItems, { product_name: "Envío Express (1-3 días)", quantity: 1, price_per_item: EXPRESS_FEE, sku: "" }]
       : coloredItems;
 
     try {
