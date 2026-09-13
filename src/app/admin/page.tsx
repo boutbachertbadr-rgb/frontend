@@ -10,6 +10,7 @@ interface Order {
   id: number; created_at: string; customer_name: string; customer_phone: string;
   customer_state: string; customer_city: string; customer_distrito?: string; customer_address: string; customer_reference?: string;
   total_price: number; status: string; is_upsell_accepted: boolean; items: OrderItem[];
+  fufills_id?: string | null; fufills_ref?: string | null; fufills_status?: string | null; fufills_error?: string | null;
 }
 interface Metrics {
   total_orders: number; total_revenue: number; avg_order_value: number;
@@ -38,6 +39,28 @@ function fmtUSD(n: number) { return `$${n.toFixed(0).replace(/\B(?=(\d{3})+(?!\d
 function statusBadge(status: string) {
   const s = STATUSES.find((x) => x.value === status);
   return <span className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${s?.color ?? "bg-gray-100 text-gray-700"}`}>{s?.label ?? status}</span>;
+}
+function fufillsErrorText(raw: string): string {
+  try {
+    const parsed = JSON.parse(raw) as { errors?: Record<string, string[]>; message?: string };
+    if (parsed.errors) return Object.values(parsed.errors).flat().join(" ");
+    if (parsed.message) return parsed.message;
+  } catch { /* not JSON — show as-is */ }
+  return raw;
+}
+function fufillsCell(order: Order) {
+  if (order.fufills_ref) {
+    return (
+      <span className="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800" title={order.fufills_status ?? ""}>
+        {order.fufills_ref}
+      </span>
+    );
+  }
+  if (order.fufills_error) {
+    const msg = fufillsErrorText(order.fufills_error);
+    return <span className="text-[10px] text-red-600 line-clamp-2" title={msg}>{msg}</span>;
+  }
+  return <span className="text-[10px] text-gray-400">Not sent</span>;
 }
 function toInputDate(d: Date) { return d.toISOString().slice(0, 10); }
 
@@ -73,6 +96,7 @@ export default function AdminDashboard() {
   const [search, setSearch] = useState("");
   const [filterStatus, setFilterStatus] = useState("");
   const [updatingId, setUpdatingId] = useState<number | null>(null);
+  const [resendingId, setResendingId] = useState<number | null>(null);
   const [previewOrder, setPreviewOrder] = useState<Order | null>(null);
   const [importing, setImporting] = useState(false);
   const [importMsg, setImportMsg] = useState("");
@@ -188,6 +212,16 @@ export default function AdminDashboard() {
   async function fetchOrders() { setLoadingOrders(true); try { const p = new URLSearchParams(); p.set("from", fromDate); p.set("to", toDate); if (filterStatus) p.set("status", filterStatus); if (search) p.set("search", search); const d = await api(`/admin/orders?${p}`); setOrders(d); setSelectedIds(new Set()); } catch (e: unknown) { setError((e as Error).message); } finally { setLoadingOrders(false); } }
 
   async function handleLogin() { setLoginErr(""); try { const d = await fetch(`${API_URL}/admin/login`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ username, password }) }).then((r) => r.json()); if (!d.token) throw new Error("Invalid"); const r = (d.role ?? "admin") as "admin" | "operator"; localStorage.setItem("vzl_admin_token", d.token); localStorage.setItem("vzl_admin_role", r); setToken(d.token); setRole(r); if (r === "operator") setActiveTab("orders"); } catch { setLoginErr("Invalid username or password"); } }
+  async function resendToFufills(id: number) {
+    setResendingId(id);
+    setError("");
+    try {
+      const d = await api(`/orders/${id}/resend-fufills`, { method: "POST" });
+      if (!d.ok) setError(`Fufills rejected order #${id}: ${fufillsErrorText(d.fufills_error ?? "unknown error")}`);
+      fetchOrders();
+    } catch (e: unknown) { setError((e as Error).message); }
+    finally { setResendingId(null); }
+  }
   async function updateStatus(id: number, status: string) { setUpdatingId(id); try { await api(`/admin/orders/${id}/status`, { method: "PATCH", body: JSON.stringify({ status }) }); setOrders((p) => p.map((o) => (o.id === id ? { ...o, status } : o))); if (!isOperator) fetchMetrics(); } finally { setUpdatingId(null); } }
   async function handleImport(e: React.ChangeEvent<HTMLInputElement>) { const f = e.target.files?.[0]; if (!f) return; setImporting(true); setImportMsg(""); try { const fd = new FormData(); fd.append("file", f); const r = await fetch(`${API_URL}/admin/orders/import`, { method: "POST", headers: { "x-admin-key": token }, body: fd }); const d = await r.json(); setImportMsg(`âœ… ${d.imported} imported`); fetchOrders(); fetchMetrics(); } catch { setImportMsg("âŒ Failed"); } finally { setImporting(false); if (fileRef.current) fileRef.current.value = ""; } }
   function toggleSelect(id: number) { setSelectedIds((prev) => { const next = new Set(prev); if (next.has(id)) next.delete(id); else next.add(id); return next; }); }
@@ -551,6 +585,7 @@ export default function AdminDashboard() {
                       <th className="px-3 py-2.5">Products</th>
                       <th className="px-3 py-2.5">Total</th>
                       <th className="px-3 py-2.5">Status</th>
+                      <th className="px-3 py-2.5">Fufills</th>
                       <th className="px-3 py-2.5"></th>
                     </tr>
                   </thead>
@@ -578,9 +613,15 @@ export default function AdminDashboard() {
                         </td>
                         <td className="px-3 py-2.5 font-bold text-gray-900 whitespace-nowrap">{fmtMoney(order.total_price)}</td>
                         <td className="px-3 py-2.5">{statusBadge(order.status)}</td>
+                        <td className="px-3 py-2.5 max-w-[180px]">{fufillsCell(order)}</td>
                         <td className="px-3 py-2.5">
                           <div className="flex items-center gap-1">
                             <button onClick={() => setPreviewOrder(order)} className="text-[10px] text-slate-600 hover:text-slate-900 underline">View</button>
+                            {!isOperator && !order.fufills_id && (
+                              <button onClick={() => resendToFufills(order.id)} disabled={resendingId === order.id} className="text-[10px] text-blue-600 hover:text-blue-800 underline disabled:opacity-50">
+                                {resendingId === order.id ? "Sending..." : "Resend"}
+                              </button>
+                            )}
                             {isOperator && (
                               <select value={order.status} disabled={updatingId === order.id} onChange={(e) => updateStatus(order.id, e.target.value)} className="text-[10px] border border-gray-200 rounded px-1 py-0.5 bg-white focus:outline-none disabled:opacity-50">
                                 {STATUSES.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { X, ShieldCheck, Truck, ChevronDown, Zap, ChevronLeft } from "lucide-react";
 import { createOrder } from "@/lib/api";
 import { generateEventId } from "@/lib/pixels";
+import { CR_PHONE_ERROR, normalizeCrPhone, validateCrPhone } from "@/lib/phone";
 
 const PROVINCES: { name: string; id: string }[] = [
   { name: "Alajuela", id: "a2paa1lUekxWZmUwOG9jQ0trUTF5dz09" },
@@ -202,8 +203,7 @@ export default function GuardCheckoutModal({
     const formData = new FormData(e.currentTarget);
     const firstName = String(formData.get("first_name") ?? "").trim();
     const lastName = String(formData.get("last_name") ?? "").trim();
-    const rawPhone = String(formData.get("phone") ?? "").replace(/\D/g, "");
-    const phone = rawPhone.startsWith("506") ? `+${rawPhone}` : `+506${rawPhone}`;
+    const phone = normalizeCrPhone(String(formData.get("phone") ?? ""));
     const provinceId = String(formData.get("state") ?? "");
     const cityId = String(formData.get("city") ?? "");
     const provinceName = PROVINCES.find(p => p.id === provinceId)?.name ?? "";
@@ -225,7 +225,7 @@ export default function GuardCheckoutModal({
     const errors: Record<string, string> = {};
     if (!firstName) errors.first_name = "Ingresá tu nombre";
     if (!lastName) errors.last_name = "Ingresá tu apellido";
-    if (rawPhone.length < 8) errors.phone = "Ingresá un teléfono válido (8 dígitos)";
+    if (!validateCrPhone(phone)) errors.phone = CR_PHONE_ERROR;
     if (!provinceId) errors.state = "Seleccioná tu provincia";
     if (!cityId) errors.city = "Seleccioná tu ciudad";
     if (!addr.address.trim()) errors.address = "Ingresá tu dirección";
