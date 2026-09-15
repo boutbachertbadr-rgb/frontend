@@ -199,7 +199,7 @@ export default function GuardPageV3() {
 
           <div className="lp-animate flex justify-center mb-4">
             <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-bold" style={{ backgroundColor: "#FFE8D0", border: "1px solid #FFB870", color: ORANGE }}>
-              <span className="led w-2 h-2 rounded-full inline-block" style={{ backgroundColor: ORANGE, boxShadow: `0 0 6px rgba(192,105,10,0.5)` }} />
+              <span className="led w-2 h-2 rounded-full inline-block" style={{ backgroundColor: "#00E5FF", boxShadow: "0 0 6px #00E5FF" }} />
               Adaptador de Aislamiento Fisico con IA
             </span>
           </div>
