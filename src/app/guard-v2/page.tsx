@@ -76,7 +76,7 @@ function Img({ src, label, className = "", priority = false }: { src: string; la
   const [err, setErr] = useState(false);
   if (err) {
     return (
-      <div className={`flex flex-col items-center justify-center gap-2 text-xs text-gray-400 text-center px-4 ${className}`} style={{ backgroundColor: "#E5E7EB", minHeight: "220px" }}>
+      <div className={`flex flex-col items-center justify-center gap-2 text-sm text-gray-400 text-center px-4 ${className}`} style={{ backgroundColor: "#E5E7EB", minHeight: "220px" }}>
         <span className="text-3xl">📸</span>
         <span className="max-w-xs leading-relaxed">{label}</span>
       </div>
@@ -161,16 +161,16 @@ export default function GuardPageV2() {
 
       {/* TOP URGENCY BAR */}
       <div className="fixed top-0 left-0 right-0 z-50 py-2 px-3 text-center" style={{ backgroundColor: INK }}>
-        <p className="text-[10px] font-bold tracking-widest uppercase mb-1" style={{ color: ORANGE }}>&#161;Precio especial por tiempo limitado!</p>
-        <p className="text-white text-xs font-bold flex flex-row items-center justify-center gap-2 flex-wrap leading-none">
+        <p className="text-xs font-bold tracking-widest uppercase mb-1" style={{ color: ORANGE }}>&#161;Precio especial por tiempo limitado!</p>
+        <p className="text-white text-sm font-bold flex flex-row items-center justify-center gap-2 flex-wrap leading-none">
           <span className="pulse inline-flex items-center gap-1">
             <Timer size={11} /> TERMINA EN
-            <span className="tabular-nums font-mono px-1.5 py-0.5 rounded text-xs" style={{ backgroundColor: ORANGE }}>{timer}</span>
+            <span className="tabular-nums font-mono px-1.5 py-0.5 rounded text-sm" style={{ backgroundColor: ORANGE }}>{timer}</span>
           </span>
           <span className="opacity-40">|</span>
           <span><s className="opacity-60">&#8353;22,500</s> &#8250; <strong>&#8353;17,700 HOY</strong></span>
         </p>
-        <p className="text-[10px] font-semibold mt-1" style={{ color: "rgba(255,255,255,0.85)" }}>Paga contra entrega &#183; Env&#237;o gratis a todo CR</p>
+        <p className="text-xs font-semibold mt-1" style={{ color: "rgba(255,255,255,0.85)" }}>Paga contra entrega &#183; Env&#237;o gratis a todo CR</p>
       </div>
 
       {/* STICKY BOTTOM CTA */}
@@ -193,11 +193,11 @@ export default function GuardPageV2() {
       </div>
 
       {/* ══════════════════ HERO ══════════════════ */}
-      <section className="pt-14 pb-14" style={{ backgroundColor: WHITE }}>
+      <section className="pt-20 pb-14" style={{ backgroundColor: WHITE }}>
         <div className="max-w-lg mx-auto px-5">
 
           <div className="lp-animate flex justify-center mb-4">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold" style={{ backgroundColor: "#F3F4F6", border: "1px solid #D1D5DB", color: INK }}>
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-bold" style={{ backgroundColor: "#F3F4F6", border: "1px solid #D1D5DB", color: INK }}>
               <span className="led w-2 h-2 rounded-full inline-block" style={{ backgroundColor: INK, boxShadow: `0 0 4px rgba(26,26,26,0.3)` }} />
               Adaptador de Aislamiento Fisico con IA
             </span>
@@ -209,7 +209,7 @@ export default function GuardPageV2() {
             </div>
             <div className="flex flex-col leading-none">
               <span className="font-bold text-base tracking-tight" style={{ color: INK }}>VAZLINA</span>
-              <span className="text-[10px] font-semibold tracking-widest uppercase" style={{ color: ORANGE }}>Guard&#8482;</span>
+              <span className="text-xs font-semibold tracking-widest uppercase" style={{ color: ORANGE }}>Guard&#8482;</span>
             </div>
           </div>
         </div>
@@ -240,7 +240,7 @@ export default function GuardPageV2() {
               { e: "🛡️", t: "Garantia 30 dias" },
               { e: "🏅", t: "Calidad certificada" },
             ].map(({ e, t }) => (
-              <span key={t} className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full" style={{ backgroundColor: BG, border: `1px solid ${BORDER}`, color: INK }}>
+              <span key={t} className="flex items-center gap-1.5 text-sm font-semibold px-3 py-1.5 rounded-full" style={{ backgroundColor: BG, border: `1px solid ${BORDER}`, color: INK }}>
                 {e} {t}
               </span>
             ))}
@@ -249,7 +249,7 @@ export default function GuardPageV2() {
           <div className="lp-animate lp-delay-2 mx-auto max-w-xs rounded-2xl overflow-hidden mb-7" style={{ border: `1px solid ${BORDER}` }}>
             <button onClick={() => setReviewsOpen(!reviewsOpen)} className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-white">
               <span className="flex gap-0.5">{[...Array(5)].map((_, i) => <Star key={i} size={13} fill="#F59E0B" style={{ color: "#F59E0B" }} />)}</span>
-              <span className="text-xs font-bold" style={{ color: INK }}>1,247 resenas verificadas</span>
+              <span className="text-sm font-bold" style={{ color: INK }}>1,247 resenas verificadas</span>
               {reviewsOpen ? <ChevronUp size={14} className="text-gray-400" /> : <ChevronDown size={14} className="text-gray-400" />}
             </button>
             {reviewsOpen && (
@@ -260,7 +260,7 @@ export default function GuardPageV2() {
                     <div className="flex-1 h-1.5 rounded-full" style={{ backgroundColor: BG }}>
                       <div className="h-full rounded-full" style={{ width: `${c > 0 ? Math.max((c / 1247) * 100, 3) : 0}%`, backgroundColor: ORANGE }} />
                     </div>
-                    <span className="text-[10px] text-gray-400 w-8 text-right tabular-nums">{c.toLocaleString()}</span>
+                    <span className="text-sm text-gray-400 w-8 text-right tabular-nums">{c.toLocaleString()}</span>
                   </div>
                 ))}
               </div>
@@ -270,7 +270,7 @@ export default function GuardPageV2() {
           <a href="#oferta" className="lp-animate lp-delay-3 cta-btn block text-center py-4 rounded-2xl font-bold text-sm tracking-widest text-white active:scale-95 transition-transform" style={{ backgroundColor: INK }}>
             PROTEGER MI HOGAR Y MI BATERIA — &#8353;17,700
           </a>
-          <p className="text-center text-xs mt-3" style={{ color: MUTED }}>Pagas solo cuando recibes el producto</p>
+          <p className="text-center text-sm mt-3" style={{ color: MUTED }}>Pagas solo cuando recibes el producto</p>
         </div>
       </section>
 
@@ -278,7 +278,7 @@ export default function GuardPageV2() {
       <section className="py-20 px-5" style={{ backgroundColor: NIGHT }}>
         <div className="max-w-lg mx-auto">
           <div className="lp-animate flex justify-center mb-5">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold" style={{ backgroundColor: "rgba(239,68,68,0.12)", color: "#EF4444", border: "1px solid rgba(239,68,68,0.3)" }}>
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-bold" style={{ backgroundColor: "rgba(239,68,68,0.12)", color: "#EF4444", border: "1px solid rgba(239,68,68,0.3)" }}>
               <Flame size={12} /> EL PELIGRO QUE NO VES
             </span>
           </div>
@@ -307,7 +307,7 @@ export default function GuardPageV2() {
               </div>
               <div>
                 <h3 className="font-bold text-white text-sm mb-1">{title}</h3>
-                <p className="text-xs leading-relaxed" style={{ color: "#9CA3AF" }}>{body}</p>
+                <p className="text-sm leading-relaxed" style={{ color: "#9CA3AF" }}>{body}</p>
               </div>
             </div>
           ))}
@@ -318,7 +318,7 @@ export default function GuardPageV2() {
       <section className="py-20 px-5" style={{ backgroundColor: BG }}>
         <div className="max-w-lg mx-auto">
           <div className="lp-animate flex justify-center mb-5">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold" style={{ backgroundColor: "rgba(230,92,0,0.08)", color: ORANGE, border: `1px solid rgba(230,92,0,0.3)` }}>
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-bold" style={{ backgroundColor: "rgba(230,92,0,0.08)", color: ORANGE, border: `1px solid rgba(230,92,0,0.3)` }}>
               <BatteryCharging size={12} /> EL COSTO OCULTO
             </span>
           </div>
@@ -338,21 +338,21 @@ export default function GuardPageV2() {
             <div className="px-5 py-4 flex items-center justify-between" style={{ borderBottom: `1px solid ${BORDER}` }}>
               <div>
                 <p className="font-semibold text-sm" style={{ color: INK }}>Telefono nuevo (bateria muerta)</p>
-                <p className="text-xs text-gray-400">Cada 2-3 anos</p>
+                <p className="text-sm text-gray-400">Cada 2-3 anos</p>
               </div>
               <p className="font-bold text-lg line-through text-gray-400">&#8353;250,000+</p>
             </div>
             <div className="px-5 py-4 flex items-center justify-between" style={{ borderBottom: `1px solid ${BORDER}` }}>
               <div>
                 <p className="font-semibold text-sm" style={{ color: INK }}>Cambio de bateria</p>
-                <p className="text-xs text-gray-400">Cada 1-2 anos</p>
+                <p className="text-sm text-gray-400">Cada 1-2 anos</p>
               </div>
               <p className="font-bold text-lg line-through text-gray-400">&#8353;25,000+</p>
             </div>
             <div className="px-5 py-4 flex items-center justify-between" style={{ backgroundColor: "rgba(230,92,0,0.04)" }}>
               <div>
                 <p className="font-bold text-sm" style={{ color: ORANGE }}>Vazlina Guard&#8482;</p>
-                <p className="text-xs text-gray-500">Tu bateria dura anos mas. Una sola vez.</p>
+                <p className="text-sm text-gray-500">Tu bateria dura anos mas. Una sola vez.</p>
               </div>
               <p className="font-bold text-xl" style={{ color: ORANGE }}>&#8353;17,700</p>
             </div>
@@ -371,7 +371,7 @@ export default function GuardPageV2() {
       <section className="py-20 px-5" style={{ backgroundColor: WHITE }}>
         <div className="max-w-lg mx-auto">
           <div className="lp-animate flex justify-center mb-5">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold text-white" style={{ backgroundColor: ORANGE }}>
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-bold text-white" style={{ backgroundColor: ORANGE }}>
               <Zap size={12} /> COMO FUNCIONA
             </span>
           </div>
@@ -388,7 +388,7 @@ export default function GuardPageV2() {
               <div className="shrink-0 w-9 h-9 rounded-full flex items-center justify-center font-bold text-white text-sm" style={{ backgroundColor: ORANGE }}>1</div>
               <div>
                 <h3 className="font-bold text-sm mb-1" style={{ color: INK }}>Android e iPhone 15+ (USB-C)</h3>
-                <p className="text-xs leading-relaxed" style={{ color: MUTED }}>Conectas Guard directo al puerto USB-C del telefono, despues enchufas el cable. Plug and play, listo en 5 segundos.</p>
+                <p className="text-sm leading-relaxed" style={{ color: MUTED }}>Conectas Guard directo al puerto USB-C del telefono, despues enchufas el cable. Plug and play, listo en 5 segundos.</p>
               </div>
             </div>
 
@@ -402,10 +402,10 @@ export default function GuardPageV2() {
                   <div className="shrink-0 w-9 h-9 rounded-full flex items-center justify-center font-bold text-white text-sm" style={{ backgroundColor: ORANGE }}>2</div>
                   <div>
                     <h3 className="font-bold text-sm" style={{ color: INK }}>iPhone con cable Lightning (iPhone 14, 13, 12...)</h3>
-                    <p className="text-xs font-semibold" style={{ color: MUTED }}>Solucion especial. Misma proteccion.</p>
+                    <p className="text-sm font-semibold" style={{ color: MUTED }}>Solucion especial. Misma proteccion.</p>
                   </div>
                 </div>
-                <p className="text-xs leading-relaxed ml-12" style={{ color: MUTED }}>
+                <p className="text-sm leading-relaxed ml-12" style={{ color: MUTED }}>
                   Enchufa Guard directo en el <strong style={{ color: INK }}>bloque del cargador Apple</strong> (el cubo). Despues conecta el <strong style={{ color: INK }}>cable Lightning al Guard</strong>. El extremo Lightning va a tu iPhone. Misma proteccion automatica, sin configuracion.
                 </p>
               </div>
@@ -419,7 +419,7 @@ export default function GuardPageV2() {
               <div className="shrink-0 w-9 h-9 rounded-full flex items-center justify-center font-bold text-white text-sm" style={{ backgroundColor: ORANGE }}>3</div>
               <div>
                 <h3 className="font-bold text-sm mb-1" style={{ color: INK }}>Tablets y Laptops: tambien protegidos</h3>
-                <p className="text-xs leading-relaxed" style={{ color: MUTED }}>Guard protege cualquier dispositivo USB-C: iPad, MacBook, laptop Windows. Un Guard por cargador.</p>
+                <p className="text-sm leading-relaxed" style={{ color: MUTED }}>Guard protege cualquier dispositivo USB-C: iPad, MacBook, laptop Windows. Un Guard por cargador.</p>
               </div>
             </div>
 
@@ -494,7 +494,7 @@ export default function GuardPageV2() {
                       <span className="inline-block rounded mx-0.5 align-middle" style={{ width: "46px", height: "13px", backgroundColor: "rgba(0,0,0,0.55)", backdropFilter: "blur(4px)" }} />
                       <span>{chat.numB}</span>
                     </p>
-                    <p className="text-white/60 text-xs">{chat.status}</p>
+                    <p className="text-white/60 text-sm">{chat.status}</p>
                   </div>
                 </div>
                 <div className="p-4 space-y-2" style={{ backgroundColor: WA_BG }}>
@@ -502,7 +502,7 @@ export default function GuardPageV2() {
                     <div key={mi} className={`flex ${msg.mine ? "justify-end" : "justify-start"}`}>
                       <div className="max-w-[80%] rounded-xl px-3 py-2 shadow-sm" style={{ backgroundColor: msg.mine ? "#DCF8C6" : WHITE }}>
                         <p className="text-sm text-gray-800 leading-snug">{msg.text}</p>
-                        <p className="text-[10px] text-gray-400 text-right mt-0.5">
+                        <p className="text-sm text-gray-400 text-right mt-0.5">
                           {msg.time}
                           {msg.mine ? <span className="ml-1" style={{ color: "#4FC3F7" }}>&#10003;&#10003;</span> : <span className="ml-1">&#10003;&#10003;</span>}
                         </p>
@@ -533,7 +533,7 @@ export default function GuardPageV2() {
             {BUNDLES.map((b) => (
               <div key={b.id} className={`bundle-card ${bundle.id === b.id ? "active" : ""}`} onClick={() => setBundle(b)}>
                 {b.best && (
-                  <div className="text-center py-2 text-xs font-bold tracking-widest text-white" style={{ backgroundColor: ORANGE }}>
+                  <div className="text-center py-2 text-sm font-bold tracking-widest text-white" style={{ backgroundColor: ORANGE }}>
                     MEJOR OFERTA — EL MAS ELEGIDO
                   </div>
                 )}
@@ -541,26 +541,26 @@ export default function GuardPageV2() {
                   <div className="flex items-start justify-between mb-3">
                     <div>
                       <h3 className="font-bold text-base" style={{ color: INK }}>{b.shortName}</h3>
-                      <p className="text-xs mt-0.5" style={{ color: MUTED }}>{b.note}</p>
+                      <p className="text-sm mt-0.5" style={{ color: MUTED }}>{b.note}</p>
                     </div>
                     <div className="text-right ml-3 shrink-0">
-                      <p className="text-xs text-gray-400 line-through">&#8353;{b.oldPrice.toLocaleString()}</p>
+                      <p className="text-sm text-gray-400 line-through">&#8353;{b.oldPrice.toLocaleString()}</p>
                       <p className="font-bold text-2xl leading-none" style={{ color: ORANGE }}>&#8353;{b.price.toLocaleString()}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2 mb-3">
-                    <span className="text-xs font-bold px-2.5 py-0.5 rounded-full text-white" style={{ backgroundColor: ORANGE }}>{b.save}</span>
-                    <span className="text-xs flex items-center gap-1" style={{ color: MUTED }}><Truck size={11} /> Envio gratis</span>
+                    <span className="text-sm font-bold px-2.5 py-0.5 rounded-full text-white" style={{ backgroundColor: ORANGE }}>{b.save}</span>
+                    <span className="text-sm flex items-center gap-1" style={{ color: MUTED }}><Truck size={11} /> Envio gratis</span>
                   </div>
                   <div className="mb-4">
-                    <p className="text-[10px] font-semibold uppercase tracking-wider mb-2" style={{ color: MUTED }}>Color:</p>
+                    <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: MUTED }}>Color:</p>
                     <div className="flex gap-2 flex-wrap">
                       {(COLOR_OPTIONS[b.id === "1x" ? 1 : b.id === "2x" ? 2 : 3] ?? []).map((opt) => (
                         <button
                           key={opt.id}
                           type="button"
                           onClick={(e) => { e.stopPropagation(); setSelectedColors(prev => ({ ...prev, [b.id]: opt })); }}
-                          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border-2 transition-all text-xs font-medium"
+                          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border-2 transition-all text-sm font-medium"
                           style={{
                             borderColor: selectedColors[b.id]?.id === opt.id ? ORANGE : BORDER,
                             backgroundColor: selectedColors[b.id]?.id === opt.id ? "rgba(230,92,0,0.06)" : WHITE,
@@ -602,7 +602,7 @@ export default function GuardPageV2() {
                 { Icon: Truck, text: "Envio gratis a todo CR" },
                 { Icon: BatteryCharging, text: "Garantia 30 dias" },
               ].map(({ Icon, text }) => (
-                <div key={text} className="flex items-center gap-1.5 text-xs font-medium" style={{ color: INK }}>
+                <div key={text} className="flex items-center gap-1.5 text-sm font-medium" style={{ color: INK }}>
                   <Icon size={13} style={{ color: ORANGE }} /> {text}
                 </div>
               ))}
@@ -623,7 +623,7 @@ export default function GuardPageV2() {
                   {openFaq === i ? <ChevronUp size={16} className="text-gray-400 shrink-0 mt-0.5" /> : <ChevronDown size={16} className="text-gray-400 shrink-0 mt-0.5" />}
                 </button>
                 {openFaq === i && (
-                  <div className="px-5 pb-4 pt-3 text-xs leading-relaxed" style={{ color: MUTED, borderTop: `1px solid ${BORDER}` }}>
+                  <div className="px-5 pb-4 pt-3 text-sm leading-relaxed" style={{ color: MUTED, borderTop: `1px solid ${BORDER}` }}>
                     {a}
                   </div>
                 )}
@@ -650,7 +650,7 @@ export default function GuardPageV2() {
           >
             ELEGIR MI PACK — DESDE &#8353;17,700
           </a>
-          <p className="lp-animate lp-delay-3 text-xs mt-4" style={{ color: "#6B7280" }}>
+          <p className="lp-animate lp-delay-3 text-sm mt-4" style={{ color: "#6B7280" }}>
             Envio gratis · Pago al recibir · Garantia 30 dias
           </p>
         </div>
