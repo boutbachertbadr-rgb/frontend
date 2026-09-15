@@ -345,7 +345,7 @@ export default function GuardCheckoutModal({
             <>
               <div>
                 <p className="font-bold text-base text-gray-800 mb-1">Elige el color de tu Guard</p>
-                <p className="text-xs text-gray-500">Ambos colores funcionan exactamente igual. Es solo preferencia visual.</p>
+                <p className="text-sm text-gray-500">Ambos colores funcionan exactamente igual. Es solo preferencia visual.</p>
               </div>
               <div className="grid grid-cols-1 gap-3">
                 {colorOptions.map((opt) => (
@@ -401,7 +401,7 @@ export default function GuardCheckoutModal({
               >
                 CONTINUAR CON MI PEDIDO →
               </button>
-              <p className="text-center text-xs text-gray-400 pb-1">Envio gratis · Pago al recibir · Sin riesgo</p>
+              <p className="text-center text-sm text-gray-400 pb-1">Envio gratis · Pago al recibir · Sin riesgo</p>
             </>
           )}
 
@@ -411,7 +411,7 @@ export default function GuardCheckoutModal({
               <button
                 type="button"
                 onClick={() => setStep(1)}
-                className="flex items-center gap-1 text-xs font-semibold text-gray-500 hover:text-gray-800 transition-colors -mb-1"
+                className="flex items-center gap-1 text-sm font-semibold text-gray-500 hover:text-gray-800 transition-colors -mb-1"
               >
                 <ChevronLeft size={14} /> Cambiar color
               </button>
@@ -431,11 +431,11 @@ export default function GuardCheckoutModal({
                       />
                     ))}
                   </div>
-                  <span className="text-xs font-semibold" style={{ color: ACCENT }}>{colorChoice.label}</span>
+                  <span className="text-sm font-semibold" style={{ color: ACCENT }}>{colorChoice.label}</span>
                 </div>
               )}
 
-              <div className="flex justify-around rounded-xl py-3 text-xs font-medium text-gray-600" style={{ backgroundColor: SOFT }}>
+              <div className="flex justify-around rounded-xl py-3 text-sm font-medium text-gray-600" style={{ backgroundColor: SOFT }}>
                 <span className="flex items-center gap-1.5"><Truck size={13} /> Envío gratis</span>
                 <span className="flex items-center gap-1.5"><ShieldCheck size={13} /> Pago al recibir</span>
               </div>
@@ -443,27 +443,27 @@ export default function GuardCheckoutModal({
               <form onSubmit={handleNativeSubmit} className="space-y-3">
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-semibold text-gray-700 mb-1">Nombre <span className="text-red-500 text-[10px] font-bold">REQUERIDO</span></label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">Nombre <span className="text-red-500 text-xs font-bold">REQUERIDO</span></label>
                     <input name="first_name" type="text" placeholder="María" className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 bg-white ${errClass("first_name")}`} />
-                    {formErrors.first_name && <p className="text-red-600 text-xs mt-1">{formErrors.first_name}</p>}
+                    {formErrors.first_name && <p className="text-red-600 text-sm mt-1">{formErrors.first_name}</p>}
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-gray-700 mb-1">Apellido <span className="text-red-500 text-[10px] font-bold">REQUERIDO</span></label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">Apellido <span className="text-red-500 text-xs font-bold">REQUERIDO</span></label>
                     <input name="last_name" type="text" placeholder="López" className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 bg-white ${errClass("last_name")}`} />
-                    {formErrors.last_name && <p className="text-red-600 text-xs mt-1">{formErrors.last_name}</p>}
+                    {formErrors.last_name && <p className="text-red-600 text-sm mt-1">{formErrors.last_name}</p>}
                   </div>
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">Teléfono <span className="text-red-500 text-[10px] font-bold">REQUERIDO</span></label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Teléfono <span className="text-red-500 text-xs font-bold">REQUERIDO</span></label>
                   <div className="flex items-center border rounded-xl bg-white overflow-hidden" style={{ borderColor: formErrors.phone ? "#E65C00" : "#E5E7EB" }}>
                     <span className="pl-4 pr-2 text-sm text-gray-400 font-medium shrink-0">+506</span>
                     <input name="phone" type="tel" placeholder="8312 3456" className="w-full px-2 py-3 text-sm focus:outline-none bg-transparent" />
                   </div>
-                  {formErrors.phone && <p className="text-red-600 text-xs mt-1">{formErrors.phone}</p>}
+                  {formErrors.phone && <p className="text-red-600 text-sm mt-1">{formErrors.phone}</p>}
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-semibold text-gray-700 mb-1">Provincia <span className="text-red-500 text-[10px] font-bold">REQUERIDO</span></label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">Provincia <span className="text-red-500 text-xs font-bold">REQUERIDO</span></label>
                     <div className="relative">
                       <select name="state" onChange={(e) => setSelectedProvince(e.target.value)} className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none appearance-none bg-white ${errClass("state")}`}>
                         <option value="">Seleccionar</option>
@@ -471,10 +471,10 @@ export default function GuardCheckoutModal({
                       </select>
                       <ChevronDown size={15} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
                     </div>
-                    {formErrors.state && <p className="text-red-600 text-xs mt-1">{formErrors.state}</p>}
+                    {formErrors.state && <p className="text-red-600 text-sm mt-1">{formErrors.state}</p>}
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-gray-700 mb-1">Ciudad <span className="text-red-500 text-[10px] font-bold">REQUERIDO</span></label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">Ciudad <span className="text-red-500 text-xs font-bold">REQUERIDO</span></label>
                     <div className="relative">
                       <select name="city" className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none appearance-none bg-white ${errClass("city")}`}>
                         <option value="">Seleccionar</option>
@@ -482,28 +482,28 @@ export default function GuardCheckoutModal({
                       </select>
                       <ChevronDown size={15} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
                     </div>
-                    {formErrors.city && <p className="text-red-600 text-xs mt-1">{formErrors.city}</p>}
+                    {formErrors.city && <p className="text-red-600 text-sm mt-1">{formErrors.city}</p>}
                   </div>
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">Dirección <span className="text-red-500 text-[10px] font-bold">REQUERIDO</span></label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Dirección <span className="text-red-500 text-xs font-bold">REQUERIDO</span></label>
                   <input name="address" type="text" maxLength={60} placeholder="Calle Duarte 45" className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 bg-white ${errClass("address")}`} />
-                  <p className="text-[10px] text-gray-400 mt-0.5">Máx 60 caracteres, solo letras y números.</p>
-                  {formErrors.address && <p className="text-red-600 text-xs mt-1">{formErrors.address}</p>}
+                  <p className="text-sm text-gray-400 mt-0.5">Máx 60 caracteres, solo letras y números.</p>
+                  {formErrors.address && <p className="text-red-600 text-sm mt-1">{formErrors.address}</p>}
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-semibold text-gray-700 mb-1">Punto de referencia <span className="text-red-500 text-[10px] font-bold">REQUERIDO</span></label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">Punto de referencia <span className="text-red-500 text-xs font-bold">REQUERIDO</span></label>
                     <input name="reference" type="text" placeholder="Cerca de la farmacia" className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 bg-white ${errClass("reference")}`} />
-                    {formErrors.reference && <p className="text-red-600 text-xs mt-1">{formErrors.reference}</p>}
+                    {formErrors.reference && <p className="text-red-600 text-sm mt-1">{formErrors.reference}</p>}
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-gray-700 mb-1">Nota <span className="text-gray-400 text-[10px]">OPCIONAL</span></label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">Nota <span className="text-gray-400 text-xs">OPCIONAL</span></label>
                     <input name="note" type="text" placeholder="Llamar antes" className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#E65C00] bg-white" />
                   </div>
                 </div>
                 <div className="pt-1">
-                  <label className="block text-xs font-semibold text-gray-700 mb-2">Método de envío</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Método de envío</label>
                   <div className="space-y-2">
                     <button type="button" onClick={() => setExpress(false)} className={`w-full flex items-center justify-between rounded-xl border-2 px-4 py-3 text-left transition-all bg-white ${!express ? "border-[#E65C00]" : "border-gray-200"}`}>
                       <p className="text-sm font-semibold text-gray-800 flex items-center gap-1.5"><Truck size={14} className="text-gray-500" /> Envío Estándar</p>
@@ -512,22 +512,22 @@ export default function GuardCheckoutModal({
                     <button type="button" onClick={() => setExpress(true)} className={`w-full flex items-center justify-between rounded-xl border-2 px-4 py-3 text-left transition-all bg-white ${express ? "border-[#E65C00]" : "border-gray-200"}`}>
                       <div>
                         <p className="text-sm font-semibold text-gray-800 flex items-center gap-1.5"><Zap size={14} style={{ color: "#F5B301" }} /> Envío Express</p>
-                        <p className="text-xs text-gray-400 mt-0.5">1-3 días hábiles</p>
+                        <p className="text-sm text-gray-400 mt-0.5">1-3 días hábiles</p>
                       </div>
                       <span className="text-sm font-bold text-gray-800">+₡2000</span>
                     </button>
                   </div>
                 </div>
                 <div className="rounded-xl px-4 py-3 space-y-1.5" style={{ backgroundColor: SOFT }}>
-                  <div className="flex justify-between text-xs text-gray-500"><span>{variant.name}</span><span>₡{variant.price.toLocaleString()}</span></div>
-                  <div className="flex justify-between text-xs text-gray-500"><span>{express ? "Envío Express (1-3 días)" : "Envío Estándar"}</span><span>{express ? "₡2000" : "Gratis"}</span></div>
+                  <div className="flex justify-between text-sm text-gray-500"><span>{variant.name}</span><span>₡{variant.price.toLocaleString()}</span></div>
+                  <div className="flex justify-between text-sm text-gray-500"><span>{express ? "Envío Express (1-3 días)" : "Envío Estándar"}</span><span>{express ? "₡2000" : "Gratis"}</span></div>
                   <div className="flex justify-between text-sm font-extrabold pt-1.5 border-t border-gray-200" style={{ color: ACCENT }}><span>Total a pagar</span><span className="tracking-tight"><span className="text-xs align-top mr-0.5">₡</span>{total.toLocaleString()}</span></div>
                 </div>
                 <button type="submit" disabled={submitting} className="w-full py-4 rounded-2xl text-white font-bold text-sm tracking-widest transition-all disabled:opacity-60 active:scale-95 mt-1" style={{ backgroundColor: ACCENT }}>
                   {submitting ? "Procesando..." : "✓ CONFIRMAR PEDIDO"}
                 </button>
-                {submitError && <p className="text-center text-xs text-red-600 mt-2">{submitError}</p>}
-                <p className="text-center text-xs text-gray-400 pb-2">Pagas únicamente al recibir tu pedido. 100% sin riesgo.</p>
+                {submitError && <p className="text-center text-sm text-red-600 mt-2">{submitError}</p>}
+                <p className="text-center text-sm text-gray-400 pb-2">Pagas únicamente al recibir tu pedido. 100% sin riesgo.</p>
               </form>
             </>
           )}
