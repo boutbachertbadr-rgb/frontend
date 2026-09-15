@@ -193,7 +193,7 @@ export default function GuardPage() {
       </div>
 
       {/* ══════════════════ HERO ══════════════════ */}
-      <section className="pt-20 pb-14" style={{ backgroundColor: WHITE }}>
+      <section className="pt-24 pb-14" style={{ backgroundColor: WHITE }}>
         <div className="max-w-lg mx-auto px-5">
 
           <div className="lp-animate flex justify-center mb-4">
