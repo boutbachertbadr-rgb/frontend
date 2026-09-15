@@ -161,14 +161,16 @@ export default function GuardPageV2() {
 
       {/* TOP URGENCY BAR */}
       <div className="fixed top-0 left-0 right-0 z-50 py-2 px-3 text-center" style={{ backgroundColor: INK }}>
+        <p className="text-[10px] font-bold tracking-widest uppercase mb-1" style={{ color: ORANGE }}>&#161;Precio especial por tiempo limitado!</p>
         <p className="text-white text-xs font-bold flex flex-row items-center justify-center gap-2 flex-wrap leading-none">
           <span className="pulse inline-flex items-center gap-1">
             <Timer size={11} /> TERMINA EN
-            <span className="tabular-nums font-mono bg-black/20 px-1.5 py-0.5 rounded text-xs">{timer}</span>
+            <span className="tabular-nums font-mono px-1.5 py-0.5 rounded text-xs" style={{ backgroundColor: ORANGE }}>{timer}</span>
           </span>
           <span className="opacity-40">|</span>
           <span><s className="opacity-60">&#8353;22,500</s> &#8250; <strong>&#8353;17,700 HOY</strong></span>
         </p>
+        <p className="text-[10px] font-semibold mt-1" style={{ color: "rgba(255,255,255,0.85)" }}>Paga contra entrega &#183; Env&#237;o gratis a todo CR</p>
       </div>
 
       {/* STICKY BOTTOM CTA */}
@@ -202,8 +204,8 @@ export default function GuardPageV2() {
           </div>
 
           <div className="lp-animate flex justify-center items-center gap-2.5 mb-5">
-            <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: ORANGE }}>
-              <span className="font-bold text-white text-sm">V</span>
+            <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: "#E65C00" }}>
+              <span className="font-bold text-sm" style={{ color: "#1A1A1A" }}>V</span>
             </div>
             <div className="flex flex-col leading-none">
               <span className="font-bold text-base tracking-tight" style={{ color: INK }}>VAZLINA</span>
