@@ -225,7 +225,8 @@ export default function GuardCheckoutModal({
     const errors: Record<string, string> = {};
     if (!firstName) errors.first_name = "Ingresá tu nombre";
     if (!lastName) errors.last_name = "Ingresá tu apellido";
-    if (rawPhone.length < 8) errors.phone = "Ingresá un teléfono válido (8 dígitos)";
+    const phoneDigits = rawPhone.startsWith("506") ? rawPhone.slice(3) : rawPhone;
+    if (phoneDigits.length !== 8 || !/^[5-8]/.test(phoneDigits)) errors.phone = "Ingresá un celular válido de Costa Rica (8 dígitos, ej: 8888 8888)";
     if (!provinceId) errors.state = "Seleccioná tu provincia";
     if (!cityId) errors.city = "Seleccioná tu ciudad";
     if (!addr.address.trim()) errors.address = "Ingresá tu dirección";
