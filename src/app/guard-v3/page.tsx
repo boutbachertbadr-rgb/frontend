@@ -5,18 +5,19 @@ import { Flame, Zap, BatteryCharging, ShieldCheck, Star, ChevronDown, ChevronUp,
 import GuardCheckoutModal, { LPVariant, ColorOption, COLOR_OPTIONS } from "@/components/lp/GuardCheckoutModal";
 
 const SILVER_DOT = "#A0A0A0";
+const PRODUCT_ORANGE = "#E65C00";
 
-const ORANGE = "#E65C00";
-const BG = "#F4F4F6";
-const WHITE = "#FFFFFF";
-const BORDER = "#D1D5DB";
-const INK = "#1A1A1A";
-const MUTED = "#6B7280";
-const BLUE = "#00E5FF";
-const NIGHT = "#0C0C0C";
-const NIGHT_CARD = "#161616";
-const NIGHT_BORDER = "#2A2E35";
-const WA_BG = "#ECE5DD";
+const ORANGE = "#C0690A";
+const BG = "#FFF8F0";
+const WHITE = "#FFFCF8";
+const BORDER = "#FFD5A8";
+const INK = "#3D1A00";
+const MUTED = "#9A6040";
+const BLUE = "#C0690A";
+const NIGHT = "#2A0E00";
+const NIGHT_CARD = "#3D1800";
+const NIGHT_BORDER = "#6B3000";
+const WA_BG = "#FFF0E0";
 
 interface Bundle {
   id: string;
@@ -48,16 +49,16 @@ function useOfferTimer() {
   const [left, setLeft] = useState("--:--:--");
   useEffect(() => {
     const randomDuration = () => (3 + Math.floor(Math.random() * 12)) * 3600000;
-    let end = Number(localStorage.getItem("guard_offer_end_v3") ?? 0);
+    let end = Number(localStorage.getItem("guard_offer_end_v3warm") ?? 0);
     if (!end || end <= Date.now()) {
       end = Date.now() + randomDuration();
-      localStorage.setItem("guard_offer_end_v3", String(end));
+      localStorage.setItem("guard_offer_end_v3warm", String(end));
     }
     const tick = () => {
       let diff = end - Date.now();
       if (diff <= 0) {
         end = Date.now() + randomDuration();
-        localStorage.setItem("guard_offer_end_v3", String(end));
+        localStorage.setItem("guard_offer_end_v3warm", String(end));
         diff = end - Date.now();
       }
       const h = Math.floor(diff / 3600000);
@@ -72,7 +73,7 @@ function useOfferTimer() {
   return left;
 }
 
-function Img({ src, label, className = "" }: { src: string; label: string; className?: string }) {
+function Img({ src, label, className = "", priority = false }: { src: string; label: string; className?: string; priority?: boolean }) {
   const [err, setErr] = useState(false);
   if (err) {
     return (
@@ -82,18 +83,18 @@ function Img({ src, label, className = "" }: { src: string; label: string; class
       </div>
     );
   }
-  return <img src={src} alt={label} className={className} style={{ objectFit: "cover", display: "block" }} onError={() => setErr(true)} />;
+  return <img src={src} alt={label} className={className} loading={priority ? "eager" : "lazy"} fetchPriority={priority ? "high" : "auto"} decoding={priority ? "sync" : "async"} style={{ objectFit: "cover", display: "block" }} onError={() => setErr(true)} />;
 }
 
-export default function GuardPage() {
+export default function GuardPageV3() {
   const timer = useOfferTimer();
   const [bundle, setBundle] = useState<Bundle>(BUNDLES[0]);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [selectedVariant, setSelectedVariant] = useState<LPVariant | null>(null);
   const [selectedColors, setSelectedColors] = useState<Record<string, ColorOption>>({
-    "1x": { id: "orange", label: "Naranja Metalico", dots: [ORANGE] },
-    "2x": { id: "mix", label: "1 Naranja + 1 Plata", dots: [ORANGE, SILVER_DOT] },
-    "3x": { id: "2o1s", label: "2 Naranja + 1 Plata", dots: [ORANGE, ORANGE, SILVER_DOT] },
+    "1x": { id: "orange", label: "Naranja Metalico", dots: [PRODUCT_ORANGE] },
+    "2x": { id: "mix", label: "1 Naranja + 1 Plata", dots: [PRODUCT_ORANGE, SILVER_DOT] },
+    "3x": { id: "2o1s", label: "2 Naranja + 1 Plata", dots: [PRODUCT_ORANGE, PRODUCT_ORANGE, SILVER_DOT] },
   });
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [showSticky, setShowSticky] = useState(false);
@@ -147,12 +148,12 @@ export default function GuardPage() {
         .lp-delay-1 { transition-delay: 0.1s; }
         .lp-delay-2 { transition-delay: 0.2s; }
         .lp-delay-3 { transition-delay: 0.3s; }
-        .bundle-card { border: 2px solid #D1D5DB; border-radius: 20px; overflow: hidden; transition: border-color 0.2s, box-shadow 0.2s; background: #FFFFFF; cursor: pointer; }
-        .bundle-card.active { border-color: #1A1A1A; box-shadow: 0 0 0 4px rgba(26,26,26,0.10); }
+        .bundle-card { border: 2px solid #FFD5A8; border-radius: 20px; overflow: hidden; transition: border-color 0.2s, box-shadow 0.2s; background: #FFFFFF; cursor: pointer; }
+        .bundle-card.active { border-color: #C0690A; box-shadow: 0 0 0 4px rgba(192,105,10,0.15); }
         @keyframes pulse-glow { 0%,100%{opacity:1;}50%{opacity:0.65;} }
         .pulse { animation: pulse-glow 2s ease-in-out infinite; }
         @keyframes shimmer { 0%{transform:translateX(-100%);}100%{transform:translateX(200%);} }
-        @keyframes cta-glow { 0%,100%{box-shadow:0 8px 25px rgba(230,92,0,0.35);}50%{box-shadow:0 14px 40px rgba(230,92,0,0.55);} }
+        @keyframes cta-glow { 0%,100%{box-shadow:0 8px 25px rgba(192,105,10,0.35);}50%{box-shadow:0 14px 40px rgba(192,105,10,0.55);} }
         .cta-btn { animation: cta-glow 2.5s ease-in-out infinite; position: relative; overflow: hidden; }
         .cta-btn::before { content:''; position:absolute; top:0; left:-100%; width:60%; height:100%; background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent); animation:shimmer 2.8s ease-in-out infinite; }
         @keyframes led-blink { 0%,100%{opacity:1;}50%{opacity:0.3;} }
@@ -195,8 +196,8 @@ export default function GuardPage() {
         <div className="max-w-lg mx-auto px-5">
 
           <div className="lp-animate flex justify-center mb-4">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold" style={{ backgroundColor: "#EFF6FF", border: "1px solid #BFDBFE", color: "#1D4ED8" }}>
-              <span className="led w-2 h-2 rounded-full inline-block" style={{ backgroundColor: BLUE, boxShadow: `0 0 6px ${BLUE}` }} />
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold" style={{ backgroundColor: "#FFE8D0", border: "1px solid #FFB870", color: ORANGE }}>
+              <span className="led w-2 h-2 rounded-full inline-block" style={{ backgroundColor: ORANGE, boxShadow: `0 0 6px rgba(192,105,10,0.5)` }} />
               Adaptador de Aislamiento Fisico con IA
             </span>
           </div>
@@ -214,7 +215,7 @@ export default function GuardPage() {
 
         {/* HERO IMAGE — full bleed edge to edge */}
         <div className="lp-animate w-full overflow-hidden shadow-md mb-7" style={{ maxWidth: "100vw" }}>
-          <Img src="/lp-guard/hero.jpg" label="Vazlina Guard — producto naranja metalico sobre superficie premium, fondo oscuro elegante" className="w-full" />
+          <Img src="/lp-guard/hero.jpg" label="Vazlina Guard — producto naranja metalico sobre superficie premium, fondo oscuro elegante" className="w-full" priority />
         </div>
 
         <div className="max-w-lg mx-auto px-5">
@@ -426,9 +427,9 @@ export default function GuardPage() {
             </div>
           </div>
 
-          <div className="lp-animate rounded-2xl p-5 flex gap-3 items-start" style={{ backgroundColor: "#EFF6FF", border: "1.5px solid #BFDBFE" }}>
-            <span className="led shrink-0 w-3 h-3 rounded-full mt-0.5" style={{ backgroundColor: BLUE, boxShadow: `0 0 8px ${BLUE}`, display: "inline-block" }} />
-            <p className="text-sm leading-relaxed" style={{ color: "#1E3A8A" }}>
+          <div className="lp-animate rounded-2xl p-5 flex gap-3 items-start" style={{ backgroundColor: "#FFF3E6", border: "1.5px solid #FFB870" }}>
+            <span className="led shrink-0 w-3 h-3 rounded-full mt-0.5" style={{ backgroundColor: ORANGE, boxShadow: `0 0 8px rgba(192,105,10,0.5)`, display: "inline-block" }} />
+            <p className="text-sm leading-relaxed" style={{ color: "#5C2800" }}>
               <strong>El chip AI monitorea el voltaje en tiempo real.</strong> Al detectar el 100% o una anomalia electrica, corta fisicamente la corriente, sin apps, sin configuracion. Siempre activo.
             </p>
           </div>
@@ -561,7 +562,7 @@ export default function GuardPage() {
                           className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border-2 transition-all text-xs font-medium"
                           style={{
                             borderColor: selectedColors[b.id]?.id === opt.id ? ORANGE : BORDER,
-                            backgroundColor: selectedColors[b.id]?.id === opt.id ? "rgba(230,92,0,0.06)" : WHITE,
+                            backgroundColor: selectedColors[b.id]?.id === opt.id ? "rgba(192,105,10,0.08)" : WHITE,
                             color: INK,
                           }}
                         >
@@ -569,8 +570,8 @@ export default function GuardPage() {
                             {opt.dots.map((c, i) => (
                               <span key={i} className="inline-block w-3.5 h-3.5 rounded-full border border-gray-200"
                                 style={{
-                                  background: c === ORANGE
-                                    ? `radial-gradient(circle at 35% 35%, #FF8C40, ${ORANGE} 70%)`
+                                  background: c === PRODUCT_ORANGE
+                                    ? `radial-gradient(circle at 35% 35%, #FF8C40, ${PRODUCT_ORANGE} 70%)`
                                     : `radial-gradient(circle at 35% 35%, #E8E8E8, #888 70%)`,
                                 }}
                               />
@@ -599,7 +600,6 @@ export default function GuardPage() {
                 { Icon: ShieldCheck, text: "Pago 100% seguro al recibir" },
                 { Icon: Truck, text: "Envio gratis a todo CR" },
                 { Icon: BatteryCharging, text: "Garantia 30 dias" },
-                { Icon: Smartphone, text: "Soporte por WhatsApp" },
               ].map(({ Icon, text }) => (
                 <div key={text} className="flex items-center gap-1.5 text-xs font-medium" style={{ color: INK }}>
                   <Icon size={13} style={{ color: ORANGE }} /> {text}
