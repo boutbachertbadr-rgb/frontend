@@ -49,13 +49,16 @@ export async function createOrder(payload: CreateOrderPayload): Promise<OrderRes
 
       if (!res.ok) {
         const error = await res.json().catch(() => ({ detail: "Error al crear la orden." }));
-        throw new Error(error.detail ?? "Error al crear la orden.");
+        const err = new Error(typeof error.detail === "string" ? error.detail : "Error al crear la orden.");
+        (err as Error & { status?: number }).status = res.status;
+        throw err;
       }
 
       return res.json();
     } catch (err) {
       clearTimeout(timeoutId);
-      if (attempt < MAX_RETRIES) {
+      const status = (err as { status?: number }).status;
+      if (attempt < MAX_RETRIES && status !== 422) {
         await new Promise(r => setTimeout(r, 1000 * attempt));
         continue;
       }

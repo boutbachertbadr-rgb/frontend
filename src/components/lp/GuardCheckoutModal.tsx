@@ -226,7 +226,7 @@ export default function GuardCheckoutModal({
     if (!firstName) errors.first_name = "Ingresá tu nombre";
     if (!lastName) errors.last_name = "Ingresá tu apellido";
     const phoneDigits = rawPhone.startsWith("506") ? rawPhone.slice(3) : rawPhone;
-    if (phoneDigits.length !== 8 || !/^[5-8]/.test(phoneDigits)) errors.phone = "Ingresá un celular válido de Costa Rica (8 dígitos, ej: 8888 8888)";
+    if (!/^\d{8}$/.test(phoneDigits)) errors.phone = "Ingresá un celular válido de Costa Rica (8 dígitos, ej: 8888 8888)";
     if (!provinceId) errors.state = "Seleccioná tu provincia";
     if (!cityId) errors.city = "Seleccioná tu ciudad";
     if (!addr.address.trim()) errors.address = "Ingresá tu dirección";
@@ -300,7 +300,12 @@ export default function GuardCheckoutModal({
       window.location.href = "/guard/thank-you";
     } catch (err) {
       console.error("[checkout] createOrder failed:", err);
-      setSubmitError("No se pudo registrar el pedido. Verificá tu conexión o contactá soporte.");
+      const serverMsg = err instanceof Error ? err.message : "";
+      const isValidation = serverMsg && !/fetch|network|abort|failed/i.test(serverMsg);
+      setSubmitError(isValidation ? serverMsg : "No se pudo registrar el pedido. Verificá tu conexión o contactá soporte.");
+      if (/customer\.phone|phone/i.test(serverMsg)) {
+        setFormErrors(prev => ({ ...prev, phone: serverMsg }));
+      }
       setSubmitting(false);
     }
   };
