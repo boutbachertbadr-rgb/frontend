@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { X, ShieldCheck, Truck, ChevronDown, Zap, ChevronLeft } from "lucide-react";
-import { createOrder } from "@/lib/api";
+import { sendOrderToSheet } from "@/lib/sheets";
 import { generateEventId } from "@/lib/pixels";
 
 const PROVINCES: { name: string; id: string }[] = [
@@ -200,8 +200,7 @@ export default function GuardCheckoutModal({
     setSubmitError("");
 
     const formData = new FormData(e.currentTarget);
-    const firstName = String(formData.get("first_name") ?? "").trim();
-    const lastName = String(formData.get("last_name") ?? "").trim();
+    const fullName = String(formData.get("full_name") ?? "").trim();
     const rawPhone = String(formData.get("phone") ?? "").replace(/\D/g, "");
     const phone = rawPhone.startsWith("506") ? `+${rawPhone}` : `+506${rawPhone}`;
     const provinceId = String(formData.get("state") ?? "");
@@ -209,27 +208,24 @@ export default function GuardCheckoutModal({
     const provinceName = PROVINCES.find(p => p.id === provinceId)?.name ?? "";
     const cityName = (CITIES_BY_PROVINCE[provinceId] ?? []).find(c => c.id === cityId)?.name ?? "";
     const addr = {
-      name: `${firstName} ${lastName}`.trim(),
+      name: fullName,
       phone,
       state: provinceName,
       city: cityName,
-      province_id: provinceId,
-      city_id: cityId,
-      distrito: "",
+      poblado: String(formData.get("poblado") ?? "").trim(),
       address: String(formData.get("address") ?? "").slice(0, 60).replace(/[^a-zA-Z0-9áéíóúñÁÉÍÓÚÑüÜ ,./\-#]/g, ""),
-      reference: String(formData.get("reference") ?? ""),
-      note: String(formData.get("note") ?? ""),
+      reference: String(formData.get("reference") ?? "").trim(),
     };
     console.log("[checkout] FormData addr:", addr);
 
     const errors: Record<string, string> = {};
-    if (!firstName) errors.first_name = "Ingresá tu nombre";
-    if (!lastName) errors.last_name = "Ingresá tu apellido";
-    if (rawPhone.length < 8) errors.phone = "Ingresá un teléfono válido (8 dígitos)";
-    if (!provinceId) errors.state = "Seleccioná tu provincia";
-    if (!cityId) errors.city = "Seleccioná tu ciudad";
+    if (!fullName) errors.full_name = "Ingresá tu nombre y apellidos";
+    const phoneDigits = rawPhone.startsWith("506") ? rawPhone.slice(3) : rawPhone;
+    if (!/^\d{8}$/.test(phoneDigits)) errors.phone = "Ingresá un celular válido de Costa Rica (8 dígitos, ej: 8888 8888)";
+    if (!provinceId) errors.state = "Seleccioná tu departamento";
+    if (!cityId) errors.city = "Seleccioná tu municipio";
+    if (!addr.poblado.trim()) errors.poblado = "Ingresá tu poblado/colonia";
     if (!addr.address.trim()) errors.address = "Ingresá tu dirección";
-    if (!addr.reference.trim()) errors.reference = "Ingresá un punto de referencia";
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
       setSubmitting(false);
@@ -263,30 +259,31 @@ export default function GuardCheckoutModal({
     if (silverQty > 0) coloredItems.push({ product_name: "Vazlina Guard — Plata Premium", quantity: silverQty, price_per_item: unitPrice, sku: SKU_SILVER });
 
     const orderItems = express
-      ? [...coloredItems, { product_name: "Envío Express (1-3 días)", quantity: 1, price_per_item: EXPRESS_FEE, sku: "" }]
+      ? [...coloredItems, { product_name: "Envío Express (1-3 días)", quantity: 1, price_per_item: EXPRESS_FEE }]
       : coloredItems;
 
+    const localOrderId = `CR-${Date.now().toString(36).toUpperCase()}`;
+    const productosStr = orderItems
+      .map(it => `${it.product_name}${"sku" in it && it.sku ? ` [${it.sku}]` : ""} x${it.quantity}`)
+      .join(" | ");
+
     try {
-      const response = await createOrder({
-        customer_name: addr.name,
-        customer_phone: addr.phone,
-        customer_state: addr.state,
-        customer_city: addr.city,
-        customer_distrito: addr.distrito,
-        customer_address: addr.address,
-        customer_reference: addr.reference,
-        customer_note: addr.note,
-        province_id: addr.province_id,
-        city_id: addr.city_id,
-        items: orderItems,
-        is_upsell_accepted: false,
-        total_price: total,
-        browser_event_id: eventId,
+      await sendOrderToSheet({
+        nombre_completo: addr.name,
+        telefono: addr.phone,
+        departamento: addr.state,
+        municipio: addr.city,
+        poblado: addr.poblado,
+        direccion: addr.address,
+        referencia: addr.reference,
+        productos: productosStr,
+        envio: express ? "Express" : "Standard",
+        precio_envio: express ? `₡${EXPRESS_FEE.toLocaleString()}` : "Gratis",
+        total,
+        origen: window.location.pathname,
       });
-      console.log("[checkout] createOrder response:", response);
-      const realOrderId = response.order_id;
       const updatedPayload = JSON.stringify({
-        orderId: realOrderId,
+        orderId: localOrderId,
         total: total.toFixed(2),
         addr,
         items: orderItems,
@@ -298,7 +295,7 @@ export default function GuardCheckoutModal({
       localStorage.setItem("guard_source", window.location.pathname);
       window.location.href = "/guard/thank-you";
     } catch (err) {
-      console.error("[checkout] createOrder failed:", err);
+      console.error("[checkout] sendOrderToSheet failed:", err);
       setSubmitError("No se pudo registrar el pedido. Verificá tu conexión o contactá soporte.");
       setSubmitting(false);
     }
@@ -345,7 +342,7 @@ export default function GuardCheckoutModal({
             <>
               <div>
                 <p className="font-bold text-base text-gray-800 mb-1">Elige el color de tu Guard</p>
-                <p className="text-xs text-gray-500">Ambos colores funcionan exactamente igual. Es solo preferencia visual.</p>
+                <p className="text-sm text-gray-500">Ambos colores funcionan exactamente igual. Es solo preferencia visual.</p>
               </div>
               <div className="grid grid-cols-1 gap-3">
                 {colorOptions.map((opt) => (
@@ -401,7 +398,7 @@ export default function GuardCheckoutModal({
               >
                 CONTINUAR CON MI PEDIDO →
               </button>
-              <p className="text-center text-xs text-gray-400 pb-1">Envio gratis · Pago al recibir · Sin riesgo</p>
+              <p className="text-center text-sm text-gray-400 pb-1">Envio gratis · Pago al recibir · Sin riesgo</p>
             </>
           )}
 
@@ -411,7 +408,7 @@ export default function GuardCheckoutModal({
               <button
                 type="button"
                 onClick={() => setStep(1)}
-                className="flex items-center gap-1 text-xs font-semibold text-gray-500 hover:text-gray-800 transition-colors -mb-1"
+                className="flex items-center gap-1 text-sm font-semibold text-gray-500 hover:text-gray-800 transition-colors -mb-1"
               >
                 <ChevronLeft size={14} /> Cambiar color
               </button>
@@ -431,39 +428,32 @@ export default function GuardCheckoutModal({
                       />
                     ))}
                   </div>
-                  <span className="text-xs font-semibold" style={{ color: ACCENT }}>{colorChoice.label}</span>
+                  <span className="text-sm font-semibold" style={{ color: ACCENT }}>{colorChoice.label}</span>
                 </div>
               )}
 
-              <div className="flex justify-around rounded-xl py-3 text-xs font-medium text-gray-600" style={{ backgroundColor: SOFT }}>
+              <div className="flex justify-around rounded-xl py-3 text-sm font-medium text-gray-600" style={{ backgroundColor: SOFT }}>
                 <span className="flex items-center gap-1.5"><Truck size={13} /> Envío gratis</span>
                 <span className="flex items-center gap-1.5"><ShieldCheck size={13} /> Pago al recibir</span>
               </div>
 
               <form onSubmit={handleNativeSubmit} className="space-y-3">
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs font-semibold text-gray-700 mb-1">Nombre <span className="text-red-500 text-[10px] font-bold">REQUERIDO</span></label>
-                    <input name="first_name" type="text" placeholder="María" className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 bg-white ${errClass("first_name")}`} />
-                    {formErrors.first_name && <p className="text-red-600 text-xs mt-1">{formErrors.first_name}</p>}
-                  </div>
-                  <div>
-                    <label className="block text-xs font-semibold text-gray-700 mb-1">Apellido <span className="text-red-500 text-[10px] font-bold">REQUERIDO</span></label>
-                    <input name="last_name" type="text" placeholder="López" className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 bg-white ${errClass("last_name")}`} />
-                    {formErrors.last_name && <p className="text-red-600 text-xs mt-1">{formErrors.last_name}</p>}
-                  </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Nombre y Apellidos <span className="text-red-500 text-xs font-bold">REQUERIDO</span></label>
+                  <input name="full_name" type="text" placeholder="María López" className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 bg-white ${errClass("full_name")}`} />
+                  {formErrors.full_name && <p className="text-red-600 text-sm mt-1">{formErrors.full_name}</p>}
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">Teléfono <span className="text-red-500 text-[10px] font-bold">REQUERIDO</span></label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Teléfono <span className="text-red-500 text-xs font-bold">REQUERIDO</span></label>
                   <div className="flex items-center border rounded-xl bg-white overflow-hidden" style={{ borderColor: formErrors.phone ? "#E65C00" : "#E5E7EB" }}>
                     <span className="pl-4 pr-2 text-sm text-gray-400 font-medium shrink-0">+506</span>
                     <input name="phone" type="tel" placeholder="8312 3456" className="w-full px-2 py-3 text-sm focus:outline-none bg-transparent" />
                   </div>
-                  {formErrors.phone && <p className="text-red-600 text-xs mt-1">{formErrors.phone}</p>}
+                  {formErrors.phone && <p className="text-red-600 text-sm mt-1">{formErrors.phone}</p>}
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-semibold text-gray-700 mb-1">Provincia <span className="text-red-500 text-[10px] font-bold">REQUERIDO</span></label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">Departamento <span className="text-red-500 text-xs font-bold">REQUERIDO</span></label>
                     <div className="relative">
                       <select name="state" onChange={(e) => setSelectedProvince(e.target.value)} className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none appearance-none bg-white ${errClass("state")}`}>
                         <option value="">Seleccionar</option>
@@ -471,10 +461,10 @@ export default function GuardCheckoutModal({
                       </select>
                       <ChevronDown size={15} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
                     </div>
-                    {formErrors.state && <p className="text-red-600 text-xs mt-1">{formErrors.state}</p>}
+                    {formErrors.state && <p className="text-red-600 text-sm mt-1">{formErrors.state}</p>}
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-gray-700 mb-1">Ciudad <span className="text-red-500 text-[10px] font-bold">REQUERIDO</span></label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">Municipio <span className="text-red-500 text-xs font-bold">REQUERIDO</span></label>
                     <div className="relative">
                       <select name="city" className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none appearance-none bg-white ${errClass("city")}`}>
                         <option value="">Seleccionar</option>
@@ -482,28 +472,26 @@ export default function GuardCheckoutModal({
                       </select>
                       <ChevronDown size={15} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
                     </div>
-                    {formErrors.city && <p className="text-red-600 text-xs mt-1">{formErrors.city}</p>}
+                    {formErrors.city && <p className="text-red-600 text-sm mt-1">{formErrors.city}</p>}
                   </div>
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">Dirección <span className="text-red-500 text-[10px] font-bold">REQUERIDO</span></label>
-                  <input name="address" type="text" maxLength={60} placeholder="Calle Duarte 45" className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 bg-white ${errClass("address")}`} />
-                  <p className="text-[10px] text-gray-400 mt-0.5">Máx 60 caracteres, solo letras y números.</p>
-                  {formErrors.address && <p className="text-red-600 text-xs mt-1">{formErrors.address}</p>}
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Poblado/Colonia <span className="text-red-500 text-xs font-bold">REQUERIDO</span></label>
+                  <input name="poblado" type="text" placeholder="Ej: Los Yoses" className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 bg-white ${errClass("poblado")}`} />
+                  {formErrors.poblado && <p className="text-red-600 text-sm mt-1">{formErrors.poblado}</p>}
                 </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs font-semibold text-gray-700 mb-1">Punto de referencia <span className="text-red-500 text-[10px] font-bold">REQUERIDO</span></label>
-                    <input name="reference" type="text" placeholder="Cerca de la farmacia" className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 bg-white ${errClass("reference")}`} />
-                    {formErrors.reference && <p className="text-red-600 text-xs mt-1">{formErrors.reference}</p>}
-                  </div>
-                  <div>
-                    <label className="block text-xs font-semibold text-gray-700 mb-1">Nota <span className="text-gray-400 text-[10px]">OPCIONAL</span></label>
-                    <input name="note" type="text" placeholder="Llamar antes" className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#E65C00] bg-white" />
-                  </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Dirección Completa <span className="text-red-500 text-xs font-bold">REQUERIDO</span></label>
+                  <input name="address" type="text" maxLength={60} placeholder="Calle Duarte 45" className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 bg-white ${errClass("address")}`} />
+                  <p className="text-sm text-gray-400 mt-0.5">Máx 60 caracteres, solo letras y números.</p>
+                  {formErrors.address && <p className="text-red-600 text-sm mt-1">{formErrors.address}</p>}
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Punto de referencia <span className="text-gray-400 text-xs">OPCIONAL</span></label>
+                  <input name="reference" type="text" placeholder="Color casa / Barrio, sector y referencia" className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#E65C00] bg-white" />
                 </div>
                 <div className="pt-1">
-                  <label className="block text-xs font-semibold text-gray-700 mb-2">Método de envío</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Método de envío</label>
                   <div className="space-y-2">
                     <button type="button" onClick={() => setExpress(false)} className={`w-full flex items-center justify-between rounded-xl border-2 px-4 py-3 text-left transition-all bg-white ${!express ? "border-[#E65C00]" : "border-gray-200"}`}>
                       <p className="text-sm font-semibold text-gray-800 flex items-center gap-1.5"><Truck size={14} className="text-gray-500" /> Envío Estándar</p>
@@ -512,22 +500,22 @@ export default function GuardCheckoutModal({
                     <button type="button" onClick={() => setExpress(true)} className={`w-full flex items-center justify-between rounded-xl border-2 px-4 py-3 text-left transition-all bg-white ${express ? "border-[#E65C00]" : "border-gray-200"}`}>
                       <div>
                         <p className="text-sm font-semibold text-gray-800 flex items-center gap-1.5"><Zap size={14} style={{ color: "#F5B301" }} /> Envío Express</p>
-                        <p className="text-xs text-gray-400 mt-0.5">1-3 días hábiles</p>
+                        <p className="text-sm text-gray-400 mt-0.5">1-3 días hábiles</p>
                       </div>
                       <span className="text-sm font-bold text-gray-800">+₡2000</span>
                     </button>
                   </div>
                 </div>
                 <div className="rounded-xl px-4 py-3 space-y-1.5" style={{ backgroundColor: SOFT }}>
-                  <div className="flex justify-between text-xs text-gray-500"><span>{variant.name}</span><span>₡{variant.price.toLocaleString()}</span></div>
-                  <div className="flex justify-between text-xs text-gray-500"><span>{express ? "Envío Express (1-3 días)" : "Envío Estándar"}</span><span>{express ? "₡2000" : "Gratis"}</span></div>
+                  <div className="flex justify-between text-sm text-gray-500"><span>{variant.name}</span><span>₡{variant.price.toLocaleString()}</span></div>
+                  <div className="flex justify-between text-sm text-gray-500"><span>{express ? "Envío Express (1-3 días)" : "Envío Estándar"}</span><span>{express ? "₡2000" : "Gratis"}</span></div>
                   <div className="flex justify-between text-sm font-extrabold pt-1.5 border-t border-gray-200" style={{ color: ACCENT }}><span>Total a pagar</span><span className="tracking-tight"><span className="text-xs align-top mr-0.5">₡</span>{total.toLocaleString()}</span></div>
                 </div>
                 <button type="submit" disabled={submitting} className="w-full py-4 rounded-2xl text-white font-bold text-sm tracking-widest transition-all disabled:opacity-60 active:scale-95 mt-1" style={{ backgroundColor: ACCENT }}>
                   {submitting ? "Procesando..." : "✓ CONFIRMAR PEDIDO"}
                 </button>
-                {submitError && <p className="text-center text-xs text-red-600 mt-2">{submitError}</p>}
-                <p className="text-center text-xs text-gray-400 pb-2">Pagas únicamente al recibir tu pedido. 100% sin riesgo.</p>
+                {submitError && <p className="text-center text-sm text-red-600 mt-2">{submitError}</p>}
+                <p className="text-center text-sm text-gray-400 pb-2">Pagas únicamente al recibir tu pedido. 100% sin riesgo.</p>
               </form>
             </>
           )}

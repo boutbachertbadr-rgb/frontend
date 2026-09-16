@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { X, ShieldCheck, Truck, ChevronDown, Zap, ChevronLeft } from "lucide-react";
-import { createOrder } from "@/lib/api";
+import { sendOrderToSheet } from "@/lib/sheets";
 import { generateEventId } from "@/lib/pixels";
 
 const PROVINCES: { name: string; id: string }[] = [
@@ -200,8 +200,7 @@ export default function GuardCheckoutModal({
     setSubmitError("");
 
     const formData = new FormData(e.currentTarget);
-    const firstName = String(formData.get("first_name") ?? "").trim();
-    const lastName = String(formData.get("last_name") ?? "").trim();
+    const fullName = String(formData.get("full_name") ?? "").trim();
     const rawPhone = String(formData.get("phone") ?? "").replace(/\D/g, "");
     const phone = rawPhone.startsWith("506") ? `+${rawPhone}` : `+506${rawPhone}`;
     const provinceId = String(formData.get("state") ?? "");
@@ -209,28 +208,24 @@ export default function GuardCheckoutModal({
     const provinceName = PROVINCES.find(p => p.id === provinceId)?.name ?? "";
     const cityName = (CITIES_BY_PROVINCE[provinceId] ?? []).find(c => c.id === cityId)?.name ?? "";
     const addr = {
-      name: `${firstName} ${lastName}`.trim(),
+      name: fullName,
       phone,
       state: provinceName,
       city: cityName,
-      province_id: provinceId,
-      city_id: cityId,
-      distrito: "",
+      poblado: String(formData.get("poblado") ?? "").trim(),
       address: String(formData.get("address") ?? "").slice(0, 60).replace(/[^a-zA-Z0-9áéíóúñÁÉÍÓÚÑüÜ ,./\-#]/g, ""),
-      reference: String(formData.get("reference") ?? ""),
-      note: String(formData.get("note") ?? ""),
+      reference: String(formData.get("reference") ?? "").trim(),
     };
     console.log("[checkout] FormData addr:", addr);
 
     const errors: Record<string, string> = {};
-    if (!firstName) errors.first_name = "Ingresá tu nombre";
-    if (!lastName) errors.last_name = "Ingresá tu apellido";
+    if (!fullName) errors.full_name = "Ingresá tu nombre y apellidos";
     const phoneDigits = rawPhone.startsWith("506") ? rawPhone.slice(3) : rawPhone;
     if (!/^\d{8}$/.test(phoneDigits)) errors.phone = "Ingresá un celular válido de Costa Rica (8 dígitos, ej: 8888 8888)";
-    if (!provinceId) errors.state = "Seleccioná tu provincia";
-    if (!cityId) errors.city = "Seleccioná tu ciudad";
+    if (!provinceId) errors.state = "Seleccioná tu departamento";
+    if (!cityId) errors.city = "Seleccioná tu municipio";
+    if (!addr.poblado.trim()) errors.poblado = "Ingresá tu poblado/colonia";
     if (!addr.address.trim()) errors.address = "Ingresá tu dirección";
-    if (!addr.reference.trim()) errors.reference = "Ingresá un punto de referencia";
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
       setSubmitting(false);
@@ -267,27 +262,28 @@ export default function GuardCheckoutModal({
       ? [...coloredItems, { product_name: "Envío Express (1-3 días)", quantity: 1, price_per_item: EXPRESS_FEE }]
       : coloredItems;
 
+    const localOrderId = `CR-${Date.now().toString(36).toUpperCase()}`;
+    const productosStr = orderItems
+      .map(it => `${it.product_name}${"sku" in it && it.sku ? ` [${it.sku}]` : ""} x${it.quantity}`)
+      .join(" | ");
+
     try {
-      const response = await createOrder({
-        customer_name: addr.name,
-        customer_phone: addr.phone,
-        customer_state: addr.state,
-        customer_city: addr.city,
-        customer_distrito: addr.distrito,
-        customer_address: addr.address,
-        customer_reference: addr.reference,
-        customer_note: addr.note,
-        province_id: addr.province_id,
-        city_id: addr.city_id,
-        items: orderItems,
-        is_upsell_accepted: false,
-        total_price: total,
-        browser_event_id: eventId,
+      await sendOrderToSheet({
+        nombre_completo: addr.name,
+        telefono: addr.phone,
+        departamento: addr.state,
+        municipio: addr.city,
+        poblado: addr.poblado,
+        direccion: addr.address,
+        referencia: addr.reference,
+        productos: productosStr,
+        envio: express ? "Express" : "Standard",
+        precio_envio: express ? `₡${EXPRESS_FEE.toLocaleString()}` : "Gratis",
+        total,
+        origen: window.location.pathname,
       });
-      console.log("[checkout] createOrder response:", response);
-      const realOrderId = response.order_id;
       const updatedPayload = JSON.stringify({
-        orderId: realOrderId,
+        orderId: localOrderId,
         total: total.toFixed(2),
         addr,
         items: orderItems,
@@ -299,13 +295,8 @@ export default function GuardCheckoutModal({
       localStorage.setItem("guard_source", window.location.pathname);
       window.location.href = "/guard/thank-you";
     } catch (err) {
-      console.error("[checkout] createOrder failed:", err);
-      const serverMsg = err instanceof Error ? err.message : "";
-      const isValidation = serverMsg && !/fetch|network|abort|failed/i.test(serverMsg);
-      setSubmitError(isValidation ? serverMsg : "No se pudo registrar el pedido. Verificá tu conexión o contactá soporte.");
-      if (/customer\.phone|phone/i.test(serverMsg)) {
-        setFormErrors(prev => ({ ...prev, phone: serverMsg }));
-      }
+      console.error("[checkout] sendOrderToSheet failed:", err);
+      setSubmitError("No se pudo registrar el pedido. Verificá tu conexión o contactá soporte.");
       setSubmitting(false);
     }
   };
@@ -447,17 +438,10 @@ export default function GuardCheckoutModal({
               </div>
 
               <form onSubmit={handleNativeSubmit} className="space-y-3">
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1">Nombre <span className="text-red-500 text-xs font-bold">REQUERIDO</span></label>
-                    <input name="first_name" type="text" placeholder="María" className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 bg-white ${errClass("first_name")}`} />
-                    {formErrors.first_name && <p className="text-red-600 text-sm mt-1">{formErrors.first_name}</p>}
-                  </div>
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1">Apellido <span className="text-red-500 text-xs font-bold">REQUERIDO</span></label>
-                    <input name="last_name" type="text" placeholder="López" className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 bg-white ${errClass("last_name")}`} />
-                    {formErrors.last_name && <p className="text-red-600 text-sm mt-1">{formErrors.last_name}</p>}
-                  </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Nombre y Apellidos <span className="text-red-500 text-xs font-bold">REQUERIDO</span></label>
+                  <input name="full_name" type="text" placeholder="María López" className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 bg-white ${errClass("full_name")}`} />
+                  {formErrors.full_name && <p className="text-red-600 text-sm mt-1">{formErrors.full_name}</p>}
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-1">Teléfono <span className="text-red-500 text-xs font-bold">REQUERIDO</span></label>
@@ -469,7 +453,7 @@ export default function GuardCheckoutModal({
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1">Provincia <span className="text-red-500 text-xs font-bold">REQUERIDO</span></label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">Departamento <span className="text-red-500 text-xs font-bold">REQUERIDO</span></label>
                     <div className="relative">
                       <select name="state" onChange={(e) => setSelectedProvince(e.target.value)} className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none appearance-none bg-white ${errClass("state")}`}>
                         <option value="">Seleccionar</option>
@@ -480,7 +464,7 @@ export default function GuardCheckoutModal({
                     {formErrors.state && <p className="text-red-600 text-sm mt-1">{formErrors.state}</p>}
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1">Ciudad <span className="text-red-500 text-xs font-bold">REQUERIDO</span></label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">Municipio <span className="text-red-500 text-xs font-bold">REQUERIDO</span></label>
                     <div className="relative">
                       <select name="city" className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none appearance-none bg-white ${errClass("city")}`}>
                         <option value="">Seleccionar</option>
@@ -492,21 +476,19 @@ export default function GuardCheckoutModal({
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">Dirección <span className="text-red-500 text-xs font-bold">REQUERIDO</span></label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Poblado/Colonia <span className="text-red-500 text-xs font-bold">REQUERIDO</span></label>
+                  <input name="poblado" type="text" placeholder="Ej: Los Yoses" className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 bg-white ${errClass("poblado")}`} />
+                  {formErrors.poblado && <p className="text-red-600 text-sm mt-1">{formErrors.poblado}</p>}
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Dirección Completa <span className="text-red-500 text-xs font-bold">REQUERIDO</span></label>
                   <input name="address" type="text" maxLength={60} placeholder="Calle Duarte 45" className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 bg-white ${errClass("address")}`} />
                   <p className="text-sm text-gray-400 mt-0.5">Máx 60 caracteres, solo letras y números.</p>
                   {formErrors.address && <p className="text-red-600 text-sm mt-1">{formErrors.address}</p>}
                 </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1">Punto de referencia <span className="text-red-500 text-xs font-bold">REQUERIDO</span></label>
-                    <input name="reference" type="text" placeholder="Cerca de la farmacia" className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 bg-white ${errClass("reference")}`} />
-                    {formErrors.reference && <p className="text-red-600 text-sm mt-1">{formErrors.reference}</p>}
-                  </div>
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1">Nota <span className="text-gray-400 text-xs">OPCIONAL</span></label>
-                    <input name="note" type="text" placeholder="Llamar antes" className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#E65C00] bg-white" />
-                  </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Punto de referencia <span className="text-gray-400 text-xs">OPCIONAL</span></label>
+                  <input name="reference" type="text" placeholder="Color casa / Barrio, sector y referencia" className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#E65C00] bg-white" />
                 </div>
                 <div className="pt-1">
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Método de envío</label>
