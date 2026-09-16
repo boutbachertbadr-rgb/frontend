@@ -1,30 +1,35 @@
 const SHEET_URL = process.env.NEXT_PUBLIC_SHEET_WEBHOOK_URL ?? "";
 
-export interface SheetOrderPayload {
-  nombre_completo: string;
-  telefono: string;
+/**
+ * One row = one SKU line. If an order has more than one SKU (e.g. a mixed
+ * color bundle), send one line per SKU so the fulfillment service gets
+ * clean, atomic columns instead of a delimited string to parse.
+ */
+export interface SheetOrderLine {
+  country?: string; // defaults to "Costa Rica"
+  full_name: string;
+  phone: string;
   departamento: string;
   municipio: string;
-  poblado: string;
-  direccion: string;
-  referencia?: string;
-  productos: string;
-  envio: string;
-  precio_envio: string;
-  total: number;
-  origen?: string;
+  direccion_completa: string;
+  punto_referencia?: string;
+  sku: string;
+  quantity: number;
+  price: number;
+  shipping: number; // 0 = free/standard, 2000 = express
 }
 
 /**
- * Sends an order straight to the Google Sheet (via Apps Script Web App),
- * with no backend/API in between. Fire-and-forget with retries.
+ * Sends order lines straight to the Google Sheet (via Apps Script Web App),
+ * with no backend/API in between. Rows are posted sequentially so they land
+ * in order. Fire-and-forget with retries per row.
  *
  * NOTE: Google Apps Script Web Apps don't handle CORS preflight requests,
  * so we send the body as text/plain (still valid JSON) and use "no-cors"
  * mode. This means we can't read the response back — we just trust the
  * request went through if fetch() doesn't throw.
  */
-export async function sendOrderToSheet(payload: SheetOrderPayload): Promise<void> {
+async function postLine(line: SheetOrderLine): Promise<void> {
   if (!SHEET_URL) {
     console.warn("[sheet] NEXT_PUBLIC_SHEET_WEBHOOK_URL no está configurada.");
     return;
@@ -32,7 +37,8 @@ export async function sendOrderToSheet(payload: SheetOrderPayload): Promise<void
 
   const body = JSON.stringify({
     fecha: new Date().toLocaleString("es-CR", { timeZone: "America/Costa_Rica" }),
-    ...payload,
+    country: "Costa Rica",
+    ...line,
   });
 
   const MAX_RETRIES = 3;
@@ -56,4 +62,10 @@ export async function sendOrderToSheet(payload: SheetOrderPayload): Promise<void
   }
 
   throw lastErr instanceof Error ? lastErr : new Error("No se pudo enviar el pedido a la hoja de cálculo.");
+}
+
+export async function sendOrderToSheet(lines: SheetOrderLine[]): Promise<void> {
+  for (const line of lines) {
+    await postLine(line);
+  }
 }

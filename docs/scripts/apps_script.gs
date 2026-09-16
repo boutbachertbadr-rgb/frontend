@@ -2,33 +2,36 @@
 // Vazlina — Google Sheet order intake (Costa Rica / Fufills)
 //
 // The frontend posts orders directly to this Web App — there is
-// no backend/API in between anymore. Every submitted order is
-// simply appended as a new row.
+// no backend/API in between anymore. One row = one SKU line
+// (a mixed-color order sends 2 rows, sharing the same customer
+// info) so the fulfillment team gets clean, atomic columns.
+//
+// Columns match exactly what the fulfillment service asked for:
+// country, full name, phone, departamento, municipio, dirección
+// completa, punto de referencia, SKU, quantity, price — plus a
+// shipping column (0 = free/standard, 2000 = express).
 //
 // SETUP (once):
 //   1. Open the Google Sheet -> Extensions -> Apps Script
 //   2. Paste this entire file, save
-//   3. Deploy -> New deployment -> Web app
-//        Execute as: Me
-//        Who has access: Anyone
-//   4. Copy the Web App URL into the frontend's
-//      NEXT_PUBLIC_SHEET_WEBHOOK_URL env var
+//   3. Deploy -> Manage deployments -> edit existing deployment
+//      -> Version: New version -> Deploy
+//      (keeps the same Web App URL already in use)
 // ============================================================
 
 var HEADERS = [
   'Fecha',                 // A  1
-  'Nombre y Apellidos',    // B  2
-  'Teléfono',              // C  3
-  'Departamento',          // D  4
-  'Municipio',             // E  5
-  'Poblado/Colonia',       // F  6
-  'Dirección Completa',    // G  7
-  'Punto de Referencia',   // H  8
-  'Productos (SKU)',       // I  9
-  'Envío',                 // J  10
-  'Precio Envío',          // K  11
-  'Total',                 // L  12
-  'Origen'                 // M  13
+  'Country',                // B  2
+  'Full Name',               // C  3
+  'Phone Number',            // D  4
+  'Departamento',            // E  5
+  'Municipio',               // F  6
+  'Dirección Completa',      // G  7
+  'Punto de Referencia',     // H  8
+  'SKU',                     // I  9
+  'Quantity',                // J  10
+  'Price',                   // K  11
+  'Shipping'                 // L  12
 ];
 
 function doPost(e) {
@@ -46,34 +49,32 @@ function doPost(e) {
       headerRange.setFontWeight('bold');
       sheet.setFrozenRows(1);
       sheet.setColumnWidth(1, 130);   // Fecha
-      sheet.setColumnWidth(2, 160);   // Nombre y Apellidos
-      sheet.setColumnWidth(3, 130);   // Teléfono
-      sheet.setColumnWidth(4, 110);   // Departamento
-      sheet.setColumnWidth(5, 110);   // Municipio
-      sheet.setColumnWidth(6, 140);   // Poblado/Colonia
+      sheet.setColumnWidth(2, 100);   // Country
+      sheet.setColumnWidth(3, 160);   // Full Name
+      sheet.setColumnWidth(4, 130);   // Phone Number
+      sheet.setColumnWidth(5, 110);   // Departamento
+      sheet.setColumnWidth(6, 110);   // Municipio
       sheet.setColumnWidth(7, 220);   // Dirección Completa
       sheet.setColumnWidth(8, 180);   // Punto de Referencia
-      sheet.setColumnWidth(9, 300);   // Productos (SKU)
-      sheet.setColumnWidth(10, 90);   // Envío
-      sheet.setColumnWidth(11, 100);  // Precio Envío
-      sheet.setColumnWidth(12, 100);  // Total
-      sheet.setColumnWidth(13, 140);  // Origen
+      sheet.setColumnWidth(9, 140);   // SKU
+      sheet.setColumnWidth(10, 90);   // Quantity
+      sheet.setColumnWidth(11, 90);   // Price
+      sheet.setColumnWidth(12, 90);   // Shipping
     }
 
     var newRow = [
-      data.fecha            || new Date().toLocaleString('en-GB'),
-      data.nombre_completo  || '',
-      data.telefono         || '',
-      data.departamento     || '',
-      data.municipio        || '',
-      data.poblado          || '',
-      data.direccion        || '',
-      data.referencia       || '',
-      data.productos        || '',
-      data.envio            || 'Standard',
-      data.precio_envio     || 'Gratis',
-      data.total            || '',
-      data.origen           || ''
+      data.fecha              || new Date().toLocaleString('en-GB'),
+      data.country             || 'Costa Rica',
+      data.full_name           || '',
+      data.phone               || '',
+      data.departamento        || '',
+      data.municipio           || '',
+      data.direccion_completa  || '',
+      data.punto_referencia    || '',
+      data.sku                 || '',
+      data.quantity            || '',
+      data.price               || '',
+      data.shipping            || 0
     ];
 
     sheet.appendRow(newRow);

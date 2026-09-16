@@ -263,25 +263,24 @@ export default function GuardCheckoutModal({
       : coloredItems;
 
     const localOrderId = `CR-${Date.now().toString(36).toUpperCase()}`;
-    const productosStr = orderItems
-      .map(it => `${it.product_name}${"sku" in it && it.sku ? ` [${it.sku}]` : ""} x${it.quantity}`)
-      .join(" | ");
+    const direccionCompleta = [addr.poblado, addr.address].filter(Boolean).join(", ");
+    const shippingPrice = express ? EXPRESS_FEE : 0;
+
+    const sheetLines = coloredItems.map(item => ({
+      full_name: addr.name,
+      phone: addr.phone,
+      departamento: addr.state,
+      municipio: addr.city,
+      direccion_completa: direccionCompleta,
+      punto_referencia: addr.reference,
+      sku: item.sku,
+      quantity: item.quantity,
+      price: item.price_per_item,
+      shipping: shippingPrice,
+    }));
 
     try {
-      await sendOrderToSheet({
-        nombre_completo: addr.name,
-        telefono: addr.phone,
-        departamento: addr.state,
-        municipio: addr.city,
-        poblado: addr.poblado,
-        direccion: addr.address,
-        referencia: addr.reference,
-        productos: productosStr,
-        envio: express ? "Express" : "Standard",
-        precio_envio: express ? `₡${EXPRESS_FEE.toLocaleString()}` : "Gratis",
-        total,
-        origen: window.location.pathname,
-      });
+      await sendOrderToSheet(sheetLines);
       const updatedPayload = JSON.stringify({
         orderId: localOrderId,
         total: total.toFixed(2),
