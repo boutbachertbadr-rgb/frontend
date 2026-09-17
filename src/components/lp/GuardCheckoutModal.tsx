@@ -265,7 +265,11 @@ export default function GuardCheckoutModal({
     const localOrderId = `CR-${Date.now().toString(36).toUpperCase()}`;
     const shippingPrice = express ? EXPRESS_FEE : 0;
 
-    const sheetLines = coloredItems.map(item => ({
+    const skuStr = coloredItems.map(item => `${item.quantity}x ${item.sku}`).join(", ");
+    const totalQty = coloredItems.reduce((sum, item) => sum + item.quantity, 0);
+    const productsPrice = coloredItems.reduce((sum, item) => sum + item.quantity * item.price_per_item, 0);
+
+    const sheetLines = [{
       full_name: addr.name,
       phone: addr.phone,
       departamento: addr.state,
@@ -273,12 +277,12 @@ export default function GuardCheckoutModal({
       poblado_colonia: addr.poblado,
       direccion_completa: addr.address,
       punto_referencia: addr.reference,
-      sku: item.sku,
-      quantity: item.quantity,
-      price: item.price_per_item,
+      sku: skuStr,
+      quantity: totalQty,
+      price: productsPrice,
       shipping: shippingPrice,
       total_price: total,
-    }));
+    }];
 
     try {
       await sendOrderToSheet(sheetLines);
