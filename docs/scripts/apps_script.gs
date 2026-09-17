@@ -39,11 +39,6 @@ function doPost(e) {
 
     if (!sheet) {
       sheet = ss.insertSheet('Orders');
-      sheet.appendRow(HEADERS);
-      var headerRange = sheet.getRange(1, 1, 1, HEADERS.length);
-      headerRange.setBackground('#1a73e8');
-      headerRange.setFontColor('#ffffff');
-      headerRange.setFontWeight('bold');
       sheet.setFrozenRows(1);
       sheet.setColumnWidth(1, 130);   // Fecha
       sheet.setColumnWidth(2, 100);   // Country
@@ -60,6 +55,15 @@ function doPost(e) {
       sheet.setColumnWidth(13, 90);   // Shipping
       sheet.setColumnWidth(14, 100);  // Total Price
     }
+
+    // Always keep row 1 in sync with HEADERS, even if this tab already
+    // existed from an older version of this script — this prevents the
+    // classic "columns look shifted" bug when the header row is stale.
+    var headerRange = sheet.getRange(1, 1, 1, HEADERS.length);
+    headerRange.setValues([HEADERS]);
+    headerRange.setBackground('#1a73e8');
+    headerRange.setFontColor('#ffffff');
+    headerRange.setFontWeight('bold');
 
     var newRow = [
       data.fecha              || new Date().toLocaleString('en-GB'),
