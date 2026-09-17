@@ -6,11 +6,6 @@
 // (a mixed-color order sends 2 rows, sharing the same customer
 // info) so the fulfillment team gets clean, atomic columns.
 //
-// Columns match exactly what the fulfillment service asked for:
-// country, full name, phone, departamento, municipio, dirección
-// completa, punto de referencia, SKU, quantity, price — plus a
-// shipping column (0 = free/standard, 2000 = express).
-//
 // SETUP (once):
 //   1. Open the Google Sheet -> Extensions -> Apps Script
 //   2. Paste this entire file, save
@@ -22,16 +17,18 @@
 var HEADERS = [
   'Fecha',                 // A  1
   'Country',                // B  2
-  'Full Name',               // C  3
-  'Phone Number',            // D  4
+  'Nombre y Apellidos',      // C  3
+  'Teléfono',                // D  4
   'Departamento',            // E  5
   'Municipio',               // F  6
-  'Dirección Completa',      // G  7
-  'Punto de Referencia',     // H  8
-  'SKU',                     // I  9
-  'Quantity',                // J  10
-  'Price',                   // K  11
-  'Shipping'                 // L  12
+  'Poblado/Colonia',         // G  7
+  'Dirección Completa',      // H  8
+  'Punto de Referencia',     // I  9
+  'SKU',                     // J  10
+  'Quantity',                // K  11
+  'Price',                   // L  12
+  'Shipping',                // M  13
+  'Total Price'              // N  14
 ];
 
 function doPost(e) {
@@ -50,16 +47,18 @@ function doPost(e) {
       sheet.setFrozenRows(1);
       sheet.setColumnWidth(1, 130);   // Fecha
       sheet.setColumnWidth(2, 100);   // Country
-      sheet.setColumnWidth(3, 160);   // Full Name
-      sheet.setColumnWidth(4, 130);   // Phone Number
+      sheet.setColumnWidth(3, 160);   // Nombre y Apellidos
+      sheet.setColumnWidth(4, 130);   // Teléfono
       sheet.setColumnWidth(5, 110);   // Departamento
       sheet.setColumnWidth(6, 110);   // Municipio
-      sheet.setColumnWidth(7, 220);   // Dirección Completa
-      sheet.setColumnWidth(8, 180);   // Punto de Referencia
-      sheet.setColumnWidth(9, 140);   // SKU
-      sheet.setColumnWidth(10, 90);   // Quantity
-      sheet.setColumnWidth(11, 90);   // Price
-      sheet.setColumnWidth(12, 90);   // Shipping
+      sheet.setColumnWidth(7, 140);   // Poblado/Colonia
+      sheet.setColumnWidth(8, 220);   // Dirección Completa
+      sheet.setColumnWidth(9, 180);   // Punto de Referencia
+      sheet.setColumnWidth(10, 140);  // SKU
+      sheet.setColumnWidth(11, 90);   // Quantity
+      sheet.setColumnWidth(12, 90);   // Price
+      sheet.setColumnWidth(13, 90);   // Shipping
+      sheet.setColumnWidth(14, 100);  // Total Price
     }
 
     var newRow = [
@@ -69,12 +68,14 @@ function doPost(e) {
       data.phone               || '',
       data.departamento        || '',
       data.municipio           || '',
+      data.poblado_colonia     || '',
       data.direccion_completa  || '',
       data.punto_referencia    || '',
       data.sku                 || '',
       data.quantity            || '',
       data.price               || '',
-      data.shipping            || 0
+      data.shipping            || 0,
+      data.total_price         || ''
     ];
 
     sheet.appendRow(newRow);

@@ -263,7 +263,6 @@ export default function GuardCheckoutModal({
       : coloredItems;
 
     const localOrderId = `CR-${Date.now().toString(36).toUpperCase()}`;
-    const direccionCompleta = [addr.poblado, addr.address].filter(Boolean).join(", ");
     const shippingPrice = express ? EXPRESS_FEE : 0;
 
     const sheetLines = coloredItems.map(item => ({
@@ -271,12 +270,14 @@ export default function GuardCheckoutModal({
       phone: addr.phone,
       departamento: addr.state,
       municipio: addr.city,
-      direccion_completa: direccionCompleta,
+      poblado_colonia: addr.poblado,
+      direccion_completa: addr.address,
       punto_referencia: addr.reference,
       sku: item.sku,
       quantity: item.quantity,
       price: item.price_per_item,
       shipping: shippingPrice,
+      total_price: total,
     }));
 
     try {

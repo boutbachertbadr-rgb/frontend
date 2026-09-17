@@ -11,12 +11,14 @@ export interface SheetOrderLine {
   phone: string;
   departamento: string;
   municipio: string;
+  poblado_colonia: string;
   direccion_completa: string;
   punto_referencia?: string;
   sku: string;
   quantity: number;
   price: number;
   shipping: number; // 0 = free/standard, 2000 = express
+  total_price: number; // grand total of the whole order (same value repeated on every line of that order)
 }
 
 /**
