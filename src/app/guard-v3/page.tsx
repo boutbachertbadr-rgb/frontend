@@ -442,8 +442,8 @@ export default function GuardPageV3() {
       <section className="py-20 px-5" style={{ backgroundColor: BG }}>
         <div className="max-w-lg mx-auto">
           <h2 className="lp-animate text-3xl font-bold text-center mb-2" style={{ color: INK }}>
-            Clientes que ya duermen{" "}
-            <span style={{ color: ORANGE }}>tranquilos cada noche.</span>
+            Así reaccionan los clientes{" "}
+            <span style={{ color: ORANGE }}>que ya lo probaron.</span>
           </h2>
           <div className="lp-animate lp-delay-1 flex justify-center items-center gap-1 mb-10">
             {[...Array(5)].map((_, i) => <Star key={i} size={15} fill="#F59E0B" style={{ color: "#F59E0B" }} />)}
