@@ -2,9 +2,14 @@
 // Vazlina — Google Sheet order intake (Costa Rica / Fufills)
 //
 // The frontend posts orders directly to this Web App — there is
-// no backend/API in between anymore. One row = one SKU line
-// (a mixed-color order sends 2 rows, sharing the same customer
-// info) so the fulfillment team gets clean, atomic columns.
+// no backend/API in between. One row = one order (SKU column
+// lists every item in the order, e.g. "2x ORONGEADAPTACR, 1x
+// GRISADAPTADORCR").
+//
+// Exactly 12 columns, no more no less:
+// Country, Full Name, Phone Number, Departamento, Municipio,
+// Dirección Completa, Punto de Referencia, SKU, Quantity,
+// Total Price, Price, Shipping
 //
 // SETUP (once):
 //   1. Open the Google Sheet -> Extensions -> Apps Script
@@ -15,20 +20,18 @@
 // ============================================================
 
 var HEADERS = [
-  'Fecha',                 // A  1
-  'Country',                // B  2
-  'Nombre y Apellidos',      // C  3
-  'Teléfono',                // D  4
-  'Departamento',            // E  5
-  'Municipio',               // F  6
-  'Poblado/Colonia',         // G  7
-  'Dirección Completa',      // H  8
-  'Punto de Referencia',     // I  9
-  'SKU',                     // J  10
-  'Quantity',                // K  11
-  'Price',                   // L  12
-  'Shipping',                // M  13
-  'Total Price'              // N  14
+  'Country',                // A  1
+  'Full Name',               // B  2
+  'Phone Number',            // C  3
+  'Departamento',            // D  4
+  'Municipio',               // E  5
+  'Dirección Completa',      // F  6
+  'Punto de Referencia',     // G  7
+  'SKU',                     // H  8
+  'Quantity',                // I  9
+  'Total Price',             // J  10
+  'Price',                   // K  11
+  'Shipping'                 // L  12
 ];
 
 function doPost(e) {
@@ -40,25 +43,23 @@ function doPost(e) {
     if (!sheet) {
       sheet = ss.insertSheet('Orders');
       sheet.setFrozenRows(1);
-      sheet.setColumnWidth(1, 130);   // Fecha
-      sheet.setColumnWidth(2, 100);   // Country
-      sheet.setColumnWidth(3, 160);   // Nombre y Apellidos
-      sheet.setColumnWidth(4, 130);   // Teléfono
-      sheet.setColumnWidth(5, 110);   // Departamento
-      sheet.setColumnWidth(6, 110);   // Municipio
-      sheet.setColumnWidth(7, 140);   // Poblado/Colonia
-      sheet.setColumnWidth(8, 220);   // Dirección Completa
-      sheet.setColumnWidth(9, 180);   // Punto de Referencia
-      sheet.setColumnWidth(10, 140);  // SKU
-      sheet.setColumnWidth(11, 90);   // Quantity
-      sheet.setColumnWidth(12, 90);   // Price
-      sheet.setColumnWidth(13, 90);   // Shipping
-      sheet.setColumnWidth(14, 100);  // Total Price
+      sheet.setColumnWidth(1, 100);   // Country
+      sheet.setColumnWidth(2, 160);   // Full Name
+      sheet.setColumnWidth(3, 130);   // Phone Number
+      sheet.setColumnWidth(4, 110);   // Departamento
+      sheet.setColumnWidth(5, 110);   // Municipio
+      sheet.setColumnWidth(6, 220);   // Dirección Completa
+      sheet.setColumnWidth(7, 180);   // Punto de Referencia
+      sheet.setColumnWidth(8, 260);   // SKU
+      sheet.setColumnWidth(9, 90);    // Quantity
+      sheet.setColumnWidth(10, 100);  // Total Price
+      sheet.setColumnWidth(11, 90);   // Price
+      sheet.setColumnWidth(12, 90);   // Shipping
     }
 
     // Always keep row 1 in sync with HEADERS, even if this tab already
-    // existed from an older version of this script — this prevents the
-    // classic "columns look shifted" bug when the header row is stale.
+    // existed from an older version of this script — prevents stale
+    // headers from making the columns look shifted.
     var headerRange = sheet.getRange(1, 1, 1, HEADERS.length);
     headerRange.setValues([HEADERS]);
     headerRange.setBackground('#1a73e8');
@@ -66,20 +67,18 @@ function doPost(e) {
     headerRange.setFontWeight('bold');
 
     var newRow = [
-      data.fecha              || new Date().toLocaleString('en-GB'),
       data.country             || 'Costa Rica',
       data.full_name           || '',
       data.phone               || '',
       data.departamento        || '',
       data.municipio           || '',
-      data.poblado_colonia     || '',
       data.direccion_completa  || '',
       data.punto_referencia    || '',
       data.sku                 || '',
       data.quantity            || '',
+      data.total_price         || '',
       data.price               || '',
-      data.shipping            || 0,
-      data.total_price         || ''
+      data.shipping            || 0
     ];
 
     sheet.appendRow(newRow);

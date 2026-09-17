@@ -212,7 +212,6 @@ export default function GuardCheckoutModal({
       phone,
       state: provinceName,
       city: cityName,
-      poblado: String(formData.get("poblado") ?? "").trim(),
       address: String(formData.get("address") ?? "").slice(0, 60).replace(/[^a-zA-Z0-9áéíóúñÁÉÍÓÚÑüÜ ,./\-#]/g, ""),
       reference: String(formData.get("reference") ?? "").trim(),
     };
@@ -224,7 +223,6 @@ export default function GuardCheckoutModal({
     if (!/^\d{8}$/.test(phoneDigits)) errors.phone = "Ingresá un celular válido de Costa Rica (8 dígitos, ej: 8888 8888)";
     if (!provinceId) errors.state = "Seleccioná tu departamento";
     if (!cityId) errors.city = "Seleccioná tu municipio";
-    if (!addr.poblado.trim()) errors.poblado = "Ingresá tu poblado/colonia";
     if (!addr.address.trim()) errors.address = "Ingresá tu dirección";
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
@@ -274,7 +272,6 @@ export default function GuardCheckoutModal({
       phone: addr.phone,
       departamento: addr.state,
       municipio: addr.city,
-      poblado_colonia: addr.poblado,
       direccion_completa: addr.address,
       punto_referencia: addr.reference,
       sku: skuStr,
@@ -478,11 +475,6 @@ export default function GuardCheckoutModal({
                     </div>
                     {formErrors.city && <p className="text-red-600 text-sm mt-1">{formErrors.city}</p>}
                   </div>
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">Poblado/Colonia <span className="text-red-500 text-xs font-bold">REQUERIDO</span></label>
-                  <input name="poblado" type="text" placeholder="Ej: Los Yoses" className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 bg-white ${errClass("poblado")}`} />
-                  {formErrors.poblado && <p className="text-red-600 text-sm mt-1">{formErrors.poblado}</p>}
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-1">Dirección Completa <span className="text-red-500 text-xs font-bold">REQUERIDO</span></label>

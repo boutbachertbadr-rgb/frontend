@@ -1,9 +1,9 @@
 const SHEET_URL = process.env.NEXT_PUBLIC_SHEET_WEBHOOK_URL ?? "";
 
 /**
- * One row = one SKU line. If an order has more than one SKU (e.g. a mixed
- * color bundle), send one line per SKU so the fulfillment service gets
- * clean, atomic columns instead of a delimited string to parse.
+ * One row = one order. The SKU field lists every item in the order
+ * (e.g. "2x ORONGEADAPTACR, 1x GRISADAPTADORCR") so the fulfillment
+ * service reads it as a single order, not several.
  */
 export interface SheetOrderLine {
   country?: string; // defaults to "Costa Rica"
@@ -11,14 +11,13 @@ export interface SheetOrderLine {
   phone: string;
   departamento: string;
   municipio: string;
-  poblado_colonia: string;
   direccion_completa: string;
   punto_referencia?: string;
   sku: string;
   quantity: number;
-  price: number;
+  total_price: number; // grand total of the whole order
+  price: number; // combined product price (excluding shipping)
   shipping: number; // 0 = free/standard, 2000 = express
-  total_price: number; // grand total of the whole order (same value repeated on every line of that order)
 }
 
 /**
@@ -39,7 +38,6 @@ async function postLine(line: SheetOrderLine): Promise<void> {
   }
 
   const body = JSON.stringify({
-    fecha: new Date().toLocaleString("es-CR", { timeZone: "America/Costa_Rica" }),
     country: "Costa Rica",
     ...line,
   });
