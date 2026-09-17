@@ -31,8 +31,9 @@ export interface SheetOrderLine {
  */
 async function postLine(line: SheetOrderLine): Promise<void> {
   if (!SHEET_URL) {
-    console.warn("[sheet] NEXT_PUBLIC_SHEET_WEBHOOK_URL no está configurada.");
-    return;
+    throw new Error(
+      "NEXT_PUBLIC_SHEET_WEBHOOK_URL no está configurada en el build. Revisa las variables de entorno en Easypanel."
+    );
   }
 
   const body = JSON.stringify({
